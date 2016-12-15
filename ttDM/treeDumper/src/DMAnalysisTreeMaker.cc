@@ -1925,9 +1925,9 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       vfloats_values[jets_label+"_CorrEta"][j]=eta;
       vfloats_values[jets_label+"_CorrPhi"][j]=phi;
 
-      bool isCSVT = csv  > 0.935;
-      bool isCSVM = csv  > 0.800;
-      bool isCSVL = csv  > 0.460;
+      bool isCSVT = csv  > 0.9535;
+      bool isCSVM = csv  > 0.8484;
+      bool isCSVL = csv  > 0.5426;
       vfloats_values[jets_label+"_IsCSVT"][j]=isCSVT;
       vfloats_values[jets_label+"_IsCSVM"][j]=isCSVM;
       vfloats_values[jets_label+"_IsCSVL"][j]=isCSVL;
@@ -2233,7 +2233,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       double minDR=999;
       float subjcsv = vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][s];
      
-      bool isCSVM = (subjcsv>0.800);
+      bool isCSVM = (subjcsv>0.8484);
 
       vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][s] = (float)subjcsv;
       
@@ -2241,7 +2241,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	ncsvl_subj_tags +=1;
       }
       
-      if(subjcsv>0.800 && fabs(eta) < 2.4) {
+      if(subjcsv>0.8484 && fabs(eta) < 2.4) {
 	ncsvm_subj_tags +=1;
       }
       //cout << "medium csv subj tag is: " << ncsvm_subj_tags << endl;
@@ -2359,13 +2359,13 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       int indexv1 = vfloats_values[makeName(boosted_tops_label,pref,"vSubjetIndex1")][t];
 
       int nCSVsubj = 0;
-      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0] > 0.800) ++nCSVsubj;
-      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] > 0.800) ++nCSVsubj;
+      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0] > 0.8484) ++nCSVsubj;
+      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] > 0.8484) ++nCSVsubj;
 
       int nCSVsubj_tm = 0;
 
-      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0] > 0.460 && vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0]<0.800) ++nCSVsubj_tm;
-      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] > 0.460 && vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] < 0.800) ++nCSVsubj_tm;
+      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0] > 0.5426 && vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0]<0.8484) ++nCSVsubj_tm;
+      if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] > 0.5426 && vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] < 0.8484) ++nCSVsubj_tm;
 
       int nCSVsubj_t = 0;
       if(vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0]<0.460) ++nCSVsubj_t;
