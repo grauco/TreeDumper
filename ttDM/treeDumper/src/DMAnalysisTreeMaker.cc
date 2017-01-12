@@ -258,15 +258,7 @@ private:
 
   edm::Handle<std::vector<float> > ak8jetvSubjetIndex0;
   edm::Handle<std::vector<float> > ak8jetvSubjetIndex1;
-
-  /*  edm::Handle<std::vector<float> > partID;
-  edm::Handle<std::vector<float> > partStatus;
-  edm::Handle<std::vector<float> > partMom0ID;
-  edm::Handle<std::vector<float> > partPt;
-  edm::Handle<std::vector<float> > partEta;
-  edm::Handle<std::vector<float> > partPhi;
-  edm::Handle<std::vector<float> > partE;
-  */
+  
   float nPV;
   edm::Handle<int> ntrpu;
 
@@ -518,7 +510,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   crossSection = channelInfo.getParameter<double>("crossSection");
   originalEvents = channelInfo.getParameter<double>("originalEvents");
 
-  doPreselection = iConfig.getUntrackedParameter<bool>("doPreselection",false);
+  doPreselection = iConfig.getUntrackedParameter<bool>("doPreselection",true);
   doPU = iConfig.getUntrackedParameter<bool>("doPU",true);
 
   useLHEWeights = channelInfo.getUntrackedParameter<bool>("useLHEWeights",false);
@@ -545,22 +537,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   jetAK8vSubjetIndex0  = consumes< std::vector<float> >( ak8jetvSubjetIndex0_);
   edm::InputTag ak8jetvSubjetIndex1_ = iConfig.getParameter<edm::InputTag>("ak8jetvSubjetIndex1");
   jetAK8vSubjetIndex1 = consumes< std::vector<float> >( ak8jetvSubjetIndex1_);
-  
-  /*  edm::InputTag PartID_ = iConfig.getParameter<edm::InputTag>("partID");
-  genPartID = consumes< std::vector<float> >( PartID_ );
-  edm::InputTag PartStatus_ = iConfig.getParameter<edm::InputTag>("partStatus");
-  genPartStatus = consumes< std::vector<float> >( PartStatus_);
-  edm::InputTag PartMom0ID_ = iConfig.getParameter<edm::InputTag>("partMom0ID");
-  genPartMom0ID = consumes< std::vector<float> >( PartMom0ID_ );
-  edm::InputTag PartPt_ = iConfig.getParameter<edm::InputTag>("partPt");
-  genPartPt = consumes< std::vector<float> >( PartPt_ );
-  edm::InputTag PartPhi_ = iConfig.getParameter<edm::InputTag>("partPhi");
-  genPartPhi = consumes< std::vector<float> >( PartPhi_);
-  edm::InputTag PartEta_ = iConfig.getParameter<edm::InputTag>("partEta");
-  genPartEta = consumes< std::vector<float> >( PartEta_ );
-  edm::InputTag PartE_ = iConfig.getParameter<edm::InputTag>("partE");
-  genPartE = consumes< std::vector<float> >( PartE_);
-  */
+
   edm::InputTag lumiBlock_ = iConfig.getParameter<edm::InputTag>("lumiBlock");
   t_lumiBlock_ = consumes< unsigned int >( lumiBlock_ );
   edm::InputTag runNumber_ = iConfig.getParameter<edm::InputTag>("runNumber");
@@ -973,7 +950,7 @@ void DMAnalysisTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& 
     iRun.getByLabel(metNames_, metNames);
     for(size_t bt = 0; bt < triggerNamesR->size();++bt){
       std::string tname = triggerNamesR->at(bt);
-      cout << "trigger test tname "<< tname <<endl; 
+      //cout << "trigger test tname "<< tname <<endl; 
     }
 }
 
@@ -1022,16 +999,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     gena.clear();
     gennu.clear();
     pare.clear();parebar.clear();parmu.clear();parmubar.clear();parnumu.clear();parnumubar.clear();parnue.clear();parnuebar.clear();parnutau.clear();parnutaubar.clear();parz.clear();parw.clear();
-
-    /*if(getParticleWZ){
-      iEvent.getByToken(genPartID, partID);
-      iEvent.getByToken(genPartStatus, partStatus);
-      iEvent.getByToken(genPartMom0ID, partMom0ID);
-      iEvent.getByToken(genPartPt, partPt);
-      iEvent.getByToken(genPartPhi, partPhi);
-      iEvent.getByToken(genPartEta, partEta);
-      iEvent.getByToken(genPartE, partE);
-      }*/
 
     float_values["Event_Z_EW_Weight"]= 1.0;
     float_values["Event_W_EW_Weight"]= 1.0;
@@ -1160,9 +1127,13 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     if(useLHEWeights){
       getEventLHEWeights();
     }
-   
-    if(!isData) {//G
-      iEvent.getByToken(t_genParticleCollection_ , genParticles);
+    //  }
+  //if(1>0){
+    //G
+    //cout << "starting gen"<<endl;
+    //if(!isData) {//G
+    if(0>1){ 
+    iEvent.getByToken(t_genParticleCollection_ , genParticles);
     
       //const bool print = false;
       int momId=-999;
@@ -1174,74 +1145,33 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  const reco::GenParticle& p = (*genParticles)[i];
 	  momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;                                                                                                                            
 	  momStatus = p.numberOfMothers() ? p.mother()->status() : 0;    
-	  //int momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
-	  // std::cout<<i<<" id="<<p.pdgId()<<" ("<<p.status()<<") mom="<<momId<<", daughters=";
-	  //for(size_t j = 0, n=p.numberOfDaughters(); j<n; ++j) std::cout<<p.daughter(j)->pdgId()<<(j+1<n?", ":"\n");
-	  //std:: cout << " pt=" << (p.p4()).Pt() << endl;
 	  MomId.push_back(momId);
 	  MomStatus.push_back(momStatus);
       }
 
-      /*size_t ngen =  h_floats_["gen_Pt"]->size();
-      for (size_t i=0; i<ngen; ++i) {
-	// Only saving b,t,W,l,nu
-	if (abs(h_floats_["gen_ID"]->at(i))==5||abs(h_floats_["gen_ID"]->at(i))==6||
-	    (abs(h_floats_["gen_ID"]->at(i))>=11&&abs(h_floats_["gen_ID"]->at(i))<=16)
-	    ||abs(h_floats_["gen_ID"]->at(i))==24||abs(h_floats_["gen_ID"]->at(i))>1000000) {
-	    vector_int_["gen_ID"].push_back(h_floats_["gen_ID"]->at(i));                               */ /* gen_ID  */
-      //	  vector_int_["gen_Status"].push_back(h_floats_["gen_Status"]->at(i));    /* gen_Status */
-      //	  vector_int_["gen_Mom0ID"].push_back(h_floats_["gen_Mom0ID"]->at(i));    /* gen_Mom0ID */
-      //  vector_int_["gen_Mom0Status"].push_back(h_floats_["gen_Mom0Status"]->at(i));    /* gen_M/om0Status */
-      //  vector_int_["gen_Mom1ID"].push_back(h_floats_["gen_Mom1ID"]->at(i));    /* gen_Mom1ID */
-      //  vector_int_["gen_Mom1Status"].push_back(h_floats_["gen_Mom1Status"]->at(i));    /* gen_Mom1Status */
-      //	  vector_int_["gen_Dau0ID"].push_back(h_floats_["gen_Dau0ID"]->at(i));    /* gen_Dau0ID */
-      //  vector_int_["gen_Dau0Status"].push_back(h_floats_["gen_Dau0Status"]->at(i));    /* gen_Dau0Status */
-      //  vector_int_["gen_Dau1ID"].push_back(h_floats_["gen_Dau1ID"]->at(i));    /* gen_Dau1ID */
-      //  vector_int_["gen_Dau1Status"].push_back(h_floats_["gen_Dau1Status"]->at(i));    /* gen_Dau1Status */
-      //vector_float_["gen_Pt"].push_back(h_floats_["gen_Pt"]->at(i));    /* gen_Pt */
-	  //  vector_float_["gen_Eta"].push_back(h_floats_["gen_Eta"]->at(i));    /* gen_Eta */
-      //  vector_float_["gen_Phi"].push_back(h_floats_["gen_Phi"]->at(i));    /* gen_Phi */
-      //  vector_float_["gen_E"].push_back(h_floats_["gen_E"]->at(i));    /* gen_E */
-      //  vector_float_["gen_Charge"].push_back(h_floats_["gen_Charge"]->at(i));    /* gen_Charge */
-      //  TLorentzVector genp; genp.SetPtEtaPhiE(h_floats_["gen_Pt"]->at(i), h_floats_["gen_Eta"]->at(i));
-      //  h_floats_["gen_Phi"]->at(i), h_floats_["gen_E"]->at(i));
-      //  vector_float_["gen_Mass"].push_back(genp.M());
-      //}*/
-      //cout << max_instances[gen_label] << " " << genParticles->size() << endl;
-      //cout << "starting gen loop" << endl;
-      for(size_t i=0;i<(size_t)max_instances[gen_label]/*max((int)genParticles->size(),(int)30)*/;++i){
+      cout << "starting gen 2" << endl;
+      for(size_t i=0;/*i<genParticles->size()*/(size_t)max_instances[gen_label]/*max((int)genParticles->size(),(int)30)*/;++i){
 	string nameshortv= "genPart";
 	string pref = obj_to_pref[gen_label];
-	//cout <<"2" << endl;
+
 	const reco::GenParticle& p = (*genParticles)[i];
-	//cout <<"3" << endl;
-	//int momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
-	//int momStatus = p.numberOfMothers() ? p.mother()->status() : 0;
-	//int momId=-999;
-	//int momStatus =-999;
-	//cout << p.numberOfMothers() << endl;
-	//if(p.numberOfMothers()>0){
-	//momId = MomId.at(i);
-	//momStatus = MomStatus.at(i);
-	  //}
-	//cout << momId << " " << momStatus << endl;
-	//cout << "4" << endl;
-	//cout << (p.p4()).Pt()  << endl;
-	//cout << (p.p4(i)).Pt()  << endl;
-	//cout << (p.p4()).Pt() << endl;
-	//cout << (p.p4()).Eta() << endl;
-	//cout << (p.p4()).Phi() <<endl;
-	//cout << (p.p4()).E() <<endl;
-	//cout << momId << 
-	//for(size_t j = 0, n=p.numberOfDaughters(); j<n; ++j) std::cout<<p.daughter(j)->pdgId()<<(j+1<n?", ":"\n");  
-	//cout << genParticles->size() << " " << i << " " << max_instances[gen_label] << endl;
-	vfloats_values[makeName(gen_label,pref,"Pt")][i]=(float)((p.p4()).Pt());
+	cout << "genPart" << endl;
+	/*vfloats_values[makeName(gen_label,pref,"Pt")][i]=(float)((p.p4()).Pt());
 	vfloats_values[makeName(gen_label,pref,"Eta")][i]=(float)((p.p4()).Eta());
 	vfloats_values[makeName(gen_label,pref,"Phi")][i]=(float)((p.p4()).Phi());
 	vfloats_values[makeName(gen_label,pref,"E")][i]=(float)((p.p4()).E());
-	//cout << "before mom" << endl;
-	//vfloats_values[makeName(gen_label,pref,"Mom0Id")][i]=(float)(momId);
-	//vfloats_values[makeName(gen_label,pref,"Mom0Status")][i]=(float)(momStatus);
+	vfloats_values[makeName(gen_label,pref,"Status")][i]=(int)(p.status());
+	vfloats_values[makeName(gen_label,pref,"Id")][i]=(int)(p.pdgId());
+	*/
+	cout << "genPart mom" << endl;
+	int momId=-999;
+	//int momStatus =-999;
+	/*momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
+	momStatus = p.numberOfMothers() ? p.mother()->status() : 0;
+
+	vfloats_values[makeName(gen_label,pref,"Mom0Id")][i]=(float)(momId);
+	vfloats_values[makeName(gen_label,pref,"Mom0Status")][i]=(float)(momStatus);
+	*/
 	/*for(size_t j = 0, n=p.numberOfDaughters(); j<n; ++j) {
 	  vfloats_values[makeName(gen_label,pref,"dauId1")][i]=(float)(p.daughter(j)->pdgId());
 	  vfloats_values[makeName(gen_label,pref,"dauStatus1")][i]=(float)(p.daughter(j)->status());
@@ -1250,12 +1180,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  vfloats_values[makeName(gen_label,pref,"dauId3")][i]=(float)(p.daughter(j+1)->pdgId());
 	  vfloats_values[makeName(gen_label,pref,"dauStatus3")][i]=(float)(p.daughter(j+1)->status());
 	  }*/
-	//cout << "after mom" << endl;
-	vfloats_values[makeName(gen_label,pref,"Status")][i]=(int)(p.status());
-	vfloats_values[makeName(gen_label,pref,"Id")][i]=(int)(p.pdgId());	
-	//	cout << p.status() << endl;
-	//	cout << "5" << endl;
-	//cout << "starting ewk gen loop" << endl;
+	cout << "ewk" << endl;
 	if(p.pdgId()==momId && isEWKID(p.pdgId()) && getParticleWZ){
 	  //cout << "inside gen loop" << endl;
 	  TLorentzVector vec;
@@ -1639,6 +1564,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       //WORKING POINTS TO BE CHECKED
     
     }
+    //G                                                                                                                                              
+    //cout << "starting muons"<<endl;
     //    cout << "starting muons" << endl;
     //Muons
     for(int mu = 0;mu < max_instances[mu_label] ;++mu){
@@ -1711,6 +1638,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	loosemuons.push_back(muon);
       }
     }
+    //G                                                                                                                                              
+    //cout << "starting electrons"<<endl;
     //    cout << "starting electrons" << endl;
     //Electrons:
     for(int el = 0;el < max_instances[ele_label] ;++el){
@@ -1832,6 +1761,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       float_values["Event_Lepton2_Charge"]=leptonsCharge.at(secondidx);
 
     }
+    //G                                                                                                                                              
+    //cout << "starting jets"<<endl;
     //    cout << "starting jets" << endl;
     //Jets:
     double Ht=0;
@@ -2113,6 +2044,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       corrMetPx -=signmet*DUnclusteredMETPx*0.1;
       corrMetPy -=signmet*DUnclusteredMETPy*0.1;
     }
+    //G                                                                                                                                              
+    //cout << "starting met"<<endl;
     //    cout << "starting met" << endl;
     //Met and mt
     string pref = obj_to_pref[met_label];
@@ -2142,7 +2075,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
     if(doPreselection){
       bool passes = true;
-      bool metCondition = (metptCorr >100.0);
+      bool metCondition = (metptCorr >100.0 && Ht > 400.);
 
       float lep1phi = float_values["Event_Lepton1_Phi"];
       float lep1pt = float_values["Event_Lepton1_Pt"];
@@ -2209,6 +2142,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       float_values["Event_Mt2w"] = (float)Mt2w;    
     }
     
+    //G                                                                                                                                              
+    //cout << "starting ak8"<<endl;
     //    cout << "starting AK8 jets" << endl;
     for(int s = 0;s < min(max_instances[boosted_tops_subjets_label],sizes[boosted_tops_subjets_label]) ;++s){
       string pref = obj_to_pref[boosted_tops_subjets_label];
@@ -2237,7 +2172,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
       vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][s] = (float)subjcsv;
       
-      if(subjcsv>0.46 && fabs(eta) < 2.4) {
+      if(subjcsv>0.5426 && fabs(eta) < 2.4) {
 	ncsvl_subj_tags +=1;
       }
       
@@ -2368,8 +2303,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       if( vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] > 0.5426 && vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1] < 0.8484) ++nCSVsubj_tm;
 
       int nCSVsubj_t = 0;
-      if(vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0]<0.460) ++nCSVsubj_t;
-      if(vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1]< 0.460) ++nCSVsubj_t;
+      if(vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv0]<0.5426) ++nCSVsubj_t;
+      if(vfloats_values[makeName(boosted_tops_subjets_label,pref,"CSVv2")][indexv1]< 0.5426) ++nCSVsubj_t;
       
       vfloats_values[makeName(boosted_tops_label,pref,"nCSVsubj")][t]=(float)nCSVsubj;
       vfloats_values[makeName(boosted_tops_label,pref,"nCSVsubj_tm")][t]=(float)nCSVsubj_tm;
@@ -2705,6 +2640,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	}
       }
     }
+    //G                                                                                                                                              
+    //cout << "starting btag"<<endl;
     //    cout << "starting btagging" << endl;
     //BTagging part
     if(doBTagSF){
@@ -3575,8 +3512,8 @@ double DMAnalysisTreeMaker::getZPtWeight(double ptW){//TO DO?, in aggrement with
 double DMAnalysisTreeMaker::getTopPtWeight(double ptT, double ptTbar, bool extrap){ //TO DO
   if((ptT>0.0 && ptTbar>0.0) ){
     if (extrap || (ptT<=400.0 && ptTbar <=400.0)){
-      double a = 0.156;
-      double b = -0.00137;
+      double a = 0.0615;
+      double b = -0.0005;
       double sfT = exp(a+b*ptT);
       double sfTbar = exp(a+b*ptTbar);
     return sqrt(sfT*sfTbar); 

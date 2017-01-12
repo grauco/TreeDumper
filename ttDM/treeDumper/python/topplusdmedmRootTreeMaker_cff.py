@@ -5,7 +5,7 @@ import copy
 leptonssize = cms.untracked.int32(6)
 #jetssize = cms.untracked.int32(20)
 jetssize = cms.untracked.int32(10)
-genpartsize = cms.untracked.int32(30)
+genpartsize = cms.untracked.int32(100)
 
 pholabel = cms.string("photons")
 mulabel = cms.string("muons")
@@ -437,7 +437,7 @@ DMTreesDumper.physicsObjects.append(
             #cms.InputTag(j,jpref+"Mass"),
             cms.InputTag(j,jpref+"Eta"),
             cms.InputTag(j,jpref+"Phi"),
-            #cms.InputTag(j,jpref+"QGL"),
+            cms.InputTag(j,jpref+"QGL"),
             #cms.InputTag(j,jpref+"mult"),
             #cms.InputTag(j,jpref+"axis2"),
             #cms.InputTag(j,jpref+"ptD"),
@@ -519,7 +519,7 @@ DMTreesDumper.physicsObjects.append(
         #toSave = cms.vstring(jpref+"Eta",jpref+"Phi","allExtra"),
         categories = cms.vstring(catJet),
 #        categories = cms.vstring("Tight"),
-        toSave = cms.vstring(jpref+"E",jpref+"Pt",jpref+"Eta",jpref+"Phi",jpref+"GenJetE", jpref+"GenJetPhi", jpref+"GenJetPt",jpref+"GenJetEta",jpref+"CSVv2",jpref+"PartonFlavour","allExtra"),#jpref+"QGL", jpref+"mult", jpref+"axis2", jpref+"ptD"),#, jpref+"jecFactor0", "allExtra"),#,jpref+"pileupJetIdRMS", jpref+"pileupJetIdbeta", jpref+"pileupJetIdbetaClassic", jpref+"pileupJetIdbetaStar", jpref+"pileupJetIdbetaStarClassic", jpref+"pileupJetIddR2Mean", jpref+"pileupJetIddRMean", jpref+"pileupJetIddZ", jpref+"pileupJetIdfrac01", jpref+"pileupJetIdfrac02", jpref+"pileupJetIdfrac03", jpref+"pileupJetIdfrac04", jpref+"pileupJetIdjetR", jpref+"pileupJetIdjetRchg", jpref+"pileupJetIdmajW", jpref+"pileupJetIdminW", jpref+"pileupJetIdnCharged", jpref+"pileupJetIdnNeutrals", jpref+"pileupJetIdnParticles", jpref+"pileupJetIdptD", jpref+"pileupJetIdpull","allExtra"),
+        toSave = cms.vstring(jpref+"E",jpref+"Pt",jpref+"Eta",jpref+"Phi",jpref+"GenJetE", jpref+"GenJetPhi", jpref+"GenJetPt",jpref+"GenJetEta",jpref+"CSVv2",jpref+"PartonFlavour","allExtra",jpref+"QGL"),# jpref+"mult", jpref+"axis2", jpref+"ptD"),#, jpref+"jecFactor0", "allExtra"),#,jpref+"pileupJetIdRMS", jpref+"pileupJetIdbeta", jpref+"pileupJetIdbetaClassic", jpref+"pileupJetIdbetaStar", jpref+"pileupJetIdbetaStarClassic", jpref+"pileupJetIddR2Mean", jpref+"pileupJetIddRMean", jpref+"pileupJetIddZ", jpref+"pileupJetIdfrac01", jpref+"pileupJetIdfrac02", jpref+"pileupJetIdfrac03", jpref+"pileupJetIdfrac04", jpref+"pileupJetIdjetR", jpref+"pileupJetIdjetRchg", jpref+"pileupJetIdmajW", jpref+"pileupJetIdminW", jpref+"pileupJetIdnCharged", jpref+"pileupJetIdnNeutrals", jpref+"pileupJetIdnParticles", jpref+"pileupJetIdptD", jpref+"pileupJetIdpull","allExtra"),
         ),
     )
 
@@ -551,20 +551,20 @@ DMTreesDumper.physicsObjects.append(
 #            cms.InputTag("jetsAK8CHS","jetAK8CHStopSubjetIndex3"),
             cms.InputTag("jetsAK8CHS","jetAK8CHSvSubjetIndex0"),
             cms.InputTag("jetsAK8CHS","jetAK8CHSvSubjetIndex1"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHSprunedMass"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHSsoftDropMass"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHStau1"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHStau2"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHStau3"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHSprunedMassCHS"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHSsoftDropMassCHS"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHStau1CHS"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHStau2CHS"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHStau3CHS"),
 #            cms.InputTag("jetsAK8CHS","jetAK8CHStopMass"),
-            cms.InputTag("jetsAK8CHS","jetAK8CHStrimmedMass"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHStrimmedMassCHS"),
 #            cms.InputTag("jetsAK8CHS","jetAK8CHSwMass"),
             ),
         variablesI = cms.VInputTag(),
         singleD = cms.VInputTag(),
         singleI = cms.VInputTag(),
         singleF = cms.VInputTag(),
-        toSave = cms.vstring("jetAK8CHSGenJetE","jetAK8CHSGenJetPt","jetAK8CHSGenJetEta","jetAK8CHSGenJetPhi","jetAK8CHSE","jetAK8CHSPt","jetAK8CHSEta","jetAK8CHSPhi", "jetAK8CHSprunedMass", "jetAK8CHStau1", "jetAK8CHStau2", "jetAK8CHStau3",  "jetAK8CHStrimmedMass", "allExtra"),
+        toSave = cms.vstring("jetAK8CHSGenJetE","jetAK8CHSGenJetPt","jetAK8CHSGenJetEta","jetAK8CHSGenJetPhi","jetAK8CHSE","jetAK8CHSPt","jetAK8CHSEta","jetAK8CHSPhi", "jetAK8CHSprunedMassCHS", "jetAK8CHStau1CHS", "jetAK8CHStau2CHS", "jetAK8CHStau3CHS",  "jetAK8CHStrimmedMassCHS", "allExtra"),
         )
     )
 
