@@ -234,7 +234,7 @@ private:
   bool useLHEWeights, useLHE, useTriggers,cutOnTriggers, useMETFilters, addPV;
   bool addLHAPDFWeights;
   string centralPdfSet,variationPdfSet;
-  std::vector<string> SingleElTriggers, SingleMuTriggers, PhotonTriggers, hadronicTriggers,metFilters;
+  std::vector<string> SingleElTriggers, SingleMuTriggers, PhotonTriggers, hadronicTriggers,metFilters, HadronPFHT900Triggers, HadronPFHT800Triggers, HadronPFJet450Triggers;
   int maxPdf, maxWeights;
   edm::Handle<LHEEventProduct > lhes;
   edm::Handle<GenEventInfoProduct> genprod;
@@ -559,6 +559,9 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
     SingleMuTriggers= channelInfo.getParameter<std::vector<string> >("SingleMuTriggers");
     PhotonTriggers= channelInfo.getParameter<std::vector<string> >("PhotonTriggers");
     hadronicTriggers= channelInfo.getParameter<std::vector<string> >("hadronicTriggers");
+    HadronPFHT900Triggers= channelInfo.getParameter<std::vector<string> >("HadronPFHT900Triggers");
+    HadronPFHT800Triggers= channelInfo.getParameter<std::vector<string> >("HadronPFHT800Triggers");
+    HadronPFJet450Triggers= channelInfo.getParameter<std::vector<string> >("HadronPFJet450Triggers");
   }
   useMETFilters = iConfig.getUntrackedParameter<bool>("useMETFilters",true);
 
@@ -3413,10 +3416,29 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
 	addvar.push_back("passes"+trig);
 	addvar.push_back("prescale"+trig);
       }
+      for (size_t lt = 0; lt < HadronPFHT900Triggers.size(); ++lt)  {
+        string trig = HadronPFHT900Triggers.at(lt);
+        addvar.push_back("passes"+trig);
+        addvar.push_back("prescale"+trig);
+      }
+      for (size_t lt = 0; lt < HadronPFHT800Triggers.size(); ++lt)  {
+        string trig = HadronPFHT800Triggers.at(lt);
+        addvar.push_back("passes"+trig);
+        addvar.push_back("prescale"+trig);
+      }
+      for (size_t lt = 0; lt < HadronPFJet450Triggers.size(); ++lt)  {
+        string trig = HadronPFJet450Triggers.at(lt);
+        addvar.push_back("passes"+trig);
+        addvar.push_back("prescale"+trig);
+      }
+      
       addvar.push_back("passesSingleElTriggers");
       addvar.push_back("passesSingleMuTriggers");
       addvar.push_back("passesPhotonTriggers");
       addvar.push_back("passesHadronicTriggers");
+      addvar.push_back("passesHadronPFHT900Triggers");
+      addvar.push_back("passesHadronPFHT800Triggers");
+      addvar.push_back("passesHadronPFJet450Triggers");
     }
   }
   
@@ -3540,7 +3562,7 @@ bool DMAnalysisTreeMaker::getMETFilters(){
 }
 
 bool DMAnalysisTreeMaker::getEventTriggers(){
-  bool eleOR=false, muOR=false, hadronOR=false, phOR=false;
+  bool eleOR=false, muOR=false, hadronOR=false, phOR=false, H900OR=false, H800OR=false, J450OR=false;
   for(size_t lt =0; lt< SingleElTriggers.size();++lt){
     string lname = SingleElTriggers.at(lt);
     for(size_t bt = 0; bt < triggerNamesR->size();++bt){
@@ -3606,12 +3628,64 @@ bool DMAnalysisTreeMaker::getEventTriggers(){
       }
     }
   }
-  
+
+  for(size_t lt =0; lt< HadronPFHT900Triggers.size();++lt){
+    string lname = HadronPFHT900Triggers.at(lt);
+    //    std::cout << lname << std::endl;                                                                                                                                                
+    for(size_t bt = 0; bt < triggerNamesR->size();++bt){
+      std::string tname = triggerNamesR->at(bt);
+      //      std::cout << " tname is " << tname << " passes "<< triggerBits->at(bt)<< std::endl;                                                                                         
+      if(tname.find(lname)!=std::string::npos){
+        //      cout << " matches "<<endl;                                                                                                                                                
+        H900OR = H900OR || (triggerBits->at(bt)>0);
+        float_values["Event_passes"+lname]=triggerBits->at(bt);
+        float_values["Event_prescale"+lname]=triggerPrescales->at(bt);
+      }
+    }
+  }
+  for(size_t lt =0; lt< HadronPFHT800Triggers.size();++lt){
+    string lname = HadronPFHT800Triggers.at(lt);
+    //    std::cout << lname << std::endl;                                                                                                                                         
+                                                                                                                                                                                    
+    for(size_t bt = 0; bt < triggerNamesR->size();++bt){
+      std::string tname = triggerNamesR->at(bt);
+      //      std::cout << " tname is " << tname << " passes "<< triggerBits->at(bt)<< std::endl;                                                                                   
+                                                                                                                                                                                       
+      if(tname.find(lname)!=std::string::npos){
+	//      cout << " matches "<<endl;                                                                                                                                        
+                                                                                                                                                                                   
+	H800OR = H800OR || (triggerBits->at(bt)>0);
+        float_values["Event_passes"+lname]=triggerBits->at(bt);
+	float_values["Event_prescale"+lname]=triggerPrescales->at(bt);
+      }
+    }
+  }
+
+  for(size_t lt =0; lt< HadronPFJet450Triggers.size();++lt){
+    string lname = HadronPFJet450Triggers.at(lt);
+    //    std::cout << lname << std::endl;                                                                                                                                            
+                                                                                                                                                                                     
+    for(size_t bt = 0; bt < triggerNamesR->size();++bt){
+      std::string tname = triggerNamesR->at(bt);
+      //      std::cout << " tname is " << tname << " passes "<< triggerBits->at(bt)<< std::endl;                                                                                     
+                                                                                                                                                                                      
+      if(tname.find(lname)!=std::string::npos){
+	//      cout << " matches "<<endl;                                                                                                                                                                                                                                                                                                                                     
+	J450OR = J450OR || (triggerBits->at(bt)>0);
+        float_values["Event_passes"+lname]=triggerBits->at(bt);
+	float_values["Event_prescale"+lname]=triggerPrescales->at(bt);
+      }
+    }
+  }
+
   float_values["Event_passesSingleElTriggers"]=(float)eleOR;
   float_values["Event_passesSingleMuTriggers"]=(float)muOR;
   float_values["Event_passesPhotonTriggers"]=(float)phOR;
   float_values["Event_passesHadronicTriggers"]=(float)hadronOR;
-  return (eleOR || muOR || hadronOR || phOR);
+  float_values["Event_passesHadronicPFHT900Triggers"]=(float)H900OR;
+  float_values["Event_passesHadronicPFHT800Triggers"]=(float)H800OR;
+  float_values["Event_passesHadronicPFJet450Triggers"]=(float)J450OR;
+  return (eleOR || muOR || hadronOR || phOR || H900OR || H800OR || J450OR);
 }
 
 

@@ -48,7 +48,7 @@ def main():
     config.JobType.pluginName = 'Analysis'
     config.JobType.psetName = options.config
     config.JobType.allowUndistributedCMSSW = True
-    config.JobType.pyCfgParams = ['isData=False', 'changeJECs=False']
+    config.JobType.pyCfgParams = ['isData=True', 'changeJECs=False']
     #config.JobType.inputFiles = ['Fall15_25nsV2_DATA.db', 'Fall15_25nsV2_MC.db']
     #config.JobType.inputFiles = ["Fall15_25nsV2_MC_L1FastJet_AK4PFchs.txt", "Fall15_25nsV2_MC_L1RC_AK4PFchs.txt","Fall15_25nsV2_MC_L2Relative_AK4PFchs.txt", "Fall15_25nsV2_MC_L3Absolute_AK4PFchs.txt","Fall15_25nsV2_MC_L2L3Residual_AK4PFchs.txt", "Fall15_25nsV2_DATA_L1FastJet_AK4PFchs.txt","Fall15_25nsV2_DATA_L1RC_AK4PFchs.txt","Fall15_25nsV2_DATA_L2Relative_AK4PFchs.txt","Fall15_25nsV2_DATA_L3Absolute_AK4PFchs.txt",  "Fall15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt"]
     
@@ -86,9 +86,9 @@ def main():
     config.Data.inputDataset = None
     config.Data.inputDBS = 'phys03'
     config.Data.splitting = 'FileBased' 
-    config.Data.unitsPerJob = 1
+    config.Data.unitsPerJob = 3
     config.Data.publication = True    
-    config.Data.outLFNDirBase = '/store/user/grauco/Bprime_Fw80Xv2p1/'
+    config.Data.outLFNDirBase = '/store/user/grauco/Bprime_Fw80Xv2p4/'
 
     config.section_("Site")
     config.Site.storageSite = 'T2_CH_CSCS'
@@ -147,9 +147,9 @@ def main():
 #            run= 'G'
         ptbin = job.split('/')[1]
         cond = job.split('/')[2]
-        config.General.requestName = 'Root80xV2p1_' + ptbin +'_29Nov' 
+        config.General.requestName = 'Root80xV2p4_' + ptbin +'_15Jbv3' 
         config.Data.inputDataset = job
-        config.Data.outputDatasetTag = 'Root80xV2p1_' + ptbin+'_29Nov'
+        config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin+'_15Jbv3'
         print 'Submitting ' + config.General.requestName + ', dataset = ' + job
         print 'Configuration :'
         #print config

@@ -15,7 +15,7 @@ import FWCore.ParameterSet.VarParsing as opts
 options = opts.VarParsing ('analysis')
 
 options.register('maxEvts',
-                 1000,# default value: process all events
+                 100,# default value: process all events
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.int,
                  'Number of events to process')
@@ -23,6 +23,9 @@ options.register('maxEvts',
 SingleElTriggers = []
 SingleMuTriggers = []
 hadronTriggers = []
+HadronPFHT800Triggers = []
+HadronPFHT900Triggers = []
+HadronPFJet450Triggers = []
 
 chan = "MET_Prompt"
 
@@ -40,10 +43,14 @@ files = []
 #files = ["file:"+filedir+"MET_Prompt/"+l for l in listFiles]
 files = ["file:"+filedir+"/"+chan+"/"+l for l in listFiles]
 options.register('sample',
-                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
+                 '/store/group/phys_b2g/B2GAnaFW_80X_V2p4/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170104_182124/0000/B2GEDMNtuple_104.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161222_110143/0000/B2GEDMNtuple_100.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161222_104338/0000/B2GEDMNtuple_14.root',
+#'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
                  #'/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/algomez-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4-6b29e1707fe76ab19c1ba543e7f6f24b/USER',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170104_182059/0000/B2GEDMNtuple_1.root',
-                 '/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016B-23Sep2016-v3_B2GAnaFW_80X_v2p4/161221_152050/0000/B2GEDMNtuple_1.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016H/JetHT/Run2016H-PromptReco-v2_B2GAnaFW_80X_V2p3/161216_223421/0000/B2GEDMNtuple_101.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016B-23Sep2016-v3_B2GAnaFW_80X_v2p4/161221_152050/0000/B2GEDMNtuple_1.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p1/SingleMuon/Run2016B/SingleMuon/Run2016B-PromptReco-v2_B2GAnaFW_80X_V2p1/161027_151657/0000/B2GEDMNtuple_1.root/',
                  #                 files,
                  #'/SingleMuon/vorobiev-Run2016H-PromptReco-v1_B2GAnaFW_80X_v2p4-376a23645e94877b22a7f32873431514/USER',
@@ -77,7 +84,7 @@ options.register('outputLabel',
                  'Output label')
 
 options.register('isData',
-                 True,
+                 False,
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.bool,
                  'Is data?')
@@ -139,6 +146,15 @@ SingleMuTriggers = ["HLT_IsoMu20","HLT_IsoTkMu20"]
 SingleMuTriggers = SingleMuTriggers + ["HLT_IsoMu20_v"+str(s) for s in xrange(15)]
 SingleMuTriggers = SingleMuTriggers + ["HLT_IsoTkMu20_v"+str(s) for s in xrange(15)]
 
+HadronPFHT900Triggers = ["HLT_PFHT900"]
+HadronPFHT900Triggers = HadronPFHT900Triggers + ["HadronPFHT900Triggers"+str(s) for s in xrange(15)]
+
+HadronPFHT800Triggers = ["HLT_PFHT800"]
+HadronPFHT800Triggers =HadronPFHT800Triggers + ["HadronPFHT800Triggers"+str(s) for s in xrange(15)]
+
+HadronPFJet450Triggers = ["HLT_PFJet450"]
+HadronPFJet450Triggers =HadronPFJet450Triggers + ["HadronPFJet450Triggers"+str(s) for s in xrange(15)]
+
 hadronTriggers = ["HLT_PFHT200_v2", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v7","HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7", "HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v3", "HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v2", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v2",  "HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight", "HLT_PFHT300_v3", "HLT_PFHT350_v4", "HLT_PFHT400_v3", "HLT_PFHT475_v3", "HLT_PFHT600_v4", "HLT_PFHT650_v4", "HLT_PFHT800_v3", "HLT_PFHT900_v2", "HLT_AK8PFJet360_TrimMass30_v4", "HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v4", "HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v3", "HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v2", "HLT_AK8DiPFJet280_200_TrimMass30_v2", "HLT_AK8DiPFJet250_200_TrimMass30_v2", "HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v2", "HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v2", "HLT_PFHT300_v2", "HLT_PFHT350_v3", "HLT_PFHT400_v2", "HLT_PFHT475_v2", "HLT_PFHT600_v3", "HLT_PFHT650_v3", "HLT_PFHT800_v2", "HLT_AK8PFJet360_TrimMass30_v3", "HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v3", "HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v2", "HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v1", "HLT_AK8DiPFJet280_200_TrimMass30_v1", "HLT_AK8DiPFJet250_200_TrimMass30_v1", "HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v1", "HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v1", "HLT_AK8PFJet200_v4", "HLT_AK8PFJet260_v5", "HLT_AK8PFJet320_v5", "HLT_AK8PFJet400_v5", "HLT_AK8PFJet450_v5", "HLT_AK8PFJet500_v5", "HLT_PFJet260_v9", "HLT_PFJet320_v9",  "HLT_PFJet400_v9",  "HLT_PFJet450_v9",  "HLT_PFJet500_v9", "HLT_PFHT400_v7", "HLT_PFHT475_v7", "HLT_PFHT600_v8", "HLT_PFHT650_v8", "HLT_PFHT800_v7", "HLT_PFHT900_v6", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v7", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7",  "HLT_AK8PFJet200_v1", "HLT_AK8PFJet260_v1", "HLT_AK8PFJet320_v1", "HLT_AK8PFJet400_v1", "HLT_AK8PFJet450_v1", "HLT_AK8PFJet500_v1", "HLT_PFJet200_v5", "HLT_PFJet260_v5", "HLT_PFJet320_v5", "HLT_PFJet400_v5", "HLT_PFJet450_v5", "HLT_PFJet500_v5", "HLT_PFHT300_v3", "HLT_PFHT350_v4", "HLT_PFHT400_v3", "HLT_PFHT475_v3", "HLT_PFHT600_v4", "HLT_PFHT650_v4", "HLT_PFHT800_v3", "HLT_PFHT900_v2", "HLT_PFHT600_v3", "HLT_PFHT650_v3", "HLT_PFHT800_v2", "HLT_PFHT900_v1", "HLT_PFJet320_v4",  "HLT_PFJet400_v4",  "HLT_PFJet450_v4",  "HLT_PFJet500_v4" ]
 
 hadronTriggers = hadronTriggers + ["HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight_v"+str(s) for s in xrange(15)]
@@ -155,6 +171,15 @@ if(options.isData):
     SingleMuTriggers = ["HLT_IsoMu20","HLT_IsoTkMu20"]
     SingleMuTriggers = SingleMuTriggers + ["HLT_IsoMu20_v"+str(s) for s in xrange(15)]
     SingleMuTriggers = SingleMuTriggers + ["HLT_IsoTkMu20_v"+str(s) for s in xrange(15)]
+
+    HadronPFHT900Triggers = ["HLT_PFHT900"]
+    HadronPFHT900Triggers = HadronPFHT900Triggers + ["HadronPFHT900Triggers"+str(s) for s in xrange(15)]
+    
+    HadronPFHT800Triggers = ["HLT_PFHT800"]
+    HadronPFHT800Triggers =HadronPFHT800Triggers + ["HadronPFHT800Triggers"+str(s) for s in xrange(15)]
+    
+    HadronPFJet450Triggers = ["HLT_PFJet450"]
+    HadronPFJet450Triggers =HadronPFJet450Triggers + ["HadronPFJet450Triggers"+str(s) for s in xrange(15)]
 
     hadronTriggers = ["HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v1", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v1", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v1", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v1","HLT_PFHT300_v2", "HLT_PFHT350_v3", "HLT_PFHT400_v2", "HLT_PFHT475_v2", "HLT_PFHT600_v3", "HLT_PFHT650_v3", "HLT_PFHT800_v2", "HLT_PFHT900_v1", "HLT_AK8PFJet360_TrimMass30_v3", "HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v3", "HLT_AK8PFHT650_TrimR0p1PT0p03Mass50_v2", "HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV_p20_v1", "HLT_AK8DiPFJet280_200_TrimMass30_v2", "HLT_AK8DiPFJet250_200_TrimMass30_v2", "HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV_p20_v2", "HLT_AK8DiPFJet250_200_TrimMass30_BTagCSV_p20_v2", "HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_NoID", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_Mu17_Mu8_v1", "HLT_ZeroBias_v2", "HLT_Photon22_v2 ","HLT_Photon30_v3 ","HLT_Photon36_v3 ","HLT_Photon50_v3 ","HLT_Photon75_v3 ","HLT_Photon90_v3 ","HLT_Photon120_v3", "HLT_Photon165_HE10_v3", "HLT_AK8PFJet200_v4", "HLT_AK8PFJet260_v5", "HLT_AK8PFJet320_v5", "HLT_AK8PFJet400_v5", "HLT_AK8PFJet450_v5", "HLT_AK8PFJet500_v5", "HLT_AK8PFJet260_v9", "HLT_AK8PFJet320_v9",  "HLT_AK8PFJet400_v9",  "HLT_AK8PFJet450_v9",  "HLT_AK8PFJet500_v9", "HLT_PFHT400_v7", "HLT_PFHT475_v7", "HLT_PFHT600_v8", "HLT_PFHT650_v8", "HLT_PFHT800_v7", "HLT_PFHT900_v6", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v7", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v2", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v2", "HLT_AK8PFJet200_v1", "HLT_AK8PFJet260_v1", "HLT_AK8PFJet320_v1", "HLT_AK8PFJet400_v1", "HLT_AK8PFJet450_v1", "HLT_AK8PFJet500_v1", "HLT_PFJet200_v5", "HLT_PFJet260_v5", "HLT_PFJet320_v5", "HLT_PFJet400_v5", "HLT_PFJet450_v5", "HLT_PFJet500_v5", "HLT_PFHT300_v3", "HLT_PFHT350_v4", "HLT_PFHT400_v3", "HLT_PFHT475_v3", "HLT_PFHT600_v4", "HLT_PFHT650_v4", "HLT_PFHT800_v3", "HLT_PFHT900_v2", "HLT_PFHT600_v3", "HLT_PFHT650_v3", "HLT_PFHT800_v2", "HLT_PFHT900_v1", "HLT_PFJet320_v4",  "HLT_PFJet400_v4",  "HLT_PFJet450_v4",  "HLT_PFJet500_v4"]
 
@@ -200,6 +225,9 @@ process.load("ttDM.treeDumper.topplusdmedmRootTreeMaker_cff")
 process.DMTreesDumper.channelInfo.SingleElTriggers=cms.vstring(SingleElTriggers)
 process.DMTreesDumper.channelInfo.SingleMuTriggers=cms.vstring(SingleMuTriggers)
 process.DMTreesDumper.channelInfo.hadronicTriggers=cms.vstring(hadronTriggers)
+process.DMTreesDumper.channelInfo.HadronPFHT800Triggers=cms.vstring(HadronPFHT800Triggers)
+process.DMTreesDumper.channelInfo.HadronPFHT900Triggers=cms.vstring(HadronPFHT900Triggers)
+process.DMTreesDumper.channelInfo.HadronPFJet450Triggers=cms.vstring(HadronPFJet450Triggers)
 
 if options.addPartonInfo:
     #if options.isData: #G
