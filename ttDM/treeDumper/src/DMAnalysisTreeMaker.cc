@@ -2078,7 +2078,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
     if(doPreselection){
       bool passes = true;
-      bool metCondition = (metptCorr >100.0 && Ht > 400.);
+      bool metCondition = (/*metptCorr >100.0 &&*/ Ht > 400.);
 
       float lep1phi = float_values["Event_Lepton1_Phi"];
       float lep1pt = float_values["Event_Lepton1_Pt"];
