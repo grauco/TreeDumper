@@ -36,7 +36,6 @@
 #include "./mt2w_bisect.h"
 #include "./mt2bl_bisect.h"
 #include "./Mt2Com_bisect.h"
-//#include "./EquationSolver.h"
 #include "./DMTopVariables.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
@@ -49,7 +48,6 @@
 #include <TMVA/Reader.h>
 #include <string>
 #include <iostream>
-//#include "TopTagger/Resolved/interface/KinematicFitter.hh"
 
 //using namespace reco;
 using namespace edm;
@@ -110,12 +108,6 @@ private:
   // spectator variables, not used for MVA evaluation
   int isSig, b_mis, w_mis, wb_mis;
   float mtop;
-  // MVA input variables
-  //  float bdt_qgid1, bdt_qgid2;
-  //  float bdt_dphij1b, bdt_dphij2b, bdt_drj1b, bdt_drj2b;
-  //  float bdt_bjcsv, bdt_jet1csv, bdt_jet2csv;
-  //  float bdt_prob;
-  //  TMVA::Reader res_topmvaReader;
 
   double jetUncertainty(double pt, double eta, string syst);
   double jetUncertainty8(double pt, double eta, string syst);
@@ -266,6 +258,7 @@ private:
   bool changeJECs;
   bool isData, applyRes;
   bool isV2;
+  string EraLabel;
   edm::Handle<double> rho;
   double Rho;
   edm::Handle<reco::GenParticleCollection> genParticles;   
@@ -344,135 +337,109 @@ private:
     jsfscsvl_subj_b_tag_down, 
     jsfscsvl_subj_mistag_up, 
     jsfscsvl_subj_mistag_down;
+
+  //tight AK4 b-tagging weights
   
   BTagWeight b_csvt_0_tags= BTagWeight(0,1000),
-    b_csvt_1_tag= BTagWeight(1,1000),
-    b_csvt_1_2_tags= BTagWeight(2,1000),
-    b_csvt_2_tags= BTagWeight(3,1000);
+    b_csvt_1_tag= BTagWeight(1,1000);
 
   double b_weight_csvt_0_tags,
-    b_weight_csvt_1_tag,
-    b_weight_csvt_1_2_tags,
-    b_weight_csvt_2_tags;
+    b_weight_csvt_1_tag;
   double b_weight_csvt_0_tags_mistag_up,
-    b_weight_csvt_1_tag_mistag_up,
-    b_weight_csvt_1_2_tags_mistag_up,
-    b_weight_csvt_2_tags_mistag_up;
+    b_weight_csvt_1_tag_mistag_up;
   double b_weight_csvt_0_tags_mistag_down,
-    b_weight_csvt_1_tag_mistag_down,
-    b_weight_csvt_1_2_tags_mistag_down,
-    b_weight_csvt_2_tags_mistag_down;
+    b_weight_csvt_1_tag_mistag_down;
   double b_weight_csvt_0_tags_b_tag_down,
-    b_weight_csvt_1_tag_b_tag_down,
-    b_weight_csvt_1_2_tags_b_tag_down,
-    b_weight_csvt_2_tags_b_tag_down;
+    b_weight_csvt_1_tag_b_tag_down;
   double b_weight_csvt_0_tags_b_tag_up,
-    b_weight_csvt_1_tag_b_tag_up,
-    b_weight_csvt_1_2_tags_b_tag_up,
-    b_weight_csvt_2_tags_b_tag_up;
-  
+    b_weight_csvt_1_tag_b_tag_up;
+
+  //medium AK4 b-tagging weights
+    
   BTagWeight b_csvm_0_tags= BTagWeight(0,1000),
-    b_csvm_1_tag= BTagWeight(1,1000),
-    b_csvm_1_2_tags= BTagWeight(2,1000),
-    b_csvm_2_tags= BTagWeight(3,1000);
+    b_csvm_1_tag= BTagWeight(1,1000);
   
   double b_weight_csvm_0_tags,
-    b_weight_csvm_1_tag,
-    b_weight_csvm_1_2_tags,
-    b_weight_csvm_2_tags;
+    b_weight_csvm_1_tag;
   double b_weight_csvm_0_tags_mistag_up,
-    b_weight_csvm_1_tag_mistag_up,
-    b_weight_csvm_1_2_tags_mistag_up,
-    b_weight_csvm_2_tags_mistag_up;
+    b_weight_csvm_1_tag_mistag_up;
   double b_weight_csvm_0_tags_mistag_down,
-    b_weight_csvm_1_tag_mistag_down,
-    b_weight_csvm_1_2_tags_mistag_down,
-    b_weight_csvm_2_tags_mistag_down;
+    b_weight_csvm_1_tag_mistag_down;
   double b_weight_csvm_0_tags_b_tag_down,
-    b_weight_csvm_1_tag_b_tag_down,
-    b_weight_csvm_1_2_tags_b_tag_down,
-    b_weight_csvm_2_tags_b_tag_down;
+    b_weight_csvm_1_tag_b_tag_down;
   double b_weight_csvm_0_tags_b_tag_up,
-    b_weight_csvm_1_tag_b_tag_up,
-    b_weight_csvm_1_2_tags_b_tag_up,
-    b_weight_csvm_2_tags_b_tag_up;
-  
+    b_weight_csvm_1_tag_b_tag_up;
+
+  //medium subjets b-tagging weights
+    
   BTagWeight b_subj_csvm_0_tags= BTagWeight(0,1000),
-    b_subj_csvm_1_tag= BTagWeight(1,1000),
-    b_subj_csvm_1_2_tags= BTagWeight(0,1),
-    b_subj_csvm_2_tags= BTagWeight(1,1);
+    b_subj_csvm_1_tag= BTagWeight(1,1),
+    b_subj_csvm_0_1_tags= BTagWeight(0,1),
+    b_subj_csvm_2_tags= BTagWeight(2,1000);
 
   double b_weight_subj_csvm_0_tags,
     b_weight_subj_csvm_1_tag,
-    b_weight_subj_csvm_1_2_tags,
+    b_weight_subj_csvm_0_1_tags,
     b_weight_subj_csvm_2_tags;
   double b_weight_subj_csvm_0_tags_mistag_up,
     b_weight_subj_csvm_1_tag_mistag_up,
-    b_weight_subj_csvm_1_2_tags_mistag_up,
+    b_weight_subj_csvm_0_1_tags_mistag_up,
     b_weight_subj_csvm_2_tags_mistag_up;
   double b_weight_subj_csvm_0_tags_mistag_down,
     b_weight_subj_csvm_1_tag_mistag_down,
-    b_weight_subj_csvm_1_2_tags_mistag_down,
+    b_weight_subj_csvm_0_1_tags_mistag_down,
     b_weight_subj_csvm_2_tags_mistag_down;
   double b_weight_subj_csvm_0_tags_b_tag_down,
     b_weight_subj_csvm_1_tag_b_tag_down,
-    b_weight_subj_csvm_1_2_tags_b_tag_down,
+    b_weight_subj_csvm_0_1_tags_b_tag_down,
     b_weight_subj_csvm_2_tags_b_tag_down;
   double b_weight_subj_csvm_0_tags_b_tag_up,
     b_weight_subj_csvm_1_tag_b_tag_up,
-    b_weight_subj_csvm_1_2_tags_b_tag_up,
+    b_weight_subj_csvm_0_1_tags_b_tag_up,
     b_weight_subj_csvm_2_tags_b_tag_up;
+
+  //loose AK4 b-tagging weights
   
   BTagWeight b_csvl_0_tags= BTagWeight(0,1000),
-    b_csvl_1_tag= BTagWeight(1,1000),
-    b_csvl_1_2_tags= BTagWeight(0,1),
-    b_csvl_2_tags= BTagWeight(1,1);
+    b_csvl_1_tag= BTagWeight(1,1000);
   
   double b_weight_csvl_0_tags_mistag_up,
-    b_weight_csvl_1_tag_mistag_up,
-    b_weight_csvl_1_2_tags_mistag_up,
-    b_weight_csvl_2_tags_mistag_up;
+    b_weight_csvl_1_tag_mistag_up;
   double b_weight_csvl_0_tags_mistag_down,
-    b_weight_csvl_1_tag_mistag_down,
-    b_weight_csvl_1_2_tags_mistag_down,
-    b_weight_csvl_2_tags_mistag_down;
+    b_weight_csvl_1_tag_mistag_down;
   double b_weight_csvl_0_tags_b_tag_down,
-    b_weight_csvl_1_tag_b_tag_down,
-    b_weight_csvl_1_2_tags_b_tag_down,
-    b_weight_csvl_2_tags_b_tag_down;
+    b_weight_csvl_1_tag_b_tag_down;
   double b_weight_csvl_0_tags_b_tag_up,
-    b_weight_csvl_1_tag_b_tag_up,
-    b_weight_csvl_1_2_tags_b_tag_up,
-    b_weight_csvl_2_tags_b_tag_up;
+    b_weight_csvl_1_tag_b_tag_up;
   double b_weight_csvl_0_tags,
-    b_weight_csvl_1_tag,
-    b_weight_csvl_1_2_tags,
-    b_weight_csvl_2_tags;
-  
+    b_weight_csvl_1_tag;
+
+  //loose subjets b-tagging weights
+
   BTagWeight b_subj_csvl_0_tags= BTagWeight(0,1000),
-    b_subj_csvl_1_tag= BTagWeight(1,1000),
-    b_subj_csvl_1_2_tags= BTagWeight(2,1000),
-    b_subj_csvl_2_tags= BTagWeight(3,1000);
+    b_subj_csvl_1_tag= BTagWeight(1,1),
+    b_subj_csvl_0_1_tags= BTagWeight(0,1),
+    b_subj_csvl_2_tags= BTagWeight(2,1000);
   
   double b_weight_subj_csvl_0_tags_mistag_up,
     b_weight_subj_csvl_1_tag_mistag_up,
-    b_weight_subj_csvl_1_2_tags_mistag_up,
+    b_weight_subj_csvl_0_1_tags_mistag_up,
     b_weight_subj_csvl_2_tags_mistag_up;
   double b_weight_subj_csvl_0_tags_mistag_down,
     b_weight_subj_csvl_1_tag_mistag_down,
-    b_weight_subj_csvl_1_2_tags_mistag_down,
+    b_weight_subj_csvl_0_1_tags_mistag_down,
     b_weight_subj_csvl_2_tags_mistag_down;
   double b_weight_subj_csvl_0_tags_b_tag_down,
     b_weight_subj_csvl_1_tag_b_tag_down,
-    b_weight_subj_csvl_1_2_tags_b_tag_down,
+    b_weight_subj_csvl_0_1_tags_b_tag_down,
     b_weight_subj_csvl_2_tags_b_tag_down;
   double b_weight_subj_csvl_0_tags_b_tag_up,
     b_weight_subj_csvl_1_tag_b_tag_up,
-    b_weight_subj_csvl_1_2_tags_b_tag_up,
+    b_weight_subj_csvl_0_1_tags_b_tag_up,
     b_weight_subj_csvl_2_tags_b_tag_up;
   double b_weight_subj_csvl_0_tags,
     b_weight_subj_csvl_1_tag,
-    b_weight_subj_csvl_1_2_tags,
+    b_weight_subj_csvl_0_1_tags,
     b_weight_subj_csvl_2_tags;
   
   double MCTagEfficiency(string algo, int flavor, double pt, double eta);
@@ -576,6 +543,8 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   addPV = iConfig.getUntrackedParameter<bool>("addPV",true);
   changeJECs = iConfig.getUntrackedParameter<bool>("changeJECs",false);
   recalculateEA = iConfig.getUntrackedParameter<bool>("recalculateEA",true);
+  
+  EraLabel = iConfig.getUntrackedParameter<std::string>("EraLabel");
 
   isData = iConfig.getUntrackedParameter<bool>("isData",false);
   applyRes = iConfig.getUntrackedParameter<bool>("applyRes",false);
@@ -615,7 +584,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(doResolvedTopSemiLep){
     max_bjets_for_top  = iConfig.getUntrackedParameter<int>("maxBJetsForTop",2);//Take the 8 leading jets for the top permutations
   }
-  if(!isData){//G
+  if(!isData){
     max_genparticles  = iConfig.getUntrackedParameter<int>("maxGenPart",30);
    }
   systematics = iConfig.getParameter<std::vector<std::string> >("systematics");
@@ -823,7 +792,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
     trees["noSyst"]->Branch((nameshortv+"_size").c_str(), &sizes[nameshortv]);
   }
   
-  if(!isData){//G
+  if(!isData){
     string nameshortv= "genPart";
     vector<string> extravarstop = additionalVariables(nameshortv);
     //double max_instances_gen = max_genparticles*max((int)(max_instances[gen_label]),(int)(max_instances[gen_label]) );
@@ -870,24 +839,25 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
 
   initTreeWeightHistory(useLHEWeights);
 
-  string L1Name = "Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt"; //
-  string L1RCName = "Spring16_25nsV6_MC_L1RC_AK4PFchs.txt"; 
-  string L2Name = "Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt";
-  string L3Name = "Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt";
-  string L2L3ResName = "Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt";
+  string L1Name ="JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt"; 
+  string L1RCName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1RC_AK4PFchs.txt"; 
+  string L2Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
+  string L3Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
+  string L2L3ResName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt";
+
   if(isData){
-    L1Name   = "Spring16_25nsV6_DATA_L1FastJet_AK4PFchs.txt";
-    L1RCName = "Spring16_25nsV6_DATA_L1RC_AK4PFchs.txt";  
-    L2Name   = "Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt";
-    L3Name   = "Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
-    L2L3ResName = "Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt";
+    L1Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK4PFchs.txt").c_str() ;
+    L1RCName = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK4PFchs.txt").c_str() ;  
+    L2Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK4PFchs.txt").c_str() ;
+    L3Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK4PFchs.txt").c_str() ;
+    L2L3ResName = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK4PFchs.txt").c_str() ;
   }
 
   if(isV2){
-      L1Name = "Spring16_25nsV6_MC_L1FastJet_AK4PFchs.txt";
-      L2Name = "Spring16_25nsV6_MC_L2Relative_AK4PFchs.txt";
-      L3Name = "Spring16_25nsV6_MC_L3Absolute_AK4PFchs.txt";
-      L2L3ResName = "Spring16_25nsV6_MC_L2L3Residual_AK4PFchs.txt"; 
+    L1Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt";
+    L2Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
+    L3Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
+    L2L3ResName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt"; 
   }
 
   jecParsL1  = new JetCorrectorParameters(L1Name);
@@ -900,28 +870,28 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(isData)jecPars.push_back(*jecParsL2L3Residuals);
 
   jecCorr = new FactorizedJetCorrector(jecPars);
-  jecUnc  = new JetCorrectionUncertainty(*(new JetCorrectorParameters("Spring16_25nsV6_DATA_UncertaintySources_AK4PFchs.txt", "Total")));
+  jecUnc  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK4PFchs.txt").c_str() , "Total")));
 
   //JEC on AK8
 
-  string L1Name8 = "Spring16_25nsV6_MC_L1FastJet_AK8PFchs.txt"; 
-  string L1RCName8 = "Spring16_25nsV6_MC_L1RC_AK8PFchs.txt"; 
-  string L2Name8 = "Spring16_25nsV6_MC_L2Relative_AK8PFchs.txt";
-  string L3Name8 = "Spring16_25nsV6_MC_L3Absolute_AK8PFchs.txt";
-  string L2L3ResName8 = "Spring16_25nsV6_MC_L2L3Residual_AK8PFchs.txt";
+  string L1Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt"; 
+  string L1RCName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1RC_AK8PFchs.txt"; 
+  string L2Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
+  string L3Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
+  string L2L3ResName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt";
   if(isData){
-    L1Name8   = "Spring16_25nsV6_DATA_L1FastJet_AK8PFchs.txt";
-    L1RCName8 = "Spring16_25nsV6_DATA_L1RC_AK8PFchs.txt";  
-    L2Name8   = "Spring16_25nsV6_DATA_L2Relative_AK8PFchs.txt";
-    L3Name8   = "Spring16_25nsV6_DATA_L3Absolute_AK8PFchs.txt";
-    L2L3ResName8 = "Spring16_25nsV6_DATA_L2L3Residual_AK8PFchs.txt";
+    L1Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK8PFchs.txt").c_str() ;
+    L1RCName8 = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK8PFchs.txt").c_str() ;  
+    L2Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK8PFchs.txt").c_str() ;
+    L3Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK8PFchs.txt").c_str() ;
+    L2L3ResName8 = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK8PFchs.txt").c_str() ;
   }
 
   if(isV2){
-      L1Name8 = "Spring16_25nsV6_MC_L1FastJet_AK8PFchs.txt";
-      L2Name8 = "Spring16_25nsV6_MC_L2Relative_AK8PFchs.txt";
-      L3Name8 = "Spring16_25nsV6_MC_L3Absolute_AK8PFchs.txt";
-      L2L3ResName8 = "Spring16_25nsV6_MC_L2L3Residual_AK8PFchs.txt"; 
+    L1Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt";
+    L2Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
+    L3Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
+    L2L3ResName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt"; 
   }
 
   jecParsL18  = new JetCorrectorParameters(L1Name8);
@@ -934,7 +904,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(isData)jecPars8.push_back(*jecParsL2L3Residuals8);
 
   jecCorr8 = new FactorizedJetCorrector(jecPars8);
-  jecUnc8  = new JetCorrectionUncertainty(*(new JetCorrectorParameters("Spring16_25nsV6_DATA_UncertaintySources_AK8PFchs.txt", "Total")));
+  jecUnc8  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK8PFchs.txt").c_str() , "Total")));
 
   
   isFirstEvent = true;
@@ -964,13 +934,12 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   nInitEventsHisto->Fill(0.1);
   nInitEvents+=1;
-  //cout << "opening analyze" << endl;
+
   // event info
   iEvent.getByToken(t_lumiBlock_,lumiBlock );
   iEvent.getByToken(t_runNumber_,runNumber );
   iEvent.getByToken(t_eventNumber_,eventNumber );
 
-  //  cout << "starting gen" << endl;
   if(useLHE){
     iEvent.getByToken(t_lhes_, lhes);
   }
@@ -1130,11 +1099,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     if(useLHEWeights){
       getEventLHEWeights();
     }
-    //  }
-  //if(1>0){
-    //G
-    //cout << "starting gen"<<endl;
-    //if(!isData) {//G
+
+    //if(!isData) {//GEN PARTICLES HAVE TO BE FIXED
     if(0>1){ 
     iEvent.getByToken(t_genParticleCollection_ , genParticles);
     
@@ -1152,13 +1118,12 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  MomStatus.push_back(momStatus);
       }
 
-      cout << "starting gen 2" << endl;
       for(size_t i=0;/*i<genParticles->size()*/(size_t)max_instances[gen_label]/*max((int)genParticles->size(),(int)30)*/;++i){
 	string nameshortv= "genPart";
 	string pref = obj_to_pref[gen_label];
 
 	const reco::GenParticle& p = (*genParticles)[i];
-	cout << "genPart" << endl;
+
 	/*vfloats_values[makeName(gen_label,pref,"Pt")][i]=(float)((p.p4()).Pt());
 	vfloats_values[makeName(gen_label,pref,"Eta")][i]=(float)((p.p4()).Eta());
 	vfloats_values[makeName(gen_label,pref,"Phi")][i]=(float)((p.p4()).Phi());
@@ -1166,7 +1131,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	vfloats_values[makeName(gen_label,pref,"Status")][i]=(int)(p.status());
 	vfloats_values[makeName(gen_label,pref,"Id")][i]=(int)(p.pdgId());
 	*/
-	cout << "genPart mom" << endl;
+
 	int momId=-999;
 	//int momStatus =-999;
 	/*momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
@@ -1183,7 +1148,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  vfloats_values[makeName(gen_label,pref,"dauId3")][i]=(float)(p.daughter(j+1)->pdgId());
 	  vfloats_values[makeName(gen_label,pref,"dauStatus3")][i]=(float)(p.daughter(j+1)->status());
 	  }*/
-	cout << "ewk" << endl;
+
 	if(p.pdgId()==momId && isEWKID(p.pdgId()) && getParticleWZ){
 	  //cout << "inside gen loop" << endl;
 	  TLorentzVector vec;
@@ -1219,7 +1184,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  if(abs(p.pdgId())==23 && p.status()==62){
 	    double wweight = getZEWKPtWeight((p.p4()).Pt());
 	    float_values["Event_Z_EW_Weight"]= wweight;
-	    //    cout << "w weight:\t" << wweight << endl;
+
 	  }
 	  if(abs(p.pdgId())==24 && p.status()==62){
 	    double wweight = getWEWKPtWeight((p.p4()).Pt());
@@ -1227,11 +1192,11 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	    float_values["Event_W_EW_Weight"]= wweight;
 	     cout << "z weight:\t" << wweight << endl;
 	     }   
-	  // cout << "closing ewk loop"<< endl;
+	 
 	}
-	//cout << "closing genloop" << endl;
+
       }
-      //cout << "starting Z" << endl;
+  
       //Z
       if(parmu.size()>0&& parmubar.size()>0){parz.push_back(parmu.at(0)+parmubar.at(0)) ;}
       if(pare.size()>0&& parebar.size()>0){parz.push_back(pare.at(0)+parebar.at(0)) ;}
@@ -1243,7 +1208,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       if(   float_values["Event_Z_QCD_Weight"] ==1 &&parz.size()>0 )    float_values["Event_Z_QCD_Weight"]= getWPtWeight(parz.at(0).Pt());
 
       //W
-      //      cout << "starting W" << endl;
       if(parmu.size()>0&& parnumubar.size()>0){parw.push_back(parmu.at(0)+parnumubar.at(0)) ;}
 
       if(pare.size()>0&& parnuebar.size()>0){parw.push_back(pare.at(0)+parnuebar.at(0)) ;}
@@ -1270,7 +1234,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   //Part 3: filling the additional variables
 
-  //  cout << "starting boosted and trigger" << endl;
   //boosted part
   iEvent.getByToken(jetAK8vSubjetIndex0, ak8jetvSubjetIndex0);
   iEvent.getByToken(jetAK8vSubjetIndex1, ak8jetvSubjetIndex1);
@@ -1294,11 +1257,9 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   if(useMETFilters){
    iEvent.getByToken(t_metBits_,metBits );
-    //    iEvent.getByToken(t_metNames_,metNames );
     if(isFirstEvent){
       for(size_t bt = 0; bt < metNames->size();++bt){
 	std::string tname = metNames->at(bt);
-	//cout << "test tname "<< tname << " passes "<< metBits->at(bt)<< endl;
       }
     }
     getMETFilters();
@@ -1321,7 +1282,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     nPV = pvZ->size();
   }
   
-  //  cout << "starting vectors" << endl;
   //Part 1 taking the obs values from the edm file
   for (;itPsets!=physObjects.end();++itPsets){ 
     variablesFloat = itPsets->template getParameter<std::vector<edm::InputTag> >("variablesF"); 
@@ -1449,13 +1409,12 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
   vector<float> leptonsCharge;
 
   vector<int> flavors;
-  //  cout << "starting loop systematics" << endl;
 
   for (size_t s = 0; s< systematics.size();++s){
     
     int nb=0,nc=0,nudsg=0;
 
-    int ncsvl_tags=0,ncsvt_tags=0,ncsvm_tags=0;//, njets_tottag=0;
+    int ncsvl_tags=0,ncsvt_tags=0,ncsvm_tags=0;
     int ncsvl_subj_tags=0,ncsvm_subj_tags=0;
     getEventTriggers();
 
@@ -1518,7 +1477,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     } 
     int lepidx=0;
     int bjetidx=0;
-    //cout << "starting photons" << endl;
+
     //Photons
     for(int ph = 0;ph < max_instances[photon_label] ;++ph){
       string pref = obj_to_pref[photon_label];
@@ -1564,12 +1523,9 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	if( sieie < 0.0267 &&   hoe < 0.05 &&   pho_isoCea < 1.25 &&   pho_isoNea < (1.65+exp(0.0040*pt +0.9402) ) &&   pho_isoPea < (1.33+0.0043*pt ) )vfloats_values[photon_label+"_isMediumSpring15"][ph]=1.0;
 	if( sieie < 0.0267 &&   hoe < 0.05 &&   pho_isoCea < 0.65 &&   pho_isoNea < (0.93+exp(0.0040*pt +0.9402) ) &&   pho_isoPea < (0.61+0.0043*pt ) )vfloats_values[photon_label+"_isTightSpring15"][ph]=1.0;
       }
-      //WORKING POINTS TO BE CHECKED
     
     }
-    //G                                                                                                                                              
-    //cout << "starting muons"<<endl;
-    //    cout << "starting muons" << endl;
+
     //Muons
     for(int mu = 0;mu < max_instances[mu_label] ;++mu){
       string pref = obj_to_pref[mu_label];
@@ -1641,9 +1597,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	loosemuons.push_back(muon);
       }
     }
-    //G                                                                                                                                              
-    //cout << "starting electrons"<<endl;
-    //    cout << "starting electrons" << endl;
+
     //Electrons:
     for(int el = 0;el < max_instances[ele_label] ;++el){
       string pref = obj_to_pref[ele_label];
@@ -1764,9 +1718,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       float_values["Event_Lepton2_Charge"]=leptonsCharge.at(secondidx);
 
     }
-    //G                                                                                                                                              
-    //cout << "starting jets"<<endl;
-    //    cout << "starting jets" << endl;
+
     //Jets:
     double Ht=0;
     double corrMetPx =0;
@@ -1833,7 +1785,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	float unc = jetUncertainty(ptCorr,eta,syst);
 	ptCorr = ptCorr * (1 + unc);
 	energyCorr = energyCorr * (1 + unc);
-	//cout << "pt uncor: " << pt << "pt corr: " << ptCorr << endl;
+
 	corrMetPx -=(cos(phi)*(ptCorr-ptzero));
         corrMetPy -=(sin(phi)*(ptCorr-ptzero));
 	
@@ -2003,7 +1955,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  jsfscsvl_b_tag_down.push_back(BTagWeight::JetInfo(csvleff, sfcsvl_b_tag_down));
 	  jsfscsvm_b_tag_down.push_back(BTagWeight::JetInfo(csvmeff, sfcsvm_b_tag_down));
 
-	  //cout<< "jet :# "<< j << "sf is " <<sfcsvt << " eff is "<<csvteff<<endl;
 	}
 	
 	if(isCSVT && passesCut &&  passesID && passesDR && fabs(eta) < 2.4) {
@@ -2018,7 +1969,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  float_values["Event_nCSVMJets"+j_n.str()]+=1.0;
 	  if(ji==0){
 	    ncsvm_tags +=1;
-	    //	    cout << " jet "<< j<< " isBJET "<<endl;
 	    TLorentzVector bjet;
 	    bjet.SetPtEtaPhiE(ptCorr, eta, phi, energyCorr);
 	    bjets.push_back(bjet);
@@ -2047,9 +1997,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       corrMetPx -=signmet*DUnclusteredMETPx*0.1;
       corrMetPy -=signmet*DUnclusteredMETPy*0.1;
     }
-    //G                                                                                                                                              
-    //cout << "starting met"<<endl;
-    //    cout << "starting met" << endl;
+ 
     //Met and mt
     string pref = obj_to_pref[met_label];
     float metpt = vfloats_values[makeName(met_label,pref,"Pt")][0];
@@ -2078,7 +2026,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
     if(doPreselection){
       bool passes = true;
-      bool metCondition = (/*metptCorr >100.0 &&*/ Ht > 400.);
+      bool metCondition = (metptCorr >100.0 || Ht > 400.);
 
       float lep1phi = float_values["Event_Lepton1_Phi"];
       float lep1pt = float_values["Event_Lepton1_Pt"];
@@ -2144,10 +2092,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       double Mt2w = Mt2cal->calculateMT2w(jetsnob,bjets,lepton, met,"MT2w");
       float_values["Event_Mt2w"] = (float)Mt2w;    
     }
-    
-    //G                                                                                                                                              
-    //cout << "starting ak8"<<endl;
-    //    cout << "starting AK8 jets" << endl;
+
     for(int s = 0;s < min(max_instances[boosted_tops_subjets_label],sizes[boosted_tops_subjets_label]) ;++s){
       string pref = obj_to_pref[boosted_tops_subjets_label];
       float pt  = vfloats_values[makeName(boosted_tops_subjets_label,pref,"Pt")][s];
@@ -2182,7 +2127,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       if(subjcsv>0.8484 && fabs(eta) < 2.4) {
 	ncsvm_subj_tags +=1;
       }
-      //cout << "medium csv subj tag is: " << ncsvm_subj_tags << endl;
+      
       double csvleff_subj = MCTagEfficiencySubjet("csvl",flavorSubjet,pt, eta);
       double sfcsvl_subj = TagScaleFactorSubjet("csvl", flavorSubjet, "noSyst", pt);
       
@@ -2643,9 +2588,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	}
       }
     }
-    //G                                                                                                                                              
-    //cout << "starting btag"<<endl;
-    //    cout << "starting btagging" << endl;
+
     //BTagging part
     if(doBTagSF){
     //CSVT
@@ -2662,23 +2605,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_csvt_1_tag_mistag_down = b_csvt_1_tag.weight(jsfscsvt_mistag_down, ncsvt_tags);  
       b_weight_csvt_1_tag_b_tag_up = b_csvt_1_tag.weight(jsfscsvt_b_tag_up, ncsvt_tags);  
       b_weight_csvt_1_tag_b_tag_down = b_csvt_1_tag.weight(jsfscsvt_b_tag_down, ncsvt_tags);
-      
-      //2 tags
-      b_weight_csvt_2_tags = b_csvt_2_tags.weight(jsfscsvt, ncsvt_tags);  
-      b_weight_csvt_2_tags_mistag_up = b_csvt_2_tags.weight(jsfscsvt_mistag_up, ncsvt_tags);  
-      b_weight_csvt_2_tags_mistag_down = b_csvt_2_tags.weight(jsfscsvt_mistag_down, ncsvt_tags);  
-      b_weight_csvt_2_tags_b_tag_up = b_csvt_2_tags.weight(jsfscsvt_b_tag_up, ncsvt_tags);  
-      b_weight_csvt_2_tags_b_tag_down = b_csvt_2_tags.weight(jsfscsvt_b_tag_down, ncsvt_tags);  
-      
-      //1-2 tags
-      b_weight_csvt_1_2_tags = b_csvt_1_2_tags.weight(jsfscsvt, ncsvt_tags);  
-      b_weight_csvt_1_2_tags_b_tag_up = b_csvt_1_2_tags.weight(jsfscsvt_b_tag_up, ncsvt_tags);  
-      b_weight_csvt_1_2_tags_b_tag_down = b_csvt_1_2_tags.weight(jsfscsvt_b_tag_down, ncsvt_tags);  
-      b_weight_csvt_1_2_tags_mistag_up = b_csvt_1_2_tags.weight(jsfscsvt_mistag_up, ncsvt_tags);  
-      b_weight_csvt_1_2_tags_mistag_down = b_csvt_1_2_tags.weight(jsfscsvt_mistag_down, ncsvt_tags);  
 
     //CSVM
-      //cout << "subj tags is: " << ncsvm_subj_tags << endl;
       //0 tags
       b_weight_csvm_0_tags = b_csvm_0_tags.weight(jsfscsvm, ncsvm_tags);  
       b_weight_csvm_0_tags_mistag_up = b_csvm_0_tags.weight(jsfscsvm_mistag_up, ncsvm_tags);  
@@ -2686,11 +2614,11 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_csvm_0_tags_b_tag_up = b_csvm_0_tags.weight(jsfscsvm_b_tag_up, ncsvm_tags);  
       b_weight_csvm_0_tags_b_tag_down = b_csvm_0_tags.weight(jsfscsvm_b_tag_down, ncsvm_tags);  
       
-      b_weight_subj_csvm_0_tags = b_csvm_0_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
-      b_weight_subj_csvm_0_tags_mistag_up = b_csvm_0_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_0_tags_mistag_down = b_csvm_0_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
-      b_weight_subj_csvm_0_tags_b_tag_up = b_csvm_0_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_0_tags_b_tag_down = b_csvm_0_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
+      b_weight_subj_csvm_0_tags = b_subj_csvm_0_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_tags_mistag_up = b_subj_csvm_0_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_tags_mistag_down = b_subj_csvm_0_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_tags_b_tag_up = b_subj_csvm_0_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_tags_b_tag_down = b_subj_csvm_0_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
    
       //1 tag
       b_weight_csvm_1_tag = b_csvm_1_tag.weight(jsfscsvm, ncsvm_tags);  
@@ -2699,39 +2627,27 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_csvm_1_tag_b_tag_up = b_csvm_1_tag.weight(jsfscsvm_b_tag_up, ncsvm_tags);  
       b_weight_csvm_1_tag_b_tag_down = b_csvm_1_tag.weight(jsfscsvm_b_tag_down, ncsvm_tags);  
 
-      b_weight_subj_csvm_1_tag = b_csvm_1_tag.weight(jsfscsvm_subj, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_tag_mistag_up = b_csvm_1_tag.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_tag_mistag_down = b_csvm_1_tag.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_tag_b_tag_up = b_csvm_1_tag.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_tag_b_tag_down = b_csvm_1_tag.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
+      b_weight_subj_csvm_1_tag = b_subj_csvm_1_tag.weight(jsfscsvm_subj, ncsvm_subj_tags);  
+      b_weight_subj_csvm_1_tag_mistag_up = b_subj_csvm_1_tag.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_1_tag_mistag_down = b_subj_csvm_1_tag.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
+      b_weight_subj_csvm_1_tag_b_tag_up = b_subj_csvm_1_tag.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_1_tag_b_tag_down = b_subj_csvm_1_tag.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
       
       //2 tags
-      b_weight_csvm_2_tags = b_csvm_2_tags.weight(jsfscsvm, ncsvm_tags);  
-      b_weight_csvm_2_tags_mistag_up = b_csvm_2_tags.weight(jsfscsvm_mistag_up, ncsvm_tags);  
-      b_weight_csvm_2_tags_mistag_down = b_csvm_2_tags.weight(jsfscsvm_mistag_down, ncsvm_tags);  
-      b_weight_csvm_2_tags_b_tag_up = b_csvm_2_tags.weight(jsfscsvm_b_tag_up, ncsvm_tags);  
-      b_weight_csvm_2_tags_b_tag_down = b_csvm_2_tags.weight(jsfscsvm_b_tag_down, ncsvm_tags);  
 
-      b_weight_subj_csvm_2_tags = b_csvm_2_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
-      b_weight_subj_csvm_2_tags_mistag_up = b_csvm_2_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_2_tags_mistag_down = b_csvm_2_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
-      b_weight_subj_csvm_2_tags_b_tag_up = b_csvm_2_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_2_tags_b_tag_down = b_csvm_2_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
+      b_weight_subj_csvm_2_tags = b_subj_csvm_2_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
+      b_weight_subj_csvm_2_tags_mistag_up = b_subj_csvm_2_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_2_tags_mistag_down = b_subj_csvm_2_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
+      b_weight_subj_csvm_2_tags_b_tag_up = b_subj_csvm_2_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_2_tags_b_tag_down = b_subj_csvm_2_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
       
-      //1-2 tags
-      b_weight_csvm_1_2_tags = b_csvm_1_2_tags.weight(jsfscsvm, ncsvm_tags);  
-      //giorgia
-      //cout << "ncsvm_tag: " << ncsvm_tags <<  " b_weight_csvm_0_tags: " << b_weight_csvm_0_tags << " b_weight_csvm_1_2_tags: " << b_weight_csvm_1_2_tags << endl;
-      b_weight_csvm_1_2_tags_b_tag_up = b_csvm_1_2_tags.weight(jsfscsvm_b_tag_up, ncsvm_tags);  
-      b_weight_csvm_1_2_tags_b_tag_down = b_csvm_1_2_tags.weight(jsfscsvm_b_tag_down, ncsvm_tags);  
-      b_weight_csvm_1_2_tags_mistag_up = b_csvm_1_2_tags.weight(jsfscsvm_mistag_up, ncsvm_tags);  
-      b_weight_csvm_1_2_tags_mistag_down = b_csvm_1_2_tags.weight(jsfscsvm_mistag_down, ncsvm_tags);  
+      //0-1 tags  
 
-      b_weight_subj_csvm_1_2_tags = b_csvm_1_2_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_2_tags_mistag_up = b_csvm_1_2_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_2_tags_mistag_down = b_csvm_1_2_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_2_tags_b_tag_up = b_csvm_1_2_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
-      b_weight_subj_csvm_1_2_tags_b_tag_down = b_csvm_1_2_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
+      b_weight_subj_csvm_0_1_tags = b_subj_csvm_0_1_tags.weight(jsfscsvm_subj, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_1_tags_mistag_up = b_subj_csvm_0_1_tags.weight(jsfscsvm_subj_mistag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_1_tags_mistag_down = b_subj_csvm_0_1_tags.weight(jsfscsvm_subj_mistag_down, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_1_tags_b_tag_up = b_subj_csvm_0_1_tags.weight(jsfscsvm_subj_b_tag_up, ncsvm_subj_tags);  
+      b_weight_subj_csvm_0_1_tags_b_tag_down = b_subj_csvm_0_1_tags.weight(jsfscsvm_subj_b_tag_down, ncsvm_subj_tags);
       
     //CSVL
       //0 tags
@@ -2741,11 +2657,11 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_csvl_0_tags_b_tag_up = b_csvl_0_tags.weight(jsfscsvl_b_tag_up, ncsvl_tags);  
       b_weight_csvl_0_tags_b_tag_down = b_csvl_0_tags.weight(jsfscsvl_b_tag_down, ncsvl_tags);  
 
-     b_weight_subj_csvl_0_tags = b_csvl_0_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
-      b_weight_subj_csvl_0_tags_mistag_up = b_csvl_0_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_0_tags_mistag_down = b_csvl_0_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
-      b_weight_subj_csvl_0_tags_b_tag_up = b_csvl_0_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_0_tags_b_tag_down = b_csvl_0_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
+      b_weight_subj_csvl_0_tags = b_subj_csvl_0_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_tags_mistag_up = b_subj_csvl_0_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_tags_mistag_down = b_subj_csvl_0_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_tags_b_tag_up = b_subj_csvl_0_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_tags_b_tag_down = b_subj_csvl_0_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
       
       //1 tag
       b_weight_csvl_1_tag = b_csvl_1_tag.weight(jsfscsvl, ncsvl_tags);  
@@ -2754,170 +2670,128 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_csvl_1_tag_b_tag_up = b_csvl_1_tag.weight(jsfscsvl_b_tag_up, ncsvl_tags);  
       b_weight_csvl_1_tag_b_tag_down = b_csvl_1_tag.weight(jsfscsvl_b_tag_down, ncsvl_tags);  
 
-      b_weight_subj_csvl_1_tag = b_csvl_1_tag.weight(jsfscsvl_subj, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_tag_mistag_up = b_csvl_1_tag.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_tag_mistag_down = b_csvl_1_tag.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_tag_b_tag_up = b_csvl_1_tag.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_tag_b_tag_down = b_csvl_1_tag.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
-      //2 tags
-      b_weight_csvl_2_tags = b_csvl_2_tags.weight(jsfscsvl, ncsvl_tags);  
-      b_weight_csvl_2_tags_mistag_up = b_csvl_2_tags.weight(jsfscsvl_mistag_up, ncsvl_tags);  
-      b_weight_csvl_2_tags_mistag_down = b_csvl_2_tags.weight(jsfscsvl_mistag_down, ncsvl_tags);  
-      b_weight_csvl_2_tags_b_tag_up = b_csvl_2_tags.weight(jsfscsvl_b_tag_up, ncsvl_tags);  
-      b_weight_csvl_2_tags_b_tag_down = b_csvl_2_tags.weight(jsfscsvl_b_tag_down, ncsvl_tags);  
+      b_weight_subj_csvl_1_tag = b_subj_csvl_1_tag.weight(jsfscsvl_subj, ncsvl_subj_tags);  
+      b_weight_subj_csvl_1_tag_mistag_up = b_subj_csvl_1_tag.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_1_tag_mistag_down = b_subj_csvl_1_tag.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
+      b_weight_subj_csvl_1_tag_b_tag_up = b_subj_csvl_1_tag.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_1_tag_b_tag_down = b_subj_csvl_1_tag.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
 
-      b_weight_subj_csvl_2_tags = b_csvl_2_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
-      b_weight_subj_csvl_2_tags_mistag_up = b_csvl_2_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_2_tags_mistag_down = b_csvl_2_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
-      b_weight_subj_csvl_2_tags_b_tag_up = b_csvl_2_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_2_tags_b_tag_down = b_csvl_2_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
+      //2 tags  
+
+      b_weight_subj_csvl_2_tags = b_subj_csvl_2_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
+      b_weight_subj_csvl_2_tags_mistag_up = b_subj_csvl_2_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_2_tags_mistag_down = b_subj_csvl_2_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
+      b_weight_subj_csvl_2_tags_b_tag_up = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_2_tags_b_tag_down = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
       
-      //1-2 tags
-      b_weight_csvl_1_2_tags = b_csvl_1_2_tags.weight(jsfscsvl, ncsvl_tags);  
-      b_weight_csvl_1_2_tags_b_tag_up = b_csvl_1_2_tags.weight(jsfscsvl_b_tag_up, ncsvl_tags);  
-      b_weight_csvl_1_2_tags_b_tag_down = b_csvl_1_2_tags.weight(jsfscsvl_b_tag_down, ncsvl_tags);  
-      b_weight_csvl_1_2_tags_mistag_up = b_csvl_1_2_tags.weight(jsfscsvl_mistag_up, ncsvl_tags);  
-      b_weight_csvl_1_2_tags_mistag_down = b_csvl_1_2_tags.weight(jsfscsvl_mistag_down, ncsvl_tags);  
+      //0-1 tags
       
-      b_weight_subj_csvl_1_2_tags = b_csvl_1_2_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_2_tags_mistag_up = b_csvl_1_2_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_2_tags_mistag_down = b_csvl_1_2_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_2_tags_b_tag_up = b_csvl_1_2_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
-      b_weight_subj_csvl_1_2_tags_b_tag_down = b_csvl_1_2_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
+      b_weight_subj_csvl_0_1_tags = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_1_tags_mistag_up = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj_mistag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_1_tags_mistag_down = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj_mistag_down, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_1_tags_b_tag_up = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
+      b_weight_subj_csvl_0_1_tags_b_tag_down = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
       
       float_values["Event_bWeight0CSVL_subj"]=b_weight_subj_csvl_0_tags;
       float_values["Event_bWeight1CSVL_subj"]=b_weight_subj_csvl_1_tag;
       float_values["Event_bWeight2CSVL_subj"]=b_weight_subj_csvl_2_tags;
-      float_values["Event_bWeight1_2CSVL_subj"]=b_weight_subj_csvl_1_2_tags;
+      float_values["Event_bWeight0_1CSVL_subj"]=b_weight_subj_csvl_0_1_tags;
       
       float_values["Event_bWeight0CSVM_subj"]=b_weight_subj_csvm_0_tags;
       float_values["Event_bWeight1CSVM_subj"]=b_weight_subj_csvm_1_tag;
       float_values["Event_bWeight2CSVM_subj"]=b_weight_subj_csvm_2_tags;
-      float_values["Event_bWeight1_2CSVM_subj"]=b_weight_subj_csvm_1_2_tags;
-      //cout << "b_weight_subj_csvm_1_2_tags: " << b_weight_subj_csvm_1_2_tags << endl; 
+      float_values["Event_bWeight0_1CSVM_subj"]=b_weight_subj_csvm_0_1_tags;
+
       //Mistag
       float_values["Event_bWeightMisTagUp0CSVL_subj"]=b_weight_subj_csvl_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVL_subj"]=b_weight_subj_csvl_1_tag_mistag_up;
       float_values["Event_bWeightMisTagUp2CSVL_subj"]=b_weight_subj_csvl_2_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1_2CSVL_subj"]=b_weight_subj_csvl_1_2_tags_mistag_up;
+      float_values["Event_bWeightMisTagUp0_1CSVL_subj"]=b_weight_subj_csvl_0_1_tags_mistag_up;
       
       float_values["Event_bWeightMisTagUp0CSVM_subj"]=b_weight_subj_csvm_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVM_subj"]=b_weight_subj_csvm_1_tag_mistag_up;
       float_values["Event_bWeightMisTagUp2CSVM_subj"]=b_weight_subj_csvm_2_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1_2CSVM_subj"]=b_weight_subj_csvm_1_2_tags_mistag_up;
+      float_values["Event_bWeightMisTagUp0_1CSVM_subj"]=b_weight_subj_csvm_0_1_tags_mistag_up;
     
       float_values["Event_bWeightMisTagDown0CSVL_subj"]=b_weight_subj_csvl_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVL_subj"]=b_weight_subj_csvl_1_tag_mistag_down;
       float_values["Event_bWeightMisTagDown2CSVL_subj"]=b_weight_subj_csvl_2_tags_mistag_down;
-      float_values["Event_bWeightMisTagDown1_2CSVL_subj"]=b_weight_subj_csvl_1_2_tags_mistag_down;
+      float_values["Event_bWeightMisTagDown0_1CSVL_subj"]=b_weight_subj_csvl_0_1_tags_mistag_down;
       
       float_values["Event_bWeightMisTagDown0CSVM_subj"]=b_weight_subj_csvm_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVM_subj"]=b_weight_subj_csvm_1_tag_mistag_down;
       float_values["Event_bWeightMisTagDown2CSVM_subj"]=b_weight_subj_csvm_2_tags_mistag_down;
-      float_values["Event_bWeightMisTagDown1_2CSVM_subj"]=b_weight_subj_csvm_1_2_tags_mistag_down;
+      float_values["Event_bWeightMisTagDown0_1CSVM_subj"]=b_weight_subj_csvm_0_1_tags_mistag_down;
       
       //Btag
       float_values["Event_bWeightBTagUp0CSVL_subj"]=b_weight_subj_csvl_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVL_subj"]=b_weight_subj_csvl_1_tag_b_tag_up;
       float_values["Event_bWeightBTagUp2CSVL_subj"]=b_weight_subj_csvl_2_tags_b_tag_up;
-      float_values["Event_bWeightBTagUp1_2CSVL_subj"]=b_weight_subj_csvl_1_2_tags_b_tag_up;
+      float_values["Event_bWeightBTagUp0_1CSVL_subj"]=b_weight_subj_csvl_0_1_tags_b_tag_up;
       
       float_values["Event_bWeightBTagUp0CSVM_subj"]=b_weight_subj_csvm_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVM_subj"]=b_weight_subj_csvm_1_tag_b_tag_up;
       float_values["Event_bWeightBTagUp2CSVM_subj"]=b_weight_subj_csvm_2_tags_b_tag_up;
-      float_values["Event_bWeightBTagUp1_2CSVM_subj"]=b_weight_subj_csvm_1_2_tags_b_tag_up;
+      float_values["Event_bWeightBTagUp0_1CSVM_subj"]=b_weight_subj_csvm_0_1_tags_b_tag_up;
 
       float_values["Event_bWeightBTagDown0CSVL_subj"]=b_weight_subj_csvl_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVL_subj"]=b_weight_subj_csvl_1_tag_b_tag_down;
       float_values["Event_bWeightBTagDown2CSVL_subj"]=b_weight_subj_csvl_2_tags_b_tag_down;
-      float_values["Event_bWeightBTagDown1_2CSVL_subj"]=b_weight_subj_csvl_1_2_tags_b_tag_down;
+      float_values["Event_bWeightBTagDown0_1CSVL_subj"]=b_weight_subj_csvl_0_1_tags_b_tag_down;
       
       float_values["Event_bWeightBTagDown0CSVM_subj"]=b_weight_subj_csvm_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVM_subj"]=b_weight_subj_csvm_1_tag_b_tag_down;
       float_values["Event_bWeightBTagDown2CSVM_subj"]=b_weight_subj_csvm_2_tags_b_tag_down;
-      float_values["Event_bWeightBTagDown1_2CSVM_subj"]=b_weight_subj_csvm_1_2_tags_b_tag_down;
+      float_values["Event_bWeightBTagDown0_1CSVM_subj"]=b_weight_subj_csvm_0_1_tags_b_tag_down;
       
       /////AK4
       
       float_values["Event_bWeight0CSVL"]=b_weight_csvl_0_tags;
       float_values["Event_bWeight1CSVL"]=b_weight_csvl_1_tag;
-      float_values["Event_bWeight2CSVL"]=b_weight_csvl_2_tags;
-      float_values["Event_bWeight1_2CSVL"]=b_weight_csvl_1_2_tags;
       
       float_values["Event_bWeight0CSVM"]=b_weight_csvm_0_tags;
       float_values["Event_bWeight1CSVM"]=b_weight_csvm_1_tag;
-      float_values["Event_bWeight2CSVM"]=b_weight_csvm_2_tags;
-      float_values["Event_bWeight1_2CSVM"]=b_weight_csvm_1_2_tags;
-      //cout << "b_weight_csvm_1_2_tags: " << b_weight_csvm_1_2_tags << endl;
 
       float_values["Event_bWeight0CSVT"]=b_weight_csvt_0_tags;
       float_values["Event_bWeight1CSVT"]=b_weight_csvt_1_tag;
-      float_values["Event_bWeight2CSVT"]=b_weight_csvt_2_tags;
-      float_values["Event_bWeight1_2CSVT"]=b_weight_csvt_1_2_tags;
-      
    
       //Mistag
       float_values["Event_bWeightMisTagUp0CSVL"]=b_weight_csvl_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVL"]=b_weight_csvl_1_tag_mistag_up;
-      float_values["Event_bWeightMisTagUp2CSVL"]=b_weight_csvl_2_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1_2CSVL"]=b_weight_csvl_1_2_tags_mistag_up;
       
       float_values["Event_bWeightMisTagUp0CSVM"]=b_weight_csvm_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVM"]=b_weight_csvm_1_tag_mistag_up;
-      float_values["Event_bWeightMisTagUp2CSVM"]=b_weight_csvm_2_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1_2CSVM"]=b_weight_csvm_1_2_tags_mistag_up;
     
       float_values["Event_bWeightMisTagUp0CSVT"]=b_weight_csvt_0_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1CSVT"]=b_weight_csvt_1_tag_mistag_up;
-      float_values["Event_bWeightMisTagUp2CSVT"]=b_weight_csvt_2_tags_mistag_up;
-      float_values["Event_bWeightMisTagUp1_2CSVT"]=b_weight_csvt_1_2_tags_mistag_up;
-      
+      float_values["Event_bWeightMisTagUp1CSVT"]=b_weight_csvt_1_tag_mistag_up;   
       
       float_values["Event_bWeightMisTagDown0CSVL"]=b_weight_csvl_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVL"]=b_weight_csvl_1_tag_mistag_down;
-      float_values["Event_bWeightMisTagDown2CSVL"]=b_weight_csvl_2_tags_mistag_down;
-      float_values["Event_bWeightMisTagDown1_2CSVL"]=b_weight_csvl_1_2_tags_mistag_down;
       
       float_values["Event_bWeightMisTagDown0CSVM"]=b_weight_csvm_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVM"]=b_weight_csvm_1_tag_mistag_down;
-      float_values["Event_bWeightMisTagDown2CSVM"]=b_weight_csvm_2_tags_mistag_down;
-      float_values["Event_bWeightMisTagDown1_2CSVM"]=b_weight_csvm_1_2_tags_mistag_down;
       
       float_values["Event_bWeightMisTagDown0CSVT"]=b_weight_csvt_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVT"]=b_weight_csvt_1_tag_mistag_down;
-      float_values["Event_bWeightMisTagDown2CSVT"]=b_weight_csvt_2_tags_mistag_down;
-      float_values["Event_bWeightMisTagDown1_2CSVT"]=b_weight_csvt_1_2_tags_mistag_down;
 
       //Btag
       float_values["Event_bWeightBTagUp0CSVL"]=b_weight_csvl_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVL"]=b_weight_csvl_1_tag_b_tag_up;
-      float_values["Event_bWeightBTagUp2CSVL"]=b_weight_csvl_2_tags_b_tag_up;
-      float_values["Event_bWeightBTagUp1_2CSVL"]=b_weight_csvl_1_2_tags_b_tag_up;
       
       float_values["Event_bWeightBTagUp0CSVM"]=b_weight_csvm_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVM"]=b_weight_csvm_1_tag_b_tag_up;
-      float_values["Event_bWeightBTagUp2CSVM"]=b_weight_csvm_2_tags_b_tag_up;
-      float_values["Event_bWeightBTagUp1_2CSVM"]=b_weight_csvm_1_2_tags_b_tag_up;
       
       float_values["Event_bWeightBTagUp0CSVT"]=b_weight_csvt_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVT"]=b_weight_csvt_1_tag_b_tag_up;
-      float_values["Event_bWeightBTagUp2CSVT"]=b_weight_csvt_2_tags_b_tag_up;
-      float_values["Event_bWeightBTagUp1_2CSVT"]=b_weight_csvt_1_2_tags_b_tag_up;
       
       float_values["Event_bWeightBTagDown0CSVL"]=b_weight_csvl_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVL"]=b_weight_csvl_1_tag_b_tag_down;
-      float_values["Event_bWeightBTagDown2CSVL"]=b_weight_csvl_2_tags_b_tag_down;
-      float_values["Event_bWeightBTagDown1_2CSVL"]=b_weight_csvl_1_2_tags_b_tag_down;
       
       float_values["Event_bWeightBTagDown0CSVM"]=b_weight_csvm_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVM"]=b_weight_csvm_1_tag_b_tag_down;
-      float_values["Event_bWeightBTagDown2CSVM"]=b_weight_csvm_2_tags_b_tag_down;
-      float_values["Event_bWeightBTagDown1_2CSVM"]=b_weight_csvm_1_2_tags_b_tag_down;
       
       float_values["Event_bWeightBTagDown0CSVT"]=b_weight_csvt_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVT"]=b_weight_csvt_1_tag_b_tag_down;
-      float_values["Event_bWeightBTagDown2CSVT"]=b_weight_csvt_2_tags_b_tag_down;
-      float_values["Event_bWeightBTagDown1_2CSVT"]=b_weight_csvt_1_2_tags_b_tag_down;
     }
     
     
@@ -3174,131 +3048,100 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
 
     addvar.push_back("bWeight0CSVT");
     addvar.push_back("bWeight1CSVT");
-    addvar.push_back("bWeight2CSVT");
-    addvar.push_back("bWeight1_2CSVT");
 
     addvar.push_back("bWeight0CSVM");
     addvar.push_back("bWeight1CSVM");
-    addvar.push_back("bWeight2CSVM");
-    addvar.push_back("bWeight1_2CSVM");
 
     addvar.push_back("bWeight0CSVL");
     addvar.push_back("bWeight1CSVL");
-    addvar.push_back("bWeight2CSVL");
-    addvar.push_back("bWeight1_2CSVL");
-
 
     addvar.push_back("bWeightMisTagDown0CSVT");
     addvar.push_back("bWeightMisTagDown1CSVT");
-    addvar.push_back("bWeightMisTagDown2CSVT");
-    addvar.push_back("bWeightMisTagDown1_2CSVT");
 
     addvar.push_back("bWeightMisTagDown0CSVM");
     addvar.push_back("bWeightMisTagDown1CSVM");
-    addvar.push_back("bWeightMisTagDown2CSVM");
-    addvar.push_back("bWeightMisTagDown1_2CSVM");
 
     addvar.push_back("bWeightMisTagDown0CSVL");
     addvar.push_back("bWeightMisTagDown1CSVL");
-    addvar.push_back("bWeightMisTagDown2CSVL");
-    addvar.push_back("bWeightMisTagDown1_2CSVL");
 
     addvar.push_back("bWeightMisTagUp0CSVT");
     addvar.push_back("bWeightMisTagUp1CSVT");
-    addvar.push_back("bWeightMisTagUp2CSVT");
-    addvar.push_back("bWeightMisTagUp1_2CSVT");
 
     addvar.push_back("bWeightMisTagUp0CSVM");
     addvar.push_back("bWeightMisTagUp1CSVM");
-    addvar.push_back("bWeightMisTagUp2CSVM");
-    addvar.push_back("bWeightMisTagUp1_2CSVM");
 
     addvar.push_back("bWeightMisTagUp0CSVL");
     addvar.push_back("bWeightMisTagUp1CSVL");
-    addvar.push_back("bWeightMisTagUp2CSVL");
-    addvar.push_back("bWeightMisTagUp1_2CSVL");
 
     addvar.push_back("bWeightBTagUp0CSVT");
     addvar.push_back("bWeightBTagUp1CSVT");
-    addvar.push_back("bWeightBTagUp2CSVT");
-    addvar.push_back("bWeightBTagUp1_2CSVT");
 
     addvar.push_back("bWeightBTagUp0CSVM");
     addvar.push_back("bWeightBTagUp1CSVM");
-    addvar.push_back("bWeightBTagUp2CSVM");
-    addvar.push_back("bWeightBTagUp1_2CSVM");
 
     addvar.push_back("bWeightBTagUp0CSVL");
     addvar.push_back("bWeightBTagUp1CSVL");
-    addvar.push_back("bWeightBTagUp2CSVL");
-    addvar.push_back("bWeightBTagUp1_2CSVL");
 
     addvar.push_back("bWeightBTagDown0CSVT");
     addvar.push_back("bWeightBTagDown1CSVT");
-    addvar.push_back("bWeightBTagDown2CSVT");
-    addvar.push_back("bWeightBTagDown1_2CSVT");
 
     addvar.push_back("bWeightBTagDown0CSVM");
     addvar.push_back("bWeightBTagDown1CSVM");
-    addvar.push_back("bWeightBTagDown2CSVM");
-    addvar.push_back("bWeightBTagDown1_2CSVM");
 
     addvar.push_back("bWeightBTagDown0CSVL");
     addvar.push_back("bWeightBTagDown1CSVL");
-    addvar.push_back("bWeightBTagDown2CSVL");
-    addvar.push_back("bWeightBTagDown1_2CSVL");
 
     //subjets
 
     addvar.push_back("bWeight0CSVM_subj");
     addvar.push_back("bWeight1CSVM_subj");
     addvar.push_back("bWeight2CSVM_subj");
-    addvar.push_back("bWeight1_2CSVM_subj");
+    addvar.push_back("bWeight0_1CSVM_subj");
 
     addvar.push_back("bWeight0CSVL_subj");
     addvar.push_back("bWeight1CSVL_subj");
     addvar.push_back("bWeight2CSVL_subj");
-    addvar.push_back("bWeight1_2CSVL_subj");
+    addvar.push_back("bWeight0_1CSVL_subj");
 
     addvar.push_back("bWeightMisTagDown0CSVM_subj");
     addvar.push_back("bWeightMisTagDown1CSVM_subj");
     addvar.push_back("bWeightMisTagDown2CSVM_subj");
-    addvar.push_back("bWeightMisTagDown1_2CSVM_subj");
+    addvar.push_back("bWeightMisTagDown0_1CSVM_subj");
 
     addvar.push_back("bWeightMisTagDown0CSVL_subj");
     addvar.push_back("bWeightMisTagDown1CSVL_subj");
     addvar.push_back("bWeightMisTagDown2CSVL_subj");
-    addvar.push_back("bWeightMisTagDown1_2CSVL_subj");
+    addvar.push_back("bWeightMisTagDown0_1CSVL_subj");
 
     addvar.push_back("bWeightMisTagUp0CSVM_subj");
     addvar.push_back("bWeightMisTagUp1CSVM_subj");
     addvar.push_back("bWeightMisTagUp2CSVM_subj");
-    addvar.push_back("bWeightMisTagUp1_2CSVM_subj");
+    addvar.push_back("bWeightMisTagUp0_1CSVM_subj");
 
     addvar.push_back("bWeightMisTagUp0CSVL_subj");
     addvar.push_back("bWeightMisTagUp1CSVL_subj");
     addvar.push_back("bWeightMisTagUp2CSVL_subj");
-    addvar.push_back("bWeightMisTagUp1_2CSVL_subj");
+    addvar.push_back("bWeightMisTagUp0_1CSVL_subj");
 
     addvar.push_back("bWeightBTagUp0CSVM_subj");
     addvar.push_back("bWeightBTagUp1CSVM_subj");
     addvar.push_back("bWeightBTagUp2CSVM_subj");
-    addvar.push_back("bWeightBTagUp1_2CSVM_subj");
+    addvar.push_back("bWeightBTagUp0_1CSVM_subj");
 
     addvar.push_back("bWeightBTagUp0CSVL_subj");
     addvar.push_back("bWeightBTagUp1CSVL_subj");
     addvar.push_back("bWeightBTagUp2CSVL_subj");
-    addvar.push_back("bWeightBTagUp1_2CSVL_subj");
+    addvar.push_back("bWeightBTagUp0_1CSVL_subj");
 
     addvar.push_back("bWeightBTagDown0CSVM_subj");
     addvar.push_back("bWeightBTagDown1CSVM_subj");
     addvar.push_back("bWeightBTagDown2CSVM_subj");
-    addvar.push_back("bWeightBTagDown1_2CSVM_subj");
+    addvar.push_back("bWeightBTagDown0_1CSVM_subj");
 
     addvar.push_back("bWeightBTagDown0CSVL_subj");
     addvar.push_back("bWeightBTagDown1CSVL_subj");
     addvar.push_back("bWeightBTagDown2CSVL_subj");
-    addvar.push_back("bWeightBTagDown1_2CSVL_subj");
+    addvar.push_back("bWeightBTagDown0_1CSVL_subj");
 
     addvar.push_back("T_Pt");
     addvar.push_back("T_Eta");
@@ -3816,7 +3659,7 @@ double DMAnalysisTreeMaker::resolSF(double eta, string syst)//DONE
   return 0.1;
  }
 
-double DMAnalysisTreeMaker::getEffectiveArea(string particle, double eta){ //TO DO
+double DMAnalysisTreeMaker::getEffectiveArea(string particle, double eta){ 
   double aeta = fabs(eta);
   if(particle=="photon"){
     if(aeta<1.0)return 0.0725;
@@ -3921,9 +3764,7 @@ float DMAnalysisTreeMaker::BTagWeight::weight(vector<JetInfo> jetTags, int tags)
       //std::cout << "nThis event should not pass the selection, what is it doing here?" << std::endl;
         return 0;
     }
-    //cout << "ciao" << endl;
     int njetTags = jetTags.size();
-    //    cout<< " njettags "<< njetTags<<endl;
     int comb = 1 << njetTags;
     float pMC = 0;
     float pData = 0;
@@ -4600,13 +4441,13 @@ double DMAnalysisTreeMaker::TagScaleFactor(string algo, int flavor, string syst,
 if(algo == "csvt"){
     if(syst ==  "noSyst") {
       if(abs(flavor)==5){
-        if (pt >= 30  && pt < 670) return (0.857294+(3.75846e-05*x));
+        if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
       }
       if(abs(flavor)==4){
-        if (pt >= 30  && pt < 670) return (0.857294+(3.75846e-05*x));
+        if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-        if( pt>=20 && pt < 1000) return 0.688619+260.84/(x*x);
+        if( pt>=20 && pt < 1000) return 0.971945+163.215/(x*x)+0.000517836*x;
       }
     }
      if(syst ==  "mistag_up") {
@@ -4634,48 +4475,56 @@ if(algo == "csvt"){
     }
   if(syst ==  "b_tag_up") {
       if(abs(flavor)==5){
-        if (pt >= 30  && pt < 50 ) return ((0.857294+(3.75846e-05*x))+0.028772119432687759);
-        if (pt >= 50  && pt < 70 ) return (0.857294+(3.75846e-05*x))+0.027094315737485886;
-        if (pt >= 70  && pt < 100) return (0.857294+(3.75846e-05*x))+0.029823761433362961;
-        if (pt >= 100 && pt < 140) return (0.857294+(3.75846e-05*x))+0.038315325975418091;
-        if (pt >= 140 && pt < 200) return (0.857294+(3.75846e-05*x))+0.043433453887701035;
-        if (pt >= 200 && pt < 300) return (0.857294+(3.75846e-05*x))+0.093691818416118622;
-        if (pt >= 300 && pt < 670) return (0.857294+(3.75846e-05*x))+0.084598012268543243;
+	if (pt >= 20  && pt < 30 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.066863462328910828;
+        if (pt >= 30  && pt < 50 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.027121582999825478;
+        if (pt >= 50  && pt < 70 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.024107675999403;
+        if (pt >= 70  && pt < 100) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.022856719791889191;
+        if (pt >= 100 && pt < 140) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.023871105164289474;
+        if (pt >= 140 && pt < 200) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.025544192641973495;
+        if (pt >= 200 && pt < 300) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.038816638290882111;
+        if (pt >= 300 && pt < 600) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.058599676936864853;
+	if (pt >= 600  && pt < 1000 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.10445025563240051;
       }
       if(abs(flavor)==4){
-        if (pt >= 30  && pt < 50 ) return (0.857294+(3.75846e-05*x))+0.01438605971634388;
-        if (pt >= 50  && pt < 70 ) return (0.857294+(3.75846e-05*x))+0.013547157868742943;
-        if (pt >= 70  && pt < 100) return (0.857294+(3.75846e-05*x))+0.01491188071668148;
-        if (pt >= 100 && pt < 140) return (0.857294+(3.75846e-05*x))+0.019157662987709045;
-        if (pt >= 140 && pt < 200) return (0.857294+(3.75846e-05*x))+0.021716726943850517;
-        if (pt >= 200 && pt < 300) return (0.857294+(3.75846e-05*x))+0.046845909208059311;
-        if (pt >= 300 && pt < 670) return (0.857294+(3.75846e-05*x))+0.042299006134271622;
+	if (pt >= 20  && pt < 30 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.033431731164455414;
+        if (pt >= 30  && pt < 50 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.013560791499912739;
+        if (pt >= 50  && pt < 70 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.0120538379997015;
+        if (pt >= 70  && pt < 100) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.011428359895944595;
+        if (pt >= 100 && pt < 140) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.011935552582144737;
+        if (pt >= 140 && pt < 200) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.012772096320986748;
+        if (pt >= 200 && pt < 300) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.019408319145441055;
+        if (pt >= 300 && pt < 600) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.029299838468432426;
+	if (pt >= 600  && pt < 1000 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))+0.052225127816200256;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-        if( pt>= 20 && pt < 1000) return (0.688619+260.84/(x*x))*(1+(0.144982+0.000116685*x+-1.0021e-07*x*x));
+        if( pt>= 20 && pt < 1000) return (0.971945+163.215/(x*x)+0.000517836*x)*(1+(0.291298+-0.000222983*x+1.69699e-07*x*x));
       }
     }
 if(syst ==  "b_tag_down") {
       if(abs(flavor)==5){
-        if (pt >= 30  && pt < 50 ) return 0.857294+((3.75846e-05*x)-0.028772119432687759);
-        if (pt >= 50  && pt < 70 ) return 0.857294+((3.75846e-05*x)-0.027094315737485886);
-        if (pt >= 70  && pt < 100) return 0.857294+((3.75846e-05*x)-0.029823761433362961);
-        if (pt >= 100 && pt < 140) return 0.857294+((3.75846e-05*x)-0.038315325975418091);
-        if (pt >= 140 && pt < 200) return 0.857294+((3.75846e-05*x)-0.043433453887701035);
-        if (pt >= 200 && pt < 300) return 0.857294+((3.75846e-05*x)-0.093691818416118622);
-        if (pt >= 300 && pt < 670) return 0.857294+((3.75846e-05*x)-0.084598012268543243);
+	if (pt >= 20  && pt < 30 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.066863462328910828;
+        if (pt >= 30  && pt < 50 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.027121582999825478;
+        if (pt >= 50  && pt < 70 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.024107675999403;
+        if (pt >= 70  && pt < 100) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.022856719791889191;
+        if (pt >= 100 && pt < 140) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.023871105164289474;
+        if (pt >= 140 && pt < 200) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.02554419264197349;
+        if (pt >= 200 && pt < 300) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.038816638290882111;
+        if (pt >= 300 && pt < 600) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.058599676936864853;
+	if (pt >= 600  && pt < 1000 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.10445025563240051;
       }
       if(abs(flavor)==4){
-        if (pt >= 30  && pt < 50 ) return 0.857294+((3.75846e-05*x)-0.01438605971634388);
-        if (pt >= 50  && pt < 70 ) return 0.857294+((3.75846e-05*x)-0.013547157868742943);
-        if (pt >= 70  && pt < 100) return 0.857294+((3.75846e-05*x)-0.01491188071668148);
-        if (pt >= 100 && pt < 140) return 0.857294+((3.75846e-05*x)-0.019157662987709045);
-        if (pt >= 140 && pt < 200) return 0.857294+((3.75846e-05*x)-0.021716726943850517);
-        if (pt >= 200 && pt < 300) return 0.857294+((3.75846e-05*x)-0.046845909208059311);
-        if (pt >= 300 && pt < 670) return 0.857294+((3.75846e-05*x)-0.042299006134271622);
+	if (pt >= 20  && pt < 30 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.033431731164455414;
+        if (pt >= 30  && pt < 50 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.013560791499912739;
+        if (pt >= 50  && pt < 70 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.0120538379997015;
+        if (pt >= 70  && pt < 100) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.011428359895944595;
+        if (pt >= 100 && pt < 140) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.011935552582144737;
+        if (pt >= 140 && pt < 200) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.012772096320986748;
+        if (pt >= 200 && pt < 300) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.019408319145441055;
+        if (pt >= 300 && pt < 600) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.029299838468432426;
+	if (pt >= 600  && pt < 1000 ) return (0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x))))-0.052225127816200256;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-        if ( pt>=20 && pt<1000) return(0.688619+260.84/(x*x))*(1-(0.144982+0.000116685*x+-1.0021e-07*x*x));
+        if ( pt>=20 && pt<1000) return (0.971945+163.215/(x*x)+0.000517836*x)*(1-(0.291298+-0.000222983*x+1.69699e-07*x*x));
       }
     }
  }                 
@@ -4683,13 +4532,13 @@ if(syst ==  "b_tag_down") {
   if(algo == "csvm"){
     if(syst ==  "noSyst") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return 0.901114+(1.32145e-05*x);
+	if (pt >= 20  && pt < 1000) return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.901114+(1.32145e-05*x);
+	if (pt >= 20  && pt < 1000) return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if (pt >= 20 && pt < 1000) return 0.980777+-0.00109334*x+4.2909e-06*x*x+-2.78512e-09*x*x*x;
+	if (pt >= 20 && pt < 1000) return 1.0589+0.000382569*x+-2.4252e-07*x*x+2.20966e-10*x*x*x;
       }
     }
     if(syst ==  "mistag_up") {
@@ -4718,67 +4567,73 @@ if(syst ==  "b_tag_down") {
 
     if(syst ==  "b_tag_up") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 50 ) return (0.901114+(1.32145e-05*x))+0.023258373141288757;
-	if (pt >= 50  && pt < 70 ) return (0.901114+(1.32145e-05*x))+0.023003481328487396;
-	if (pt >= 70  && pt < 100) return (0.901114+(1.32145e-05*x))+0.022424774244427681;
-	if (pt >= 100 && pt < 140) return (0.901114+(1.32145e-05*x))+0.032237973064184189;
-	if (pt >= 140 && pt < 200) return (0.901114+(1.32145e-05*x))+0.033661492168903351;
-	if (pt >= 200 && pt < 300) return (0.901114+(1.32145e-05*x))+0.064984261989593506;
-	if (pt >= 300 && pt < 670) return (0.901114+(1.32145e-05*x))+0.072893746197223663;
+	if (pt >= 20  && pt < 30 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.078885495662689209;
+	if (pt >= 30  && pt < 50 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.025339335203170776;
+	if (pt >= 50  && pt < 70 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.022487226873636246;
+	if (pt >= 70  && pt < 100) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.021372253075242043;
+	if (pt >= 100 && pt < 140) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.021989239379763603;
+	if (pt >= 140 && pt < 200) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.023777997121214867;
+	if (pt >= 200 && pt < 300) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.030794138088822365;
+	if (pt >= 300 && pt < 600) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.041836585849523544;
+	if (pt >= 600  && pt < 1000 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.063810773193836212;
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 50 ) return (0.901114+(1.32145e-05*x))+0.011629186570644379;
-	if (pt >= 50  && pt < 70 ) return (0.901114+(1.32145e-05*x))+0.011501740664243698;
-	if (pt >= 70  && pt < 100) return (0.901114+(1.32145e-05*x))+0.01121238712221384;
-	if (pt >= 100 && pt < 140) return (0.901114+(1.32145e-05*x))+0.0161189865320920949;
-	if (pt >= 140 && pt < 200) return (0.901114+(1.32145e-05*x))+0.016830746084451675;
-	if (pt >= 200 && pt < 300) return (0.901114+(1.32145e-05*x))+0.032492130994796753;
-	if (pt >= 300 && pt < 670) return (0.901114+(1.32145e-05*x))+0.036446873098611832;
+	if (pt >= 20  && pt < 30 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.039442747831344604;
+	if (pt >= 30  && pt < 50 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.012669667601585388;
+	if (pt >= 50  && pt < 70 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.011243613436818123;
+	if (pt >= 70  && pt < 100) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.010686126537621021;
+	if (pt >= 100 && pt < 140) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.010994619689881802;
+	if (pt >= 140 && pt < 200) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.011888998560607433;
+	if (pt >= 200 && pt < 300) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.015397069044411182;
+	if (pt >= 300 && pt < 600) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.020918292924761772;
+	if (pt >= 600  && pt < 1000 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.031905386596918106;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if( pt>=20 && pt<1000) return (0.980777+-0.00109334*x+4.2909e-06*x*x+-2.78512e-09*x*x*x)*(1+(0.0672836+0.000102309*x+-1.01558e-07*x*x));
+	if( pt>=20 && pt<1000) return (1.0589+0.000382569*x+-2.4252e-07*x*x+2.20966e-10*x*x*x)*(1+(0.100485+3.95509e-05*x+-4.90326e-08*x*x));
       }
     }
 
     if(syst ==  "b_tag_down") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 50 ) return 0.901114+((1.32145e-05*x)-0.023258373141288757);
-	if (pt >= 50  && pt < 70 ) return 0.901114+((1.32145e-05*x)-0.023003481328487396);
-	if (pt >= 70  && pt < 100) return 0.901114+((1.32145e-05*x)-0.022424774244427681);
-	if (pt >= 100 && pt < 140) return 0.901114+((1.32145e-05*x)-0.032237973064184189);
-	if (pt >= 140 && pt < 200) return 0.901114+((1.32145e-05*x)-0.033661492168903351);
-	if (pt >= 200 && pt < 300) return 0.901114+((1.32145e-05*x)-0.064984261989593506);
-	if (pt >= 300 && pt < 670) return 0.901114+((1.32145e-05*x)-0.072893746197223663);
+	if (pt >= 20  && pt < 30 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.078885495662689209;
+	if (pt >= 30  && pt < 50 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.025339335203170776;
+	if (pt >= 50  && pt < 70 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.022487226873636246;
+	if (pt >= 70  && pt < 100) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.021372253075242043;
+	if (pt >= 100 && pt < 140) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.021989239379763603;
+	if (pt >= 140 && pt < 200) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.023777997121214867;
+	if (pt >= 200 && pt < 300) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.030794138088822365;
+	if (pt >= 300 && pt < 670) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.041836585849523544;
+	if (pt >= 600  && pt < 1000 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.063810773193836212;
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 50 ) return 0.901114+((1.32145e-05*x)-0.011629186570644379);
-	if (pt >= 50  && pt < 70 ) return 0.901114+((1.32145e-05*x)-0.011501740664243698);
-	if (pt >= 70  && pt < 100) return 0.901114+((1.32145e-05*x)-0.01121238712221384);
-	if (pt >= 100 && pt < 140) return 0.901114+((1.32145e-05*x)-0.016118986532092094);
-	if (pt >= 140 && pt < 200) return 0.901114+((1.32145e-05*x)-0.016830746084451675);
-	if (pt >= 200 && pt < 300) return 0.901114+((1.32145e-05*x)-0.032492130994796753);
-	if (pt >= 300 && pt < 670) return 0.901114+((1.32145e-05*x)-0.036446873098611832);
+	if (pt >= 20  && pt < 30 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.039442747831344604;
+	if (pt >= 30  && pt < 50 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.012669667601585388;
+	if (pt >= 50  && pt < 70 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.011243613436818123;
+	if (pt >= 70  && pt < 100) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.010686126537621021;
+	if (pt >= 100 && pt < 140) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.010994619689881802;
+	if (pt >= 140 && pt < 200) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.011888998560607433;
+	if (pt >= 200 && pt < 300) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.015397069044411182;
+	if (pt >= 300 && pt < 600) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.020918292924761772;
+	if (pt >= 600  && pt < 1000 ) return (0.498094*((1.+(0.422991*x))/(1.+(0.210944*x))))+0.031905386596918106;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return (0.980777+-0.00109334*x+4.2909e-06*x*x+-2.78512e-09*x*x*x)*(1-(0.0672836+0.000102309*x+-1.01558e-07*x*x));
+	if(pt>=20 && pt<1000) return ((1.0589+0.000382569*x+-2.4252e-07*x*x+2.20966e-10*x*x*x)*(1-(0.100485+3.95509e-05*x+-4.90326e-08*x*x)));
       }
     }
   }
 
-  
-  
   //Loose WP
   if(algo == "csvl"){
     double x=pt;
     if(syst ==  "noSyst") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 20  && pt < 1000) return 0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 20  && pt < 1000) return 0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return 1.05636+0.000920353*x+-7.85916e-07*x*x+1.92221e-11*x*x*x;
+	if(pt>=20 && pt<1000) return 1.13904+-0.000594946*x+1.97303e-06*x*x+-1.38194e-09*x*x*x;
       }
     }
     if(syst ==  "mistag_up") {
@@ -4804,56 +4659,62 @@ if(syst ==  "b_tag_down") {
       }
     }
     
-
     if(syst ==  "b_tag_up") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 50 ) return (0.931535+(1.40704e-05*x))+0.01710829883813858;
-	if (pt >= 50  && pt < 70 ) return (0.931535+(1.40704e-05*x))+0.020177565515041351;
-	if (pt >= 70  && pt < 100) return (0.931535+(1.40704e-05*x))+0.019350524991750717;
-	if (pt >= 100 && pt < 140) return (0.931535+(1.40704e-05*x))+0.027258865535259247;
-	if (pt >= 140 && pt < 200) return (0.931535+(1.40704e-05*x))+0.027310512959957123;
-	if (pt >= 200 && pt < 300) return (0.931535+(1.40704e-05*x))+0.039027795195579529;
-	if (pt >= 300 && pt < 670) return (0.931535+(1.40704e-05*x))+0.089093379676342122;
+	if (pt >= 20  && pt < 30 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.025239448994398117); 
+	if (pt >= 30  && pt < 50 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.01235662866383791);
+	if (pt >= 50  && pt < 70 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.011164451949298382);
+	if (pt >= 70  && pt < 100) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.010772000998258591);
+	if (pt >= 100 && pt < 140) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.010771119967103004);
+	if (pt >= 140 && pt < 200) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.01066881138831377);
+	if (pt >= 200 && pt < 300) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.013474081642925739);
+	if (pt >= 300 && pt < 600) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.016922028735280037);
+	if (pt >= 600 && pt< 1000) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.016922028735280037);
       }
       if(abs(flavor)==4){
-      	if (pt >= 30  && pt < 50 ) return (0.931535+(1.40704e-05*x))+0.0085541494190692902;
-	if (pt >= 50  && pt < 70 ) return (0.931535+(1.40704e-05*x))+0.010088782757520676;
-	if (pt >= 70  && pt < 100) return (0.931535+(1.40704e-05*x))+0.0096752624958753586;
-	if (pt >= 100 && pt < 140) return (0.931535+(1.40704e-05*x))+0.013629432767629623;
-	if (pt >= 140 && pt < 200) return (0.931535+(1.40704e-05*x))+0.013655256479978561;
-	if (pt >= 200 && pt < 300) return (0.931535+(1.40704e-05*x))+0.019513897597789764;
-	if (pt >= 300 && pt < 670) return (0.931535+(1.40704e-05*x))+0.044546689838171005;
+	if (pt >= 20  && pt < 30 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.050478897988796234);
+      	if (pt >= 30  && pt < 50 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.024713257327675819);
+	if (pt >= 50  && pt < 70 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.022328903898596764);
+	if (pt >= 70  && pt < 100) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.021544001996517181);
+	if (pt >= 100 && pt < 140) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.021542239934206009);
+	if (pt >= 140 && pt < 200) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.021337622776627541);
+	if (pt >= 200 && pt < 300) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.026948163285851479);
+	if (pt >= 300 && pt < 600) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.033844057470560074);
+	if (pt >= 600 && pt < 1000) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))+0.04352019727230072);
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return (1.05636+0.000920353*x+-7.85916e-07*x*x+1.92221e-11*x*x*x)*(1+(0.0539991+-6.29073e-06*x+-3.39895e-09*x*x));
+	if(pt>=20 && pt<1000) return ((1.13904+-0.000594946*x+1.97303e-06*x*x+-1.38194e-09*x*x*x)*(1+(0.0996438+-8.33354e-05*x+4.74359e-08*x*x)));
       }
     }
 
     if(syst ==  "b_tag_down") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 50 ) return 0.931535+((1.40704e-05*x)-0.01710829883813858);
-	if (pt >= 50  && pt < 70 ) return 0.931535+((1.40704e-05*x)-0.020177565515041351);
-	if (pt >= 70  && pt < 100) return 0.931535+((1.40704e-05*x)-0.019350524991750717);
-	if (pt >= 100 && pt < 140) return 0.931535+((1.40704e-05*x)-0.027258865535259247);
-	if (pt >= 140 && pt < 200) return 0.931535+((1.40704e-05*x)-0.027310512959957123);
-	if (pt >= 200 && pt < 300) return 0.931535+((1.40704e-05*x)-0.039027795195579529);
-	if (pt >= 300 && pt < 670) return 0.931535+((1.40704e-05*x)-0.089093379676342122);
+	if (pt >= 20  && pt < 30 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.025239448994398117);
+	if (pt >= 30  && pt < 50 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.01235662866383791);
+	if (pt >= 50  && pt < 70 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.011164451949298382);
+	if (pt >= 70  && pt < 100) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.010772000998258591);
+	if (pt >= 100 && pt < 140) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.010771119967103004);
+	if (pt >= 140 && pt < 200) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.01066881138831377);
+	if (pt >= 200 && pt < 300) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.013474081642925739);
+	if (pt >= 300 && pt < 600) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.016922028735280037);
+	if (pt >= 600 && pt < 1000) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.02176009863615036);
       }
       if(abs(flavor)==4){
-      	if (pt >= 30  && pt < 50 ) return 0.931535+((1.40704e-05*x)-0.0085541494190692902);
-	if (pt >= 50  && pt < 70 ) return 0.931535+((1.40704e-05*x)-0.010088782757520676);
-	if (pt >= 70  && pt < 100) return 0.931535+((1.40704e-05*x)-0.0096752624958753586);
-	if (pt >= 100 && pt < 140) return 0.931535+((1.40704e-05*x)-0.013629432767629623);
-	if (pt >= 140 && pt < 200) return 0.931535+((1.40704e-05*x)-0.013655256479978561);
-	if (pt >= 200 && pt < 300) return 0.931535+((1.40704e-05*x)-0.019513897597789764);
-	if (pt >= 300 && pt < 670) return 0.931535+((1.40704e-05*x)-0.044546689838171005);
+	if (pt >= 20 && pt < 30) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.050478897988796234);
+      	if (pt >= 30  && pt < 50 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.024713257327675819);
+	if (pt >= 50  && pt < 70 ) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.022328903898596764);
+	if (pt >= 70  && pt < 100) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.021544001996517181);
+	if (pt >= 100 && pt < 140) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.021542239934206009);
+	if (pt >= 140 && pt < 200) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.021337622776627541);
+	if (pt >= 200 && pt < 300) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.026948163285851479);
+	if (pt >= 300 && pt < 600) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.033844057470560074);;
+	if (pt >= 600 && pt < 1000) return ((0.673622*((1.+(0.284768*x))/(1.+(0.191506*x))))-0.04352019727230072);
       }      
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return (1.05636+0.000920353*x+-7.85916e-07*x*x+1.92221e-11*x*x*x)*(1-(0.0539991+-6.29073e-06*x+-3.39895e-09*x*x));
+	if(pt>=20 && pt<1000) return (1.13904+-0.000594946*x+1.97303e-06*x*x+-1.38194e-09*x*x*x)*(1-(0.0996438+-8.33354e-05*x+4.74359e-08*x*x));
       }
     }
   }
-
 
   return 1.0;
 
