@@ -10,9 +10,7 @@ cmsenv
 
 git clone https://github.com/grauco/treeDumper.git
 
-mkdir ttDM
-
-cp -rf treeDumper/* ttDM/
+cp -rf treeDumper/ttDM .
 
 rm -rf treeDumper
 
