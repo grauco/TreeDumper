@@ -340,42 +340,51 @@ private:
 
   //tight AK4 b-tagging weights
   
-  BTagWeight b_csvt_0_tags= BTagWeight(0,1000),
-    b_csvt_1_tag= BTagWeight(1,1000);
-
+  BTagWeight b_csvt_0_tags= BTagWeight(0,6),
+    b_csvt_1_tag= BTagWeight(1,6),
+    b_csvt_2_tag= BTagWeight(2,6);
   double b_weight_csvt_0_tags,
-    b_weight_csvt_1_tag;
+    b_weight_csvt_1_tag,
+    b_weight_csvt_2_tag;
   double b_weight_csvt_0_tags_mistag_up,
-    b_weight_csvt_1_tag_mistag_up;
+    b_weight_csvt_1_tag_mistag_up,
+    b_weight_csvt_2_tag_mistag_up;
   double b_weight_csvt_0_tags_mistag_down,
-    b_weight_csvt_1_tag_mistag_down;
+    b_weight_csvt_1_tag_mistag_down,
+    b_weight_csvt_2_tag_mistag_down;
   double b_weight_csvt_0_tags_b_tag_down,
-    b_weight_csvt_1_tag_b_tag_down;
+    b_weight_csvt_1_tag_b_tag_down,
+    b_weight_csvt_2_tag_b_tag_down;
   double b_weight_csvt_0_tags_b_tag_up,
-    b_weight_csvt_1_tag_b_tag_up;
+    b_weight_csvt_1_tag_b_tag_up,
+    b_weight_csvt_2_tag_b_tag_up;
 
   //medium AK4 b-tagging weights
     
-  BTagWeight b_csvm_0_tags= BTagWeight(0,1000),
-    b_csvm_1_tag= BTagWeight(1,1000);
-  
+  BTagWeight b_csvm_0_tags= BTagWeight(0,6),
+    b_csvm_1_tag= BTagWeight(1,6),
+    b_csvm_2_tag= BTagWeight(2,6);
   double b_weight_csvm_0_tags,
-    b_weight_csvm_1_tag;
+    b_weight_csvm_1_tag,
+    b_weight_csvm_2_tag;
   double b_weight_csvm_0_tags_mistag_up,
-    b_weight_csvm_1_tag_mistag_up;
+    b_weight_csvm_1_tag_mistag_up,
+    b_weight_csvm_2_tag_mistag_up;
   double b_weight_csvm_0_tags_mistag_down,
-    b_weight_csvm_1_tag_mistag_down;
+    b_weight_csvm_1_tag_mistag_down,
+    b_weight_csvm_2_tag_mistag_down;
   double b_weight_csvm_0_tags_b_tag_down,
-    b_weight_csvm_1_tag_b_tag_down;
+    b_weight_csvm_1_tag_b_tag_down,
+    b_weight_csvm_2_tag_b_tag_down;
   double b_weight_csvm_0_tags_b_tag_up,
-    b_weight_csvm_1_tag_b_tag_up;
-
+    b_weight_csvm_1_tag_b_tag_up,
+    b_weight_csvm_2_tag_b_tag_up;
   //medium subjets b-tagging weights
     
-  BTagWeight b_subj_csvm_0_tags= BTagWeight(0,1000),
+  BTagWeight b_subj_csvm_0_tags= BTagWeight(0,6),
     b_subj_csvm_1_tag= BTagWeight(1,1),
     b_subj_csvm_0_1_tags= BTagWeight(0,1),
-    b_subj_csvm_2_tags= BTagWeight(2,1000);
+    b_subj_csvm_2_tags= BTagWeight(2,6);
 
   double b_weight_subj_csvm_0_tags,
     b_weight_subj_csvm_1_tag,
@@ -400,26 +409,32 @@ private:
 
   //loose AK4 b-tagging weights
   
-  BTagWeight b_csvl_0_tags= BTagWeight(0,1000),
-    b_csvl_1_tag= BTagWeight(1,1000);
+  BTagWeight b_csvl_0_tags= BTagWeight(0,6),
+    b_csvl_1_tag= BTagWeight(1,6),
+    b_csvl_2_tag= BTagWeight(2,6);
   
   double b_weight_csvl_0_tags_mistag_up,
-    b_weight_csvl_1_tag_mistag_up;
+    b_weight_csvl_1_tag_mistag_up,
+    b_weight_csvl_2_tag_mistag_up;
   double b_weight_csvl_0_tags_mistag_down,
-    b_weight_csvl_1_tag_mistag_down;
+    b_weight_csvl_1_tag_mistag_down,
+    b_weight_csvl_2_tag_mistag_down;
   double b_weight_csvl_0_tags_b_tag_down,
-    b_weight_csvl_1_tag_b_tag_down;
+    b_weight_csvl_1_tag_b_tag_down,
+    b_weight_csvl_2_tag_b_tag_down;
   double b_weight_csvl_0_tags_b_tag_up,
-    b_weight_csvl_1_tag_b_tag_up;
+    b_weight_csvl_1_tag_b_tag_up,
+    b_weight_csvl_2_tag_b_tag_up;
   double b_weight_csvl_0_tags,
-    b_weight_csvl_1_tag;
+    b_weight_csvl_1_tag,
+    b_weight_csvl_2_tag;
 
   //loose subjets b-tagging weights
 
-  BTagWeight b_subj_csvl_0_tags= BTagWeight(0,1000),
+  BTagWeight b_subj_csvl_0_tags= BTagWeight(0,6),
     b_subj_csvl_1_tag= BTagWeight(1,1),
     b_subj_csvl_0_1_tags= BTagWeight(0,1),
-    b_subj_csvl_2_tags= BTagWeight(2,1000);
+    b_subj_csvl_2_tags= BTagWeight(2,6);
   
   double b_weight_subj_csvl_0_tags_mistag_up,
     b_weight_subj_csvl_1_tag_mistag_up,
@@ -2026,7 +2041,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
     if(doPreselection){
       bool passes = true;
-      bool metCondition = (metptCorr >100.0 || Ht > 400.);
+      bool metCondition = (metptCorr > 100.0 || Ht > 400.);
 
       float lep1phi = float_values["Event_Lepton1_Phi"];
       float lep1pt = float_values["Event_Lepton1_Pt"];
@@ -2064,7 +2079,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       metCondition = metCondition || (metLep>100.0);
 	
       passes = passes && metCondition;
-      passes = passes && nTightJets>=3;
+
       if (!passes ) {
 	//Reset event weights/#objects
 	string nameshortv= "Event";
@@ -2684,6 +2699,12 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_subj_csvl_2_tags_b_tag_up = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
       b_weight_subj_csvl_2_tags_b_tag_down = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
       
+      b_weight_csvl_2_tags = b_csvl_2_tags.weight(jsfscsvl, ncsvl_tags);
+      b_weight_csvl_2_tags_mistag_up = b_csvl_2_tags.weight(jsfscsvl_mistag_up, ncsvl_tags);
+      b_weight_csvl_2_tags_mistag_down = b_csvl_2_tags.weight(jsfscsvl_mistag_down, ncsvl_tags);
+      b_weight_csvl_2_tags_b_tag_up = b_csvl_2_tags.weight(jsfscsvl_b_tag_up, ncsvl_tags);
+      b_weight_csvl_2_tags_b_tag_down = b_csvl_2_tags.weight(jsfscsvl_b_tag_down, ncsvl_tags);
+
       //0-1 tags
       
       b_weight_subj_csvl_0_1_tags = b_subj_csvl_0_1_tags.weight(jsfscsvl_subj, ncsvl_subj_tags);  
@@ -2748,50 +2769,64 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       
       float_values["Event_bWeight0CSVL"]=b_weight_csvl_0_tags;
       float_values["Event_bWeight1CSVL"]=b_weight_csvl_1_tag;
-      
+      float_values["Event_bWeight2CSVL"]=b_weight_csvl_2_tag;
+
       float_values["Event_bWeight0CSVM"]=b_weight_csvm_0_tags;
       float_values["Event_bWeight1CSVM"]=b_weight_csvm_1_tag;
+      float_values["Event_bWeight2CSVM"]=b_weight_csvm_2_tag;
 
       float_values["Event_bWeight0CSVT"]=b_weight_csvt_0_tags;
       float_values["Event_bWeight1CSVT"]=b_weight_csvt_1_tag;
-   
+      float_values["Event_bWeight2CSVT"]=b_weight_csvt_2_tag;
       //Mistag
       float_values["Event_bWeightMisTagUp0CSVL"]=b_weight_csvl_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVL"]=b_weight_csvl_1_tag_mistag_up;
-      
+      float_values["Event_bWeightMisTagUp2CSVL"]=b_weight_csvl_2_tag_mistag_up;
+
       float_values["Event_bWeightMisTagUp0CSVM"]=b_weight_csvm_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVM"]=b_weight_csvm_1_tag_mistag_up;
-    
+      float_values["Event_bWeightMisTagUp2CSVM"]=b_weight_csvm_2_tag_mistag_up;
+
       float_values["Event_bWeightMisTagUp0CSVT"]=b_weight_csvt_0_tags_mistag_up;
       float_values["Event_bWeightMisTagUp1CSVT"]=b_weight_csvt_1_tag_mistag_up;   
-      
+      float_values["Event_bWeightMisTagUp2CSVT"]=b_weight_csvt_2_tag_mistag_up;
+
       float_values["Event_bWeightMisTagDown0CSVL"]=b_weight_csvl_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVL"]=b_weight_csvl_1_tag_mistag_down;
-      
+      float_values["Event_bWeightMisTagDown2CSVL"]=b_weight_csvl_2_tag_mistag_down;
+
       float_values["Event_bWeightMisTagDown0CSVM"]=b_weight_csvm_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVM"]=b_weight_csvm_1_tag_mistag_down;
-      
+      float_values["Event_bWeightMisTagDown2CSVM"]=b_weight_csvm_2_tag_mistag_down;
+
       float_values["Event_bWeightMisTagDown0CSVT"]=b_weight_csvt_0_tags_mistag_down;
       float_values["Event_bWeightMisTagDown1CSVT"]=b_weight_csvt_1_tag_mistag_down;
+      float_values["Event_bWeightMisTagDown2CSVT"]=b_weight_csvt_2_tag_mistag_down;
 
       //Btag
       float_values["Event_bWeightBTagUp0CSVL"]=b_weight_csvl_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVL"]=b_weight_csvl_1_tag_b_tag_up;
-      
+      float_values["Event_bWeightBTagUp2CSVL"]=b_weight_csvl_2_tag_b_tag_up;
+
       float_values["Event_bWeightBTagUp0CSVM"]=b_weight_csvm_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVM"]=b_weight_csvm_1_tag_b_tag_up;
-      
+      float_values["Event_bWeightBTagUp2CSVM"]=b_weight_csvm_2_tag_b_tag_up;
+
       float_values["Event_bWeightBTagUp0CSVT"]=b_weight_csvt_0_tags_b_tag_up;
       float_values["Event_bWeightBTagUp1CSVT"]=b_weight_csvt_1_tag_b_tag_up;
-      
+      float_values["Event_bWeightBTagUp2CSVT"]=b_weight_csvt_2_tag_b_tag_up;
+
       float_values["Event_bWeightBTagDown0CSVL"]=b_weight_csvl_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVL"]=b_weight_csvl_1_tag_b_tag_down;
-      
+      float_values["Event_bWeightBTagDown2CSVL"]=b_weight_csvl_2_tag_b_tag_down;
+
       float_values["Event_bWeightBTagDown0CSVM"]=b_weight_csvm_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVM"]=b_weight_csvm_1_tag_b_tag_down;
-      
+      float_values["Event_bWeightBTagDown2CSVM"]=b_weight_csvm_2_tag_b_tag_down;
+
       float_values["Event_bWeightBTagDown0CSVT"]=b_weight_csvt_0_tags_b_tag_down;
       float_values["Event_bWeightBTagDown1CSVT"]=b_weight_csvt_1_tag_b_tag_down;
+      float_values["Event_bWeightBTagDown2CSVT"]=b_weight_csvt_2_tag_b_tag_down;
     }
     
     
@@ -3048,48 +3083,63 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
 
     addvar.push_back("bWeight0CSVT");
     addvar.push_back("bWeight1CSVT");
+    addvar.push_back("bWeight2CSVT");
 
     addvar.push_back("bWeight0CSVM");
     addvar.push_back("bWeight1CSVM");
+    addvar.push_back("bWeight2CSVM");
 
     addvar.push_back("bWeight0CSVL");
     addvar.push_back("bWeight1CSVL");
+    addvar.push_back("bWeight2CSVL");
 
     addvar.push_back("bWeightMisTagDown0CSVT");
     addvar.push_back("bWeightMisTagDown1CSVT");
+    addvar.push_back("bWeightMisTagDown2CSVT");
 
     addvar.push_back("bWeightMisTagDown0CSVM");
     addvar.push_back("bWeightMisTagDown1CSVM");
+    addvar.push_back("bWeightMisTagDown2CSVM");
 
     addvar.push_back("bWeightMisTagDown0CSVL");
     addvar.push_back("bWeightMisTagDown1CSVL");
+    addvar.push_back("bWeightMisTagDown2CSVL");
 
     addvar.push_back("bWeightMisTagUp0CSVT");
     addvar.push_back("bWeightMisTagUp1CSVT");
+    addvar.push_back("bWeightMisTagUp2CSVT");
 
     addvar.push_back("bWeightMisTagUp0CSVM");
     addvar.push_back("bWeightMisTagUp1CSVM");
+    addvar.push_back("bWeightMisTagUp2CSVM");
 
     addvar.push_back("bWeightMisTagUp0CSVL");
     addvar.push_back("bWeightMisTagUp1CSVL");
+    addvar.push_back("bWeightMisTagUp2CSVL");
 
     addvar.push_back("bWeightBTagUp0CSVT");
     addvar.push_back("bWeightBTagUp1CSVT");
-
+    addvar.push_back("bWeightBTagUp2CSVT");
+    
     addvar.push_back("bWeightBTagUp0CSVM");
     addvar.push_back("bWeightBTagUp1CSVM");
+    addvar.push_back("bWeightBTagUp2CSVM");
 
     addvar.push_back("bWeightBTagUp0CSVL");
     addvar.push_back("bWeightBTagUp1CSVL");
+    addvar.push_back("bWeightBTagUp2CSVL");
 
     addvar.push_back("bWeightBTagDown0CSVT");
     addvar.push_back("bWeightBTagDown1CSVT");
+    addvar.push_back("bWeightBTagDown2CSVT");
 
     addvar.push_back("bWeightBTagDown0CSVM");
     addvar.push_back("bWeightBTagDown1CSVM");
+    addvar.push_back("bWeightBTagDown2CSVM");
 
     addvar.push_back("bWeightBTagDown0CSVL");
     addvar.push_back("bWeightBTagDown1CSVL");
+    addvar.push_back("bWeightBTagDown2CSVL");
 
     //subjets
 
