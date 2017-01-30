@@ -2699,11 +2699,11 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       b_weight_subj_csvl_2_tags_b_tag_up = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_up, ncsvl_subj_tags);  
       b_weight_subj_csvl_2_tags_b_tag_down = b_subj_csvl_2_tags.weight(jsfscsvl_subj_b_tag_down, ncsvl_subj_tags);
       
-      b_weight_csvl_2_tags = b_csvl_2_tags.weight(jsfscsvl, ncsvl_tags);
-      b_weight_csvl_2_tags_mistag_up = b_csvl_2_tags.weight(jsfscsvl_mistag_up, ncsvl_tags);
-      b_weight_csvl_2_tags_mistag_down = b_csvl_2_tags.weight(jsfscsvl_mistag_down, ncsvl_tags);
-      b_weight_csvl_2_tags_b_tag_up = b_csvl_2_tags.weight(jsfscsvl_b_tag_up, ncsvl_tags);
-      b_weight_csvl_2_tags_b_tag_down = b_csvl_2_tags.weight(jsfscsvl_b_tag_down, ncsvl_tags);
+      b_weight_csvl_2_tag = b_csvl_2_tag.weight(jsfscsvl, ncsvl_tags);
+      b_weight_csvl_2_tag_mistag_up = b_csvl_2_tag.weight(jsfscsvl_mistag_up, ncsvl_tags);
+      b_weight_csvl_2_tag_mistag_down = b_csvl_2_tag.weight(jsfscsvl_mistag_down, ncsvl_tags);
+      b_weight_csvl_2_tag_b_tag_up = b_csvl_2_tag.weight(jsfscsvl_b_tag_up, ncsvl_tags);
+      b_weight_csvl_2_tag_b_tag_down = b_csvl_2_tag.weight(jsfscsvl_b_tag_down, ncsvl_tags);
 
       //0-1 tags
       
@@ -3354,8 +3354,7 @@ void DMAnalysisTreeMaker::initializePdf(string central, string varied){
 
 }
 
-double DMAnalysisTreeMaker::getWEWKPtWeight(double ptW){ // TO DO?, in aggrement with ttDM PAS, Table 6
-  //EWK
+double DMAnalysisTreeMaker::getWEWKPtWeight(double ptW){ 
 
   if(ptW<150.)return 0.980859;
   if(ptW>=150. && ptW <200.)return 0.962119;
@@ -3369,7 +3368,7 @@ double DMAnalysisTreeMaker::getWEWKPtWeight(double ptW){ // TO DO?, in aggrement
   return 1.0;
 }
 
-double DMAnalysisTreeMaker::getZEWKPtWeight(double ptW){ //TO DO?, in aggrement with ttDM PAS, Table 6
+double DMAnalysisTreeMaker::getZEWKPtWeight(double ptW){ 
   if(ptW<150.)return 0.984525;
   if(ptW>=150. && ptW <200.)return 0.969079;
   if(ptW>=200. && ptW <250.)return 0.954627;
@@ -3383,7 +3382,7 @@ double DMAnalysisTreeMaker::getZEWKPtWeight(double ptW){ //TO DO?, in aggrement 
 
 }
 
-double DMAnalysisTreeMaker::getWPtWeight(double ptW){ //TO DO?, in aggrement with ttDM PAS, Table 5
+double DMAnalysisTreeMaker::getWPtWeight(double ptW){ 
   //QCD
   
   if(ptW<150.)return 1.89123;
@@ -3398,7 +3397,7 @@ double DMAnalysisTreeMaker::getWPtWeight(double ptW){ //TO DO?, in aggrement wit
   return 1.0;
 }
 
-double DMAnalysisTreeMaker::getAPtWeight(double ptW){ //TO DO, ma che e'?
+double DMAnalysisTreeMaker::getAPtWeight(double ptW){ 
   if(ptW<150.)return 1.24087;
   if(ptW>=150. && ptW <200.)return 1.55807;
   if(ptW>=200. && ptW <250.)return 1.51043;
@@ -3411,7 +3410,7 @@ double DMAnalysisTreeMaker::getAPtWeight(double ptW){ //TO DO, ma che e'?
   return 1.0;
 }
 
-double DMAnalysisTreeMaker::getZPtWeight(double ptW){//TO DO?, in aggrement with ttDM PAS, Table 5
+double DMAnalysisTreeMaker::getZPtWeight(double ptW){
   if(ptW<150.)return 1.685005;
   if(ptW>=150. && ptW <200.)return 1.552560;
   if(ptW>=200. && ptW <250.)return 1.522595;
@@ -3424,7 +3423,7 @@ double DMAnalysisTreeMaker::getZPtWeight(double ptW){//TO DO?, in aggrement with
   return 1.0;
 }
 
-double DMAnalysisTreeMaker::getTopPtWeight(double ptT, double ptTbar, bool extrap){ //TO DO
+double DMAnalysisTreeMaker::getTopPtWeight(double ptT, double ptTbar, bool extrap){ 
   if((ptT>0.0 && ptTbar>0.0) ){
     if (extrap || (ptT<=400.0 && ptTbar <=400.0)){
       double a = 0.0615;
@@ -3853,457 +3852,463 @@ float DMAnalysisTreeMaker::BTagWeight::weight(vector<JetInfo> jetTags, int tags)
 
 
 double DMAnalysisTreeMaker::MCTagEfficiencySubjet(string algo, int flavor, double pt, double eta){
-if ((abs(flavor) ==5)){ 
-	 if (algo=="csvt") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.296489; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.283186; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.22293; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.345938; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.345226; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.334581; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.390734; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.392072; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.364133; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.416481; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.400909; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.380812; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.407575; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.409937; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.350389; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.389089; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.380354; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.312596; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.358209; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.346685; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.264417; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.270419; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.268743; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.206701; 
-	 }
-	 if (algo=="csvm") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.467274; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.478342; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.382431; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.509244; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.525654; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.514811; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.57471; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.585932; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.542646; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.611787; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.603202; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.554784; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.602366; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.608457; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.545904; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.592466; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.587298; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.513208; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.566559; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.558705; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.472549; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.491582; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.482574; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.415809; 
-	 }
-	 if (algo=="csvl") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.626355; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.6381; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.609076; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.635854; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.648998; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.684752; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.7; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.707276; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.708857; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.734967; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.731502; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.720738; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.734769; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.742253; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.745629; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.752044; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.752473; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.755872; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.744627; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.7484; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.76149; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.740626; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.736961; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.757653; 
-	 }
-}
- if ((abs(flavor) ==4)){ 
-   if (algo=="csvt") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.0305344; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.0189983; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0175439; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.0308756; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.0314319; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.0321429; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.0402351; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.032538; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.0250804; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.0392806; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.0303384; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.032345; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.0380644; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.0400807; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.0308721; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.0408119; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.0315339; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.0374813; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.0329393; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.0369307; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.0279534; 
-   }
-	 if (algo=="csvm") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.115522; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.102476; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0845704; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.147465; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.142026; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.143452; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.159584; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.154013; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.13119; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.169901; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.163944; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.147574; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.164608; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.174439; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.138765; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.160192; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.142437; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.141829; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.142984; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.148338; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.130893; 
-	}
-	 if (algo=="csvl") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.295165; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.287277; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.278453; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.337327; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.335274; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.33631; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.350362; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.339479; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.358842; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.368197; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.373979; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.366577; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.358575; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.368036; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.372056; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.364688; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.363976; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.396102; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.380335; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.393311; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.42629; 
-	}
-}
- if ((abs(flavor)!= 5 && (abs(flavor)!= 4 ))){ 
-   if (algo=="csvt") {
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.0101643; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.00741036; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.00463209; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.00674189; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.0056723; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.00512842; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.00625346; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.00420484; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.00454994; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.00560886; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.00504171; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.00524952; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.0061885; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.00530979; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.00545241; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.00512219; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.00430636; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.00391961; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.00515681; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.00461102; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.00430911; 
-   }
-   if (algo=="csvm") {
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.0352963; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.0317506; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0222538; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.0377191; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.0332173; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.0299433; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.0353044; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.0293838; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.0293827; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.0345339; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.0321109; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.0305427; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.0303497; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.0291583; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.0312996; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.0247239; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.0247349; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.0250143; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.0262878; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.0251433; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.0286476; 
-   }
-   if (algo=="csvl") {
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.199172; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.202331; 
-     if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.222045; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.136186; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.135791; 
-     if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.151454; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.128908; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.13025; 
-     if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.156014; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.123812; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.131985; 
-     if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.158645; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.116918; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.124735; 
-     if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.162019; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.117095; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.129155; 
-     if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.181763; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.144244; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.153178; 
-     if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.225239; 
-   }
- }
- return 1.0;
+  if ((abs(flavor) ==5)){ 
+    if (algo=="csvm") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.284091; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.361111; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.283784; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.476489; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.454861; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.376923; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.502451; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.480892; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.439024; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.532209; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.527831; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.474074; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.54755; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.557831; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.467187; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.552198; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.573951; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.492498; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.535885; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.531685; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.453575; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.449269; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.44352; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.400552; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.390766; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.394737; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.317647; 
+    }
+    if (algo=="csvl") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.477273; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.555556; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.472973; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.658307; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.649306; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.588462; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.64951; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.707006; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.61324; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.691718; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.738964; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.654321; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.728146; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.736145; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.690625; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.730769; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.741722; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.732568; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.720694; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.70711; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.694771; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.677206; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.664588; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.680939; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.656532; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.642857; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.711765; 
+    }
+  }
+  if ((abs(flavor) ==4)){ 
+    if (algo=="csvm") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0704225; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.0432692; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.0432692; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0807834; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.0852941; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.0872675; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.0861298; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.0989957; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.0802469; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.101236; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.106457; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.087146; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.107405; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.112926; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.112971; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.110882; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.109333; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.092999; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.0974194; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.0953184; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.0986214; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.0934178; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.109236; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.113351; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.0968069; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.119436; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.1; 
+    }
+    if (algo=="csvl") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.232394; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.206731; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.192308; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.277846; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.305882; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.253219; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.289709; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.315638; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.257716; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.304482; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.316754; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.305011; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.307518; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.308949; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.320502; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.312049; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.332; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.338036; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.296452; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.31337; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.344115; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.304004; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.330776; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.385831; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.329954; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.397626; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.426087; 
+    }
+  }
+  if ((abs(flavor)!= 5 && (abs(flavor)!= 4 ))){ 
+    if (algo=="csvm") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0127099; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.0142752; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.0150551; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0149497; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.0148449; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.025; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.0102449; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.0128765; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.016835; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.010187; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.0139552; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.0218688; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.00983413; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.0115432; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.0188073; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.00940008; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.0106913; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.019997; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.01057; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.0139478; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.022888; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.0148112; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.0187542; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.0307771; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.022779; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.0282619; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.0396389; 
+    }
+    if (algo=="csvl") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0755788; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.0950037; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.101357; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.10048; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.108998; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.137057; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.0830857; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.100368; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.129032; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.0839288; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.10876; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.137448; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.0784764; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.100403; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.150217; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.0774176; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.0937824; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.155002; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.0850308; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.10305; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.171304; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.109577; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.133381; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.215083; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.157024; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.179517; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.243524; 
+    }
+  }
+  
+  return 1.0;
 }
 
 double DMAnalysisTreeMaker::MCTagEfficiency(string algo, int flavor, double pt, double eta){
-if ((abs(flavor) ==5)){ 
-	 if (algo=="csvt") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.352168; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.319601; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.23781; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.526553; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.497584; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.417645; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.541338; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.528332; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.440321; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.543049; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.521693; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.436618; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.528846; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.510575; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.413917; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.482124; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.462141; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.364861; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.434455; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.411495; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.301717; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.296532; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.305188; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.224686; 
-	 }
-	 if (algo=="csvm") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.529907; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.525015; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.407325; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.718092; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.70719; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.62003; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.742626; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.740707; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.642757; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.749783; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.740894; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.641026; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.743477; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.727679; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.631493; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.704655; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.691343; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.593679; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.672252; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.650178; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.537782; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.538615; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.538796; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.45657; 
-	 }
-	 if (algo=="csvl") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.722738; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.721697; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.642741; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.845194; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.838713; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.800013; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.861446; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.86854; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.820012; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.868555; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.869711; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.817321; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.870079; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.861107; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.831645; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.861654; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.854613; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.845222; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.854853; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.843449; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.830373; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  0) && (pt < 40))) return 0.807141; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  40) && (pt < 60))) return 0.802808; 
-		if(((eta>=5.6) && (eta <6.4)) && ((pt >=  60) && (pt < 80))) return 0.801898; 
-	 }
-}
-if ((abs(flavor) ==4)){ 
-	 if (algo=="csvt") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.0279674; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.0217746; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0177389; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.0460526; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.0357602; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.0354151; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.0430039; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.0390738; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.0383872; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.0457265; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.0422265; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.037679; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.0455882; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.0398756; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.0437271; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.0445344; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.0435157; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.0494012; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.041203; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.0440075; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.0340389; 
-	 }
-	 if (algo=="csvm") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.123621; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.116604; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0851939; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.194646; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.173913; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.155941; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.185173; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.198263; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.167081; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.196581; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.208253; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.165411; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.198284; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.195136; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.165522; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.178506; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.192159; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.178518; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.161718; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.178047; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.152218; 
-	}
-	 if (algo=="csvl") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.338892; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.326619; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.317029; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.404719; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.414716; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.403656; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.41656; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.413169; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.41066; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.426068; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.425144; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.405049; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.414951; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.426753; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.424679; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.407067; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.420939; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.454341; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.432387; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.458657; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.489522; 
-	}
-}
- if ((abs(flavor)!= 5 && (abs(flavor)!= 4 ))){ 
-	 if (algo=="csvt") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.00576088; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.00446663; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.00241878; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.00399483; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.00426005; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.00308828; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.00272815; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.00338576; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.00254755; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.00244485; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.00300245; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.00272979; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.00196052; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.00253911; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.00270194; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.00200782; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.00174762; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.00318708; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.00305354; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.00392678; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.00398442; 
-	 }
-	 if (algo=="csvm") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.0191537; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.018406; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.0141139; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.0169362; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.020136; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.0225764; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.0158694; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.0161145; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.0198304; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.0142888; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.0159926; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.0216754; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.0133914; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.0159441; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.0216155; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.0117827; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.0163915; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.02327; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.0212436; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.0252931; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.0322783; 
-	 }
-	 if (algo=="csvl") {
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  0) && (pt < 40))) return 0.240319; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  40) && (pt < 60))) return 0.255961; 
-		if(((eta>=0) && (eta <0.6)) && ((pt >=  60) && (pt < 80))) return 0.279793; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  0) && (pt < 40))) return 0.0960913; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  40) && (pt < 60))) return 0.117138; 
-		if(((eta>=0.6) && (eta <1.2)) && ((pt >=  60) && (pt < 80))) return 0.16714; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  0) && (pt < 40))) return 0.0837656; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  40) && (pt < 60))) return 0.10333; 
-		if(((eta>=1.2) && (eta <2.4)) && ((pt >=  60) && (pt < 80))) return 0.153027; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  0) && (pt < 40))) return 0.0856786; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  40) && (pt < 60))) return 0.102328; 
-		if(((eta>=2.4) && (eta <3.2)) && ((pt >=  60) && (pt < 80))) return 0.15678; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  0) && (pt < 40))) return 0.086396; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  40) && (pt < 60))) return 0.102759; 
-		if(((eta>=3.2) && (eta <4)) && ((pt >=  60) && (pt < 80))) return 0.161679; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  0) && (pt < 40))) return 0.0964282; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  40) && (pt < 60))) return 0.114439; 
-		if(((eta>=4) && (eta <4.8)) && ((pt >=  60) && (pt < 80))) return 0.194674; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  0) && (pt < 40))) return 0.139306; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  40) && (pt < 60))) return 0.160493; 
-		if(((eta>=4.8) && (eta <5.6)) && ((pt >=  60) && (pt < 80))) return 0.245989; 
-	 }
-}
-  return 1.0;
+
+  if ((abs(flavor) ==5)){ 
+    if (algo=="csvt") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.342571; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.288474; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.216505; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.437115; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.4047; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.338496; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.486694; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.422745; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.361853; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.481402; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.475984; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.374789; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.491533; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.460526; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.369161; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.448853; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.470953; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.347471; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.431072; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.421002; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.315734; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.361362; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.34923; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.295325; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.330469; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.348276; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.265306; 
+    }
+    if (algo=="csvm") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.534198; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.499001; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.414671; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.647904; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.627937; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.56167; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.67714; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.651373; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.576598; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.68872; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.699531; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.592855; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.695597; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.679656; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.576595; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.6739; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.680093; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.556281; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.644785; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.635838; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.55755; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.589675; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.590609; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.523375; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.53125; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.55977; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.483965; 
+    }
+    if (algo=="csvl") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.732311; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.714191; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.677025; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.810026; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.807441; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.779314; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.836807; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.826275; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.787961; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.848171; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.853738; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.799461; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.850127; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.857794; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.804119; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.83695; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.846631; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.797716; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.81984; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.806358; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.795143; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.804683; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.796038; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.777651; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.794531; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.791954; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.787172; 
+    }
   }
+  if ((abs(flavor) ==4)){ 
+    if (algo=="csvt") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0262541; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.0185376; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.0136986; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0319807; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.0197183; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.0279493; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.0255741; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.01772; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.0205867; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.0232438; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.0279521; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.0255624; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.0260586; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.0359205; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.0274143; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.0343137; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.0388926; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.0204082; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.0273909; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.0384615; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.0315594; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.0278928; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.0291363; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.030622; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.0356135; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.0491315; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.0286369; 
+    }
+    if (algo=="csvm") { 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.112049; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.101442; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.0826069; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.138239; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.128773; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.132922; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.129436; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.113408; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.121462; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.137913; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.12664; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.121166; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.123779; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.140475; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.141433; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.143791; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.151615; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.115412; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.129062; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.142534; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.133045; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.118476; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.141172; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.146411; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.124824; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.144417; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.153494; 
+    }
+    if (algo=="csvl") {
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.320206; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.34243; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.288501; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.358666; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.4; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.375691; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.368476; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.384525; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.384457; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.370351; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.396463; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.373211; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.357763; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.381655; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.384424; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.383987; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.423863; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.399719; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.370474; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.397059; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.429455; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.360398; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.417967; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.465072; 
+      if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.386812; 
+      if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.456079; 
+      if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.510882; 
+    }
+  }
+  if ((abs(flavor)!= 5 && (abs(flavor)!= 4))){ 
+      if (algo=="csvt") {
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.00259623; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.00213082; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.00150227; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0014928; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.0017178; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.00184959; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.000814536; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.00163144; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.000850871; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.00123497; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.00141717; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.00166174; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.00107009; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.00175009; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.00151395; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.00120192; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.00189036; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.00296673; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.00119175; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.00238975; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.00293906; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.00236889; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.00339697; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.00545897; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.00495133; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.00795053; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.00723691; 
+      }
+      if (algo=="csvm") {
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0128081; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.0132035; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.0141569; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0117292; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.0147411; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.0181379; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.00733083; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.0127678; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.0150888; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.00708482; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.0106661; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.0147095; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.00825499; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.0119881; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.0188162; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.00773738; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.0116859; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.0221798; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.00991031; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.0137591; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.028191; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.013274; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.0217214; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.0386715; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.0226748; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.0373743; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.0433209; 
+      }
+      if (algo=="csvl") {
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  20) && (pt < 30))) return 0.0864027; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  20) && (pt < 30))) return 0.115483; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  20) && (pt < 30))) return 0.182538; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  30) && (pt < 50))) return 0.0854452; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  30) && (pt < 50))) return 0.116731; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  30) && (pt < 50))) return 0.164494; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  50) && (pt < 70))) return 0.0652256; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  50) && (pt < 70))) return 0.0963967; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  50) && (pt < 70))) return 0.130183; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  70) && (pt < 100))) return 0.0654534; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  70) && (pt < 100))) return 0.0936824; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  70) && (pt < 100))) return 0.137001; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  100) && (pt < 140))) return 0.0640526; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  100) && (pt < 140))) return 0.0920546; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  100) && (pt < 140))) return 0.145051; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  140) && (pt < 200))) return 0.0706881; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  140) && (pt < 200))) return 0.100962; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  140) && (pt < 200))) return 0.169457; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  200) && (pt < 300))) return 0.0755818; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  200) && (pt < 300))) return 0.107032; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  200) && (pt < 300))) return 0.183781; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  300) && (pt < 600))) return 0.0990443; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  300) && (pt < 600))) return 0.143629; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  300) && (pt < 600))) return 0.222533; 
+	if(((fabs(eta)>=0) && (fabs(eta) <0.6)) && ((pt >=  600) && (pt < 1000))) return 0.152535; 
+	if(((fabs(eta)>=0.6) && (fabs(eta) <1.2)) && ((pt >=  600) && (pt < 1000))) return 0.207257; 
+	if(((fabs(eta)>=1.2) && (fabs(eta) <2.4)) && ((pt >=  600) && (pt < 1000))) return 0.287868; 
+      }
+    }
     
+    return 1.0;
+}
+  
 double DMAnalysisTreeMaker::TagScaleFactorSubjet(string algo, int flavor, string syst, double pt){ 
   double x = pt;
   if(algo == "csvl"){
@@ -4326,16 +4331,16 @@ double DMAnalysisTreeMaker::TagScaleFactorSubjet(string algo, int flavor, string
     }
     if(syst ==  "mistag_up") {
       if(abs(flavor)==5){
-        if (pt >= 30  && pt < 140) return 0.935202;
-        if (pt >= 140  && pt < 180) return 0.975405;
-        if (pt >= 180  && pt < 240) return 0.944102;
-        if (pt >= 240  && pt < 450) return 0.965785;
+     	if (pt >= 30  && pt < 140) return 0.935202;
+	if (pt >= 140  && pt < 180) return 0.975405;
+	if (pt >= 180  && pt < 240) return 0.944102;
+	if (pt >= 240  && pt < 450) return 0.965785;
       }
       if(abs(flavor)==4){
-        if (pt >= 30  && pt < 140) return 0.935202;
-        if (pt >= 140  && pt < 180) return 0.975405;
-        if (pt >= 180  && pt < 240) return 0.944102;
-        if (pt >= 240  && pt < 450) return 0.965785;
+	if (pt >= 30  && pt < 140) return 0.935202;
+	if (pt >= 140  && pt < 180) return 0.975405;
+	if (pt >= 180  && pt < 240) return 0.944102;
+	if (pt >= 240  && pt < 450) return 0.965785;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
         if ( pt>=20 && pt < 1000) return ((0.960807+(0.0018048*x))+(-3.09836e-06*(x*x)))+(1.64823e-09*(x*(x*x)));
@@ -4343,16 +4348,16 @@ double DMAnalysisTreeMaker::TagScaleFactorSubjet(string algo, int flavor, string
     }
     if(syst ==  "mistag_down") {
       if(abs(flavor)==5){
-        if (pt >= 30  && pt < 140) return 0.935202;
-        if (pt >= 140  && pt < 180) return 0.975405;
-        if (pt >= 180  && pt < 240) return 0.944102;
-        if (pt >= 240  && pt < 450) return 0.965785;
+	if (pt >= 30  && pt < 140) return 0.935202;
+	if (pt >= 140  && pt < 180) return 0.975405;
+	if (pt >= 180  && pt < 240) return 0.944102;
+	if (pt >= 240  && pt < 450) return 0.965785;
       }
       if(abs(flavor)==4){
-        if (pt >= 30  && pt < 140) return 0.935202;
-        if (pt >= 140  && pt < 180) return 0.975405;
-        if (pt >= 180  && pt < 240) return 0.944102;
-        if (pt >= 240  && pt < 450) return 0.965785;
+	if (pt >= 30  && pt < 140) return 0.935202;
+	if (pt >= 140  && pt < 180) return 0.975405;
+	if (pt >= 180  && pt < 240) return 0.944102;
+	if (pt >= 240  && pt < 450) return 0.965785;
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
         if ( pt>=20 && pt < 1000) return ((0.873402+(0.00148169*x))+(-2.27029e-06*(x*x)))+(1.09633e-09*(x*(x*x)));
@@ -4502,25 +4507,25 @@ if(algo == "csvt"){
     }
      if(syst ==  "mistag_up") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return (0.857294+(3.75846e-05*x));
+	if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return (0.857294+(3.75846e-05*x));
+	if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if (pt >= 20 && pt < 1000) return (0.688619+260.84/(x*x))*(1+(0.144982+0.000116685*x+-1.0021e-07*x*x));
+	if (pt >= 20 && pt < 1000) return (0.971945+163.215/(x*x)+0.000517836*x)*(1+(0.291298+-0.000222983*x+1.69699e-07*x*x));
       }
     }
     if(syst ==  "mistag_down") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670)  return 0.857294+(3.75846e-05*x);
+	if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
 
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return (0.857294+(3.75846e-05*x));
+	 if (pt >= 20  && pt < 1000) return 0.828089*((1.+(0.040466*x))/(1.+(0.0329445*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if (pt >= 20 && pt < 1000) return (0.688619+260.84/(x*x))*(1-(0.144982+0.000116685*x+-1.0021e-07*x*x));
+	if (pt >= 20 && pt < 1000) return (0.971945+163.215/(x*x)+0.000517836*x)*(1-(0.291298+-0.000222983*x+1.69699e-07*x*x));
       }
     }
   if(syst ==  "b_tag_up") {
@@ -4593,25 +4598,25 @@ if(syst ==  "b_tag_down") {
     }
     if(syst ==  "mistag_up") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return 0.901114+(1.32145e-05*x);
+	if (pt >= 30  && pt < 670) return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.901114+(1.32145e-05*x);
+	if (pt >= 30  && pt < 670) return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if (pt >= 20 && pt < 1000) return (0.980777+-0.00109334*x+4.2909e-06*x*x+-2.78512e-09*x*x*x)*(1+(0.0672836+0.000102309*x+-1.01558e-07*x*x));
+	if (pt >= 20 && pt < 1000) return (1.0589+0.000382569*x+-2.4252e-07*x*x+2.20966e-10*x*x*x)*(1+(0.100485+3.95509e-05*x+-4.90326e-08*x*x));
       }
     }
     if(syst ==  "mistag_down") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670)  return 0.901114+(1.32145e-05*x);
+	if (pt >= 30  && pt < 670)  return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
 
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.901114+(1.32145e-05*x);
+	if (pt >= 30  && pt < 670) return 0.498094*((1.+(0.422991*x))/(1.+(0.210944*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if (pt >= 20 && pt < 1000) return (0.980777+-0.00109334*x+4.2909e-06*x*x+-2.78512e-09*x*x*x)*(1-(0.0672836+0.000102309*x+-1.01558e-07*x*x));
+	if (pt >= 20 && pt < 1000) return (1.0589+0.000382569*x+-2.4252e-07*x*x+2.20966e-10*x*x*x)*(1-(0.100485+3.95509e-05*x+-4.90326e-08*x*x));
       }
     }
 
@@ -4688,24 +4693,24 @@ if(syst ==  "b_tag_down") {
     }
     if(syst ==  "mistag_up") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 30  && pt < 670) return 0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 30  && pt < 670) return 0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return (1.05636+0.000920353*x+-7.85916e-07*x*x+1.92221e-11*x*x*x)*(1+(0.0539991+-6.29073e-06*x+-3.39895e-09*x*x));
+	if(pt>=20 && pt<1000) return (1.13904+-0.000594946*x+1.97303e-06*x*x+-1.38194e-09*x*x*x)*(1+(0.0996438+-8.33354e-05*x+4.74359e-08*x*x));
       }
     }
     if(syst ==  "mistag_down") {
       if(abs(flavor)==5){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 30  && pt < 670) return  0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)==4){
-	if (pt >= 30  && pt < 670) return 0.931535+(1.40704e-05*x);
+	if (pt >= 30  && pt < 670) return 0.673622*((1.+(0.284768*x))/(1.+(0.191506*x)));
       }
       if(abs(flavor)!=5 && abs(flavor)!=4){
-	if(pt>=20 && pt<1000) return (1.05636+0.000920353*x+-7.85916e-07*x*x+1.92221e-11*x*x*x)*(1-(0.0539991+-6.29073e-06*x+-3.39895e-09*x*x));
+	if(pt>=20 && pt<1000) return (1.13904+-0.000594946*x+1.97303e-06*x*x+-1.38194e-09*x*x*x)*(1-(0.0996438+-8.33354e-05*x+4.74359e-08*x*x));
       }
     }
     
