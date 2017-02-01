@@ -21,3 +21,5 @@ scram b -j 10
 cd test/
 
 cmsRun topplusdmTrees_cfg.py maxEvts=N sample="mySample/sample.root" version="1"7 outputLabel="myoutput" 
+
+add option: -EraLabel in case you are running on Data, since JECs depend on this
