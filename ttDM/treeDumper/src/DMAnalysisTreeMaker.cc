@@ -340,7 +340,7 @@ private:
 
   //tight AK4 b-tagging weights
   
-  BTagWeight b_csvt_0_tags= BTagWeight(0,6),
+  BTagWeight b_csvt_0_tags= BTagWeight(0,0),
     b_csvt_1_tag= BTagWeight(1,6),
     b_csvt_2_tag= BTagWeight(2,6);
   double b_weight_csvt_0_tags,
@@ -361,7 +361,7 @@ private:
 
   //medium AK4 b-tagging weights
     
-  BTagWeight b_csvm_0_tags= BTagWeight(0,6),
+  BTagWeight b_csvm_0_tags= BTagWeight(0,0),
     b_csvm_1_tag= BTagWeight(1,6),
     b_csvm_2_tag= BTagWeight(2,6);
   double b_weight_csvm_0_tags,
@@ -381,7 +381,7 @@ private:
     b_weight_csvm_2_tag_b_tag_up;
   //medium subjets b-tagging weights
     
-  BTagWeight b_subj_csvm_0_tags= BTagWeight(0,6),
+  BTagWeight b_subj_csvm_0_tags= BTagWeight(0,0),
     b_subj_csvm_1_tag= BTagWeight(1,1),
     b_subj_csvm_0_1_tags= BTagWeight(0,1),
     b_subj_csvm_2_tags= BTagWeight(2,6);
@@ -409,7 +409,7 @@ private:
 
   //loose AK4 b-tagging weights
   
-  BTagWeight b_csvl_0_tags= BTagWeight(0,6),
+  BTagWeight b_csvl_0_tags= BTagWeight(0,0),
     b_csvl_1_tag= BTagWeight(1,6),
     b_csvl_2_tag= BTagWeight(2,6);
   
@@ -431,7 +431,7 @@ private:
 
   //loose subjets b-tagging weights
 
-  BTagWeight b_subj_csvl_0_tags= BTagWeight(0,6),
+  BTagWeight b_subj_csvl_0_tags= BTagWeight(0,0),
     b_subj_csvl_1_tag= BTagWeight(1,1),
     b_subj_csvl_0_1_tags= BTagWeight(0,1),
     b_subj_csvl_2_tags= BTagWeight(2,6);
@@ -3687,24 +3687,24 @@ double DMAnalysisTreeMaker::smear(double pt, double genpt, double eta, string sy
   return  smear;
 }
 
-double DMAnalysisTreeMaker::resolSF(double eta, string syst)
+double DMAnalysisTreeMaker::resolSF(double eta, string syst)//DONE
 {//from https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetResolution#Smearing_procedures
   double fac = 0.;
   if (syst == "jer__up")fac = 1.;
   if (syst == "jer__down")fac = -1.;
-  if (eta <= 0.5)                       return 0.109 + (0.008 * fac);
-  else if ( eta > 0.5 && eta <= 0.8 )   return 0.138 + (0.013 * fac);
-  else if ( eta > 0.8 && eta <= 1.1 )   return 0.114 + (0.013 * fac);
-  else if ( eta > 1.1 && eta <= 1.3 )   return 0.123 + (0.024 * fac);
-  else if ( eta > 1.3 && eta <= 1.7 )   return 0.084 + (0.011 * fac);
-  else if ( eta > 1.7 && eta <= 1.9 )   return 0.082 + (0.035 * fac);
-  else if ( eta > 1.9 && eta <= 2.1 )   return 0.140 + (0.047 * fac);
-  else if ( eta > 2.1 && eta <= 2.3 )   return 0.067 + (0.053 *fac);
-  else if ( eta > 2.3 && eta <= 2.5 )   return 0.177 + (0.041 *fac);
-  else if ( eta > 2.5 && eta <= 2.8 )   return 0.364 + (0.039 *fac);
-  else if ( eta > 2.8 && eta <= 3.0 )   return 0.857 + (0.071 *fac);
-  else if ( eta > 3.0 && eta <= 3.2 )   return 0.328 + (0.022 *fac);
-  else if ( eta > 3.2 && eta <= 5.0 )   return 0.160 + (0.029 *fac);
+  if (eta <= 0.5)                       return 0.122 + (0.026 * fac);
+  else if ( eta > 0.5 && eta <= 0.8 )   return 0.167 + (0.048 * fac);
+  else if ( eta > 0.8 && eta <= 1.1 )   return 0.168 + (0.046 * fac);
+  else if ( eta > 1.1 && eta <= 1.3 )   return 0.029 + (0.066 * fac);
+  else if ( eta > 1.3 && eta <= 1.7 )   return 0.115 + (0.003 * fac);
+  else if ( eta > 1.7 && eta <= 1.9 )   return 0.041 + (0.0062 * fac);
+  else if ( eta > 1.9 && eta <= 2.1 )   return 0.167 + (0.086 * fac);
+  else if ( eta > 2.1 && eta <= 2.3 )   return 0.094 + (0.093 *fac);
+  else if ( eta > 2.3 && eta <= 2.5 )   return 0.168 + (0.120 *fac);
+  else if ( eta > 2.5 && eta <= 2.8 )   return 0.266 + (0.132 *fac);
+  else if ( eta > 2.8 && eta <= 3.0 )   return 0.595 + (0.175 *fac);
+  else if ( eta > 3.0 && eta <= 3.2 )   return 0.998 + (0.066 *fac);
+  else if ( eta > 3.2 && eta <= 5.0 )   return 0.226 + (0.145 *fac);
   return 0.1;
  }
 
