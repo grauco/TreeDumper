@@ -1,4 +1,4 @@
-/**					\
+/**				\
  * DMAnalysisTreeMaker			\
  * \
  * Produces analysis trees from edm-ntuples adding extra variables for resolved and unresolved tops\
@@ -3687,24 +3687,24 @@ double DMAnalysisTreeMaker::smear(double pt, double genpt, double eta, string sy
   return  smear;
 }
 
-double DMAnalysisTreeMaker::resolSF(double eta, string syst)//DONE
+double DMAnalysisTreeMaker::resolSF(double eta, string syst)
 {//from https://twiki.cern.ch/twiki/bin/viewauth/CMS/JetResolution#Smearing_procedures
   double fac = 0.;
   if (syst == "jer__up")fac = 1.;
   if (syst == "jer__down")fac = -1.;
-  if (eta <= 0.5)                       return 0.122 + (0.026 * fac);
-  else if ( eta > 0.5 && eta <= 0.8 )   return 0.167 + (0.048 * fac);
-  else if ( eta > 0.8 && eta <= 1.1 )   return 0.168 + (0.046 * fac);
-  else if ( eta > 1.1 && eta <= 1.3 )   return 0.029 + (0.066 * fac);
-  else if ( eta > 1.3 && eta <= 1.7 )   return 0.115 + (0.003 * fac);
-  else if ( eta > 1.7 && eta <= 1.9 )   return 0.041 + (0.0062 * fac);
-  else if ( eta > 1.9 && eta <= 2.1 )   return 0.167 + (0.086 * fac);
-  else if ( eta > 2.1 && eta <= 2.3 )   return 0.094 + (0.093 *fac);
-  else if ( eta > 2.3 && eta <= 2.5 )   return 0.168 + (0.120 *fac);
-  else if ( eta > 2.5 && eta <= 2.8 )   return 0.266 + (0.132 *fac);
-  else if ( eta > 2.8 && eta <= 3.0 )   return 0.595 + (0.175 *fac);
-  else if ( eta > 3.0 && eta <= 3.2 )   return 0.998 + (0.066 *fac);
-  else if ( eta > 3.2 && eta <= 5.0 )   return 0.226 + (0.145 *fac);
+  if (eta <= 0.5)                       return 0.109 + (0.008 * fac);
+  else if ( eta > 0.5 && eta <= 0.8 )   return 0.138 + (0.013 * fac);
+  else if ( eta > 0.8 && eta <= 1.1 )   return 0.114 + (0.013 * fac);
+  else if ( eta > 1.1 && eta <= 1.3 )   return 0.123 + (0.024 * fac);
+  else if ( eta > 1.3 && eta <= 1.7 )   return 0.084 + (0.011 * fac);
+  else if ( eta > 1.7 && eta <= 1.9 )   return 0.082 + (0.035 * fac);
+  else if ( eta > 1.9 && eta <= 2.1 )   return 0.140 + (0.047 * fac);
+  else if ( eta > 2.1 && eta <= 2.3 )   return 0.067 + (0.053 *fac);
+  else if ( eta > 2.3 && eta <= 2.5 )   return 0.177 + (0.041 *fac);
+  else if ( eta > 2.5 && eta <= 2.8 )   return 0.364 + (0.039 *fac);
+  else if ( eta > 2.8 && eta <= 3.0 )   return 0.857 + (0.071 *fac);
+  else if ( eta > 3.0 && eta <= 3.2 )   return 0.328 + (0.022 *fac);
+  else if ( eta > 3.2 && eta <= 5.0 )   return 0.160 + (0.029 *fac);
   return 0.1;
  }
 
