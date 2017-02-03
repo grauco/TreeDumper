@@ -854,25 +854,25 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
 
   initTreeWeightHistory(useLHEWeights);
 
-  string L1Name ="JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt"; 
-  string L1RCName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1RC_AK4PFchs.txt"; 
-  string L2Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
-  string L3Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
-  string L2L3ResName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt";
+  string L1Name ="Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt"; 
+  string L1RCName = "Summer16_23Sep2016V3_MC_L1RC_AK4PFchs.txt"; 
+  string L2Name = "Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
+  string L3Name = "Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
+  string L2L3ResName = "Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt";
 
   if(isData){
-    L1Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK4PFchs.txt").c_str() ;
-    L1RCName = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK4PFchs.txt").c_str() ;  
-    L2Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK4PFchs.txt").c_str() ;
-    L3Name   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK4PFchs.txt").c_str() ;
-    L2L3ResName = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK4PFchs.txt").c_str() ;
+    L1Name   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK4PFchs.txt").c_str() ;
+    L1RCName = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK4PFchs.txt").c_str() ;  
+    L2Name   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK4PFchs.txt").c_str() ;
+    L3Name   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK4PFchs.txt").c_str() ;
+    L2L3ResName = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK4PFchs.txt").c_str() ;
   }
 
   if(isV2){
-    L1Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt";
-    L2Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
-    L3Name = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
-    L2L3ResName = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt"; 
+    L1Name = "Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt";
+    L2Name = "Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt";
+    L3Name = "Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt";
+    L2L3ResName = "Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt"; 
   }
 
   jecParsL1  = new JetCorrectorParameters(L1Name);
@@ -885,28 +885,28 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(isData)jecPars.push_back(*jecParsL2L3Residuals);
 
   jecCorr = new FactorizedJetCorrector(jecPars);
-  jecUnc  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK4PFchs.txt").c_str() , "Total")));
+  jecUnc  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK4PFchs.txt").c_str() , "Total")));
 
   //JEC on AK8
 
-  string L1Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt"; 
-  string L1RCName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1RC_AK8PFchs.txt"; 
-  string L2Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
-  string L3Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
-  string L2L3ResName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt";
+  string L1Name8 = "Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt"; 
+  string L1RCName8 = "Summer16_23Sep2016V3_MC_L1RC_AK8PFchs.txt"; 
+  string L2Name8 = "Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
+  string L3Name8 = "Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
+  string L2L3ResName8 = "Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt";
   if(isData){
-    L1Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK8PFchs.txt").c_str() ;
-    L1RCName8 = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK8PFchs.txt").c_str() ;  
-    L2Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK8PFchs.txt").c_str() ;
-    L3Name8   = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK8PFchs.txt").c_str() ;
-    L2L3ResName8 = ("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK8PFchs.txt").c_str() ;
+    L1Name8   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L1FastJet_AK8PFchs.txt").c_str() ;
+    L1RCName8 = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L1RC_AK8PFchs.txt").c_str() ;  
+    L2Name8   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L2Relative_AK8PFchs.txt").c_str() ;
+    L3Name8   = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L3Absolute_AK8PFchs.txt").c_str() ;
+    L2L3ResName8 = ("Summer16_23Sep2016"+EraLabel+"V3_DATA_L2L3Residual_AK8PFchs.txt").c_str() ;
   }
 
   if(isV2){
-    L1Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt";
-    L2Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
-    L3Name8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
-    L2L3ResName8 = "JECs/Summer16/textFiles/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt"; 
+    L1Name8 = "Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt";
+    L2Name8 = "Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt";
+    L3Name8 = "Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt";
+    L2L3ResName8 = "Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt"; 
   }
 
   jecParsL18  = new JetCorrectorParameters(L1Name8);
@@ -919,7 +919,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(isData)jecPars8.push_back(*jecParsL2L3Residuals8);
 
   jecCorr8 = new FactorizedJetCorrector(jecPars8);
-  jecUnc8  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("JECs/Summer16/textFiles/Summer16_23Sep2016"+EraLabel+"V3_DATA/Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK8PFchs.txt").c_str() , "Total")));
+  jecUnc8  = new JetCorrectionUncertainty(*(new JetCorrectorParameters(("Summer16_23Sep2016"+EraLabel+"V3_DATA_UncertaintySources_AK8PFchs.txt").c_str() , "Total")));
 
   
   isFirstEvent = true;
