@@ -3576,9 +3576,9 @@ bool DMAnalysisTreeMaker::getEventTriggers(){
   float_values["Event_passesPhotonTriggers"]=(float)phOR;
   float_values["Event_passesHadronicTriggers"]=(float)hadronOR;
   //std::cout << "............" << HHThOR << ".............." << std::endl;
-  float_values["Event_passesHadronicPFHT900Triggers"]=(float)HHThOR;
-  float_values["Event_passesHadronicPFHT800Triggers"]=(float)HHTlOR;
-  float_values["Event_passesHadronicPFJet450Triggers"]=(float)HJetOR;
+  float_values["Event_passesHadronPFHT900Triggers"]=(float)HHThOR;
+  float_values["Event_passesHadronPFHT800Triggers"]=(float)HHTlOR;
+  float_values["Event_passesHadronPFJet450Triggers"]=(float)HJetOR;
   return (eleOR || muOR || hadronOR || phOR || HHThOR || HHTlOR || HJetOR);
 }
 
