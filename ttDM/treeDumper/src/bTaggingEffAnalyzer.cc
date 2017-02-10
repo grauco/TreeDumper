@@ -27,6 +27,7 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TH2D.h"
@@ -60,10 +61,13 @@ private:
   // ----------member data ---------------------------
 
   typedef std::vector<pat::Jet> PatJetCollection;
+  typedef std::vector<pat::Muon> PatMuonCollection;
   
   edm::EDGetTokenT< PatJetCollection > t_jetsTag_;
+  edm::EDGetTokenT< PatMuonCollection > t_muonsTag_;
   
   const edm::InputTag jetsTag;
+  const edm::InputTag muonsTag;
   const std::string   discriminatorTag;
   const double  discriminatorValue;
   const int     ptNBins;
@@ -98,6 +102,7 @@ private:
 bTaggingEffAnalyzer::bTaggingEffAnalyzer(const edm::ParameterSet& iConfig):
 
   jetsTag(iConfig.getParameter<edm::InputTag>("JetsTag")),
+  muonsTag(iConfig.getParameter<edm::InputTag>("MuonsTag")),
   discriminatorTag(iConfig.getParameter<std::string>("DiscriminatorTag")),
   discriminatorValue(iConfig.getParameter<double>("DiscriminatorValue")),
   ptNBins(iConfig.getParameter<int>("PtNBins")),
@@ -109,6 +114,7 @@ bTaggingEffAnalyzer::bTaggingEffAnalyzer(const edm::ParameterSet& iConfig):
                                                                  
 {
   t_jetsTag_ = consumes< PatJetCollection >( jetsTag );
+  t_muonsTag_ = consumes< PatMuonCollection >( muonsTag );
   
   //now do what ever initialization is needed
   h2_bTaggingEff_Denom_b    = fs->make<TH2D>("h2_bTaggingEff_Denom_b", ";p_{T} [GeV];#eta", ptNBins, ptMin, ptMax, etaNBins, etaMin, etaMax);
@@ -137,29 +143,66 @@ bTaggingEffAnalyzer::~bTaggingEffAnalyzer()
 void bTaggingEffAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   edm::Handle<PatJetCollection> jets;
-  iEvent.getByToken(t_jetsTag_,jets ); 
+  iEvent.getByToken(t_jetsTag_,jets );
+
+  edm::Handle<PatMuonCollection> muons;
+  iEvent.getByToken(t_muonsTag_,muons );
+
+  // loop over muons to calculate the related multiciplicity
+  int nMuons=0;
+  for(PatMuonCollection::const_iterator it = muons->begin(); it != muons->end(); ++it)
+    {
+      if(it->pt()>10.0 && abs(it->eta()) < 2.4 && it->isLooseMuon()) nMuons++;
+    }
+
   
-  // loop over jets
+  // loop over jets to apply preselection (HT, JetID and AK4jetmultiplicity)
+  bool passesID = true;
+  float Ht=0;
+  int nJets=0;
   for(PatJetCollection::const_iterator it = jets->begin(); it != jets->end(); ++it)
     {
-      int partonFlavor = it->partonFlavour();
-      if( abs(partonFlavor)==5 )
-	{
-	  h2_bTaggingEff_Denom_b->Fill(it->pt(), it->eta());
-	  if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_b->Fill(it->pt(), it->eta());
-	}
-      else if( abs(partonFlavor)==4 )
-	{
-	  h2_bTaggingEff_Denom_c->Fill(it->pt(), it->eta());
-	  if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_c->Fill(it->pt(), it->eta());
-	}
-      else
-	{
-	  h2_bTaggingEff_Denom_udsg->Fill(it->pt(), it->eta());
-	  if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_udsg->Fill(it->pt(), it->eta());
-	}
-    }
-}
+      //define Tight JetID
+      if(fabs(it->eta())<2.7){
+	passesID = (it->neutralHadronEnergyFraction()<0.90 &&  it->neutralEmEnergyFraction()<0.90 && it->chargedMultiplicity()+it->neutralMultiplicity()>1) && ((fabs(it->eta())<=2.4 && it->chargedHadronEnergyFraction()>0 &&  it->chargedMultiplicity()>0 && it->chargedEmEnergyFraction()<0.99) || fabs(it->eta())>2.4);
+      } else if(fabs(it->eta())<3.0 && fabs(it->eta())>2.7){
+	passesID = it->neutralEmEnergyFraction()<0.90 && it->neutralMultiplicity()>2;
+      } else if(fabs(it->eta())>3.0){
+	passesID = it->neutralEmEnergyFraction()<0.90 && it->neutralMultiplicity()>10 ;
+      }
+
+      //calculate Hadronic Activity
+      if(passesID && it->pt()>30 && (it->eta())<4.){
+	nJets+=1;
+	if(it->pt()>50) Ht+=it->pt();
+      }
+      
+    }//loop over AK4 jets
+
+  if(Ht>1250 && nJets>3 && nMuons==0){
+  //if(1>0){
+    // loop over jets
+    for(PatJetCollection::const_iterator it = jets->begin(); it != jets->end(); ++it)
+      {
+	int partonFlavor = it->partonFlavour();
+	if( abs(partonFlavor)==5 )
+	  {
+	    h2_bTaggingEff_Denom_b->Fill(it->pt(), it->eta());
+	    if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_b->Fill(it->pt(), it->eta());
+	  }
+	else if( abs(partonFlavor)==4 )
+	  {
+	    h2_bTaggingEff_Denom_c->Fill(it->pt(), it->eta());
+	    if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_c->Fill(it->pt(), it->eta());
+	  }
+	else
+	  {
+	    h2_bTaggingEff_Denom_udsg->Fill(it->pt(), it->eta());
+	    if( it->bDiscriminator(discriminatorTag.c_str()) >= discriminatorValue ) h2_bTaggingEff_Num_udsg->Fill(it->pt(), it->eta());
+	  }
+      }//close loop over AK4 jets
+  }//close Ht, nJets & nMuons
+}//close anaylze
 
 
 // ------------ method called once each job just before starting event loop  ------------
