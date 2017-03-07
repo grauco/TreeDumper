@@ -1,3 +1,4 @@
+
 import commands, os
 ### *****************************************************************************************
 ### Usage:
@@ -43,8 +44,12 @@ files = []
 #files = ["file:"+filedir+"MET_Prompt/"+l for l in listFiles]
 files = ["file:"+filedir+"/"+chan+"/"+l for l in listFiles]
 options.register('sample',
+                 '/store/user/decosa/B2GAnaFW_80X_v2p4/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_v2p4/170213_085503/0000/B2GEDMNtuple_2.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170104_182124/0000/B2GEDMNtuple_104.root',
-                 '/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016C-23Sep2016-v1_B2GAnaFW_80X_v2p4/161221_155142/0000/B2GEDMNtuple_10.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016H-PromptReco-v2_B2GAnaFW_80X_v2p4/161221_180745/0000/B2GEDMNtuple_10.root',
+                 #'/store/user/grauco/B2GAnaFW_80X_V2p4/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161227_111236/0000/B2GEDMNtuple_2.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
                  'Sample to analyze')
@@ -69,7 +74,7 @@ options.register('EraLabel',
                  'Data Era Label')
 
 options.register('isData',
-                 True,
+                 False,
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.bool,
                  'Is data?')
@@ -123,12 +128,12 @@ l = l + ["trigger2"+str(s) for s in xrange(15)]
 SingleElTriggers = ["HLT_Ele27_eta2p1_WP75_Gsf"]
 SingleElTriggers = SingleElTriggers + ["HLT_Ele27_eta2p1_WP75_Gsf_v"+str(s) for s in xrange(15)]
 
-PhotonTriggers = ["HLT_Photon155"]
-PhotonTriggers = PhotonTriggers + ["HLT_Photon155_v"+str(s) for s in xrange(15)]
+PhotonTriggers = ["HLT_AK8PFJet360_TrimMass30"]
+PhotonTriggers = PhotonTriggers + ["HLT_AK8PFJet360_TrimMass30_v"+str(s) for s in xrange(15)]
 
-SingleMuTriggers = ["HLT_IsoMu20","HLT_IsoTkMu20"]
-SingleMuTriggers = SingleMuTriggers + ["HLT_IsoMu20_v"+str(s) for s in xrange(15)]
-SingleMuTriggers = SingleMuTriggers + ["HLT_IsoTkMu20_v"+str(s) for s in xrange(15)]
+SingleMuTriggers = ["HLT_Mu50","HLT_TkMu50"]
+SingleMuTriggers = SingleMuTriggers + ["HLT_Mu50_v"+str(s) for s in xrange(15)]
+SingleMuTriggers = SingleMuTriggers + ["HLT_TkMu50_v"+str(s) for s in xrange(15)]
 
 HadronPFHT900Triggers = ["HLT_PFHT900"]
 HadronPFHT900Triggers = HadronPFHT900Triggers + ["HLT_PFHT900_v"+str(s) for s in xrange(15)]
@@ -136,8 +141,9 @@ HadronPFHT900Triggers = HadronPFHT900Triggers + ["HLT_PFHT900_v"+str(s) for s in
 HadronPFHT800Triggers = ["HLT_PFHT800"]
 HadronPFHT800Triggers =HadronPFHT800Triggers + ["HLT_PFHT800_v"+str(s) for s in xrange(15)]
 
-HadronPFJet450Triggers = ["HLT_PFJet450"]
+HadronPFJet450Triggers = ["HLT_PFJet450", "HLT_AK8PFJet450"]
 HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
+HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
 
 #hadronTriggers = ["HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v7","HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7", "HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v3", "HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v2", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v2",  "HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v7", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7"]
 hadronTriggers = ["HLT_PFMETNoMu120_PFMHTNoMu120_IDTight", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight"]
@@ -157,9 +163,9 @@ if(options.isData):
     SingleElTriggers = SingleElTriggers + ["HLT_Ele27_eta2p1_WPLoose_Gsf_v"+str(s) for s in xrange(15)]
     SingleElTriggers = SingleElTriggers + ["HLT_Ele23_WPLoose_Gsf_v"+str(s) for s in xrange(15)]
 
-    SingleMuTriggers = ["HLT_IsoMu20","HLT_IsoTkMu20"]
-    SingleMuTriggers = SingleMuTriggers + ["HLT_IsoMu20_v"+str(s) for s in xrange(15)]
-    SingleMuTriggers = SingleMuTriggers + ["HLT_IsoTkMu20_v"+str(s) for s in xrange(15)]
+    SingleMuTriggers = ["HLT_Mu50","HLT_TkMu50"]
+    SingleMuTriggers = SingleMuTriggers + ["HLT_Mu50_v"+str(s) for s in xrange(15)]
+    SingleMuTriggers = SingleMuTriggers + ["HLT_TkMu50_v"+str(s) for s in xrange(15)]
 
     HadronPFHT900Triggers = ["HLT_PFHT900"]
     HadronPFHT900Triggers = HadronPFHT900Triggers + ["HLT_PFHT900_v"+str(s) for s in xrange(15)]
@@ -167,7 +173,8 @@ if(options.isData):
     HadronPFHT800Triggers = ["HLT_PFHT800"]
     HadronPFHT800Triggers =HadronPFHT800Triggers + ["HLT_PFHT800_v"+str(s) for s in xrange(15)]
     
-    HadronPFJet450Triggers = ["HLT_PFJet450"]
+    HadronPFJet450Triggers = ["HLT_PFJet450", "HLT_AK8PFJet450"]
+    HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
     HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
 
     #hadronTriggers = ["HLT_PFMET90_PFMHT90_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET120_PFMHT120_IDTight_v1", "HLT_PFMET120_NoiseCleaned_PFMHT120_IDTight","HLT_PFMET120_JetIdCleaned_PFMHT120_IDTight","HLT_PFMET90_JetIdCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_NoID", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET100_PFMHT100_IDTight_v7", "HLT_PFMET110_PFMHT110_IDTight_v7", "HLT_PFMET120_PFMHT120_IDTight_v7", "HLT_PFMET90_PFMHT90_IDTight_v2", "HLT_PFMET100_PFMHT100_IDTight_v2", "HLT_PFMET110_PFMHT110_IDTight_v2", "HLT_PFMET120_PFMHT120_IDTight_v2", "HLT_AK8PFJet200_v1", "HLT_AK8PFJet260_v1"]
