@@ -141,9 +141,9 @@ HadronPFHT900Triggers = HadronPFHT900Triggers + ["HLT_PFHT900_v"+str(s) for s in
 HadronPFHT800Triggers = ["HLT_PFHT800"]
 HadronPFHT800Triggers =HadronPFHT800Triggers + ["HLT_PFHT800_v"+str(s) for s in xrange(15)]
 
-HadronPFJet450Triggers = ["HLT_PFJet450", "HLT_AK8PFJet450"]
+HadronPFJet450Triggers = ["HLT_PFJet450"]
 HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
-HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
+#HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
 
 #hadronTriggers = ["HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v7","HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7", "HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v3", "HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v2", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v2",  "HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v7", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7"]
 hadronTriggers = ["HLT_PFMETNoMu120_PFMHTNoMu120_IDTight", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight"]
@@ -173,9 +173,9 @@ if(options.isData):
     HadronPFHT800Triggers = ["HLT_PFHT800"]
     HadronPFHT800Triggers =HadronPFHT800Triggers + ["HLT_PFHT800_v"+str(s) for s in xrange(15)]
     
-    HadronPFJet450Triggers = ["HLT_PFJet450", "HLT_AK8PFJet450"]
+    HadronPFJet450Triggers = ["HLT_PFJet450"]
     HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
-    HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
+    #HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
 
     #hadronTriggers = ["HLT_PFMET90_PFMHT90_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET120_PFMHT120_IDTight_v1", "HLT_PFMET120_NoiseCleaned_PFMHT120_IDTight","HLT_PFMET120_JetIdCleaned_PFMHT120_IDTight","HLT_PFMET90_JetIdCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_NoID", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET100_PFMHT100_IDTight_v7", "HLT_PFMET110_PFMHT110_IDTight_v7", "HLT_PFMET120_PFMHT120_IDTight_v7", "HLT_PFMET90_PFMHT90_IDTight_v2", "HLT_PFMET100_PFMHT100_IDTight_v2", "HLT_PFMET110_PFMHT110_IDTight_v2", "HLT_PFMET120_PFMHT120_IDTight_v2", "HLT_AK8PFJet200_v1", "HLT_AK8PFJet260_v1"]
 
