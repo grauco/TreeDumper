@@ -15,7 +15,7 @@ import FWCore.ParameterSet.VarParsing as opts
 options = opts.VarParsing ('analysis')
 
 options.register('maxEvts',
-                 1000,# default value: process all events
+                 -1,# default value: process all events
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.int,
                  'Number of events to process')
@@ -111,7 +111,7 @@ options.register('lhesource',
                  'LHEProducts source')
 
 options.register('channel',
-                 "ttbar",
+                 "",
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
                  'channel for weight evaluation'
