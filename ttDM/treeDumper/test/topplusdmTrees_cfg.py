@@ -1,4 +1,3 @@
-
 import commands, os
 ### *****************************************************************************************
 ### Usage:
@@ -16,7 +15,7 @@ import FWCore.ParameterSet.VarParsing as opts
 options = opts.VarParsing ('analysis')
 
 options.register('maxEvts',
-                 -1,# default value: process all events
+                 1000,# default value: process all events
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.int,
                  'Number of events to process')
@@ -44,12 +43,14 @@ files = []
 #files = ["file:"+filedir+"MET_Prompt/"+l for l in listFiles]
 files = ["file:"+filedir+"/"+chan+"/"+l for l in listFiles]
 options.register('sample',
-                 '/store/user/decosa/B2GAnaFW_80X_v2p4/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_v2p4/170213_085503/0000/B2GEDMNtuple_2.root',
+                 #'/store/user/decosa/B2GAnaFW_80X_v2p4/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-900_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_v2p4/170213_085503/0000/B2GEDMNtuple_2.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/170104_182124/0000/B2GEDMNtuple_104.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016C-23Sep2016-v1_B2GAnaFW_80X_v2p4/161221_155142/0000/B2GEDMNtuple_10.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/SingleMuon/Run2016H-PromptReco-v2_B2GAnaFW_80X_v2p4/161221_180745/0000/B2GEDMNtuple_10.root',
                  #'/store/user/grauco/B2GAnaFW_80X_V2p4/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161227_111236/0000/B2GEDMNtuple_2.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
+                 #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1_B2GAnaFW_80X_V2p4/170124_202648/0000/B2GEDMNtuple_1.root',
+                 '/store/group/phys_b2g/B2GAnaFW_80X_V2p4/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161222_110143/0000/B2GEDMNtuple_1.root',
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
                  'Sample to analyze')
@@ -110,7 +111,7 @@ options.register('lhesource',
                  'LHEProducts source')
 
 options.register('channel',
-                 '',
+                 "ttbar",
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
                  'channel for weight evaluation'
@@ -143,7 +144,7 @@ HadronPFHT800Triggers =HadronPFHT800Triggers + ["HLT_PFHT800_v"+str(s) for s in 
 
 HadronPFJet450Triggers = ["HLT_PFJet450"]
 HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
-#HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
+#HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
 
 #hadronTriggers = ["HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v7","HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7", "HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight_v3", "HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight_v2", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v2", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v2",  "HLT_PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu120_JetIdCleaned_PFMHTNoMu120_IDTight","HLT_PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight","HLT_PFMETNoMu90_JetIdCleaned_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", "HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v7", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7", "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7"]
 hadronTriggers = ["HLT_PFMETNoMu120_PFMHTNoMu120_IDTight", "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight"]
@@ -175,7 +176,7 @@ if(options.isData):
     
     HadronPFJet450Triggers = ["HLT_PFJet450"]
     HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
-    #HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_AK8PFJet450_v"+str(s) for s in xrange(15)]
+    #HadronPFJet450Triggers =HadronPFJet450Triggers + ["HLT_PFJet450_v"+str(s) for s in xrange(15)]
 
     #hadronTriggers = ["HLT_PFMET90_PFMHT90_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET100_PFMHT100_IDTight_v1", "HLT_PFMET120_PFMHT120_IDTight_v1", "HLT_PFMET120_NoiseCleaned_PFMHT120_IDTight","HLT_PFMET120_JetIdCleaned_PFMHT120_IDTight","HLT_PFMET90_JetIdCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_IDTight","HLT_PFMET90_NoiseCleaned_PFMHT90_NoID", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET90_PFMHT90_IDTight", "HLT_PFMET100_PFMHT100_IDTight_v7", "HLT_PFMET110_PFMHT110_IDTight_v7", "HLT_PFMET120_PFMHT120_IDTight_v7", "HLT_PFMET90_PFMHT90_IDTight_v2", "HLT_PFMET100_PFMHT100_IDTight_v2", "HLT_PFMET110_PFMHT110_IDTight_v2", "HLT_PFMET120_PFMHT120_IDTight_v2", "HLT_AK8PFJet200_v1", "HLT_AK8PFJet260_v1"]
 
@@ -236,6 +237,7 @@ if options.addPartonInfo:
         process.DMTreesDumper.channelInfo.getPartonTop=cms.untracked.bool(True)
         process.DMTreesDumper.channelInfo.doWReweighting=cms.untracked.bool(True)
         process.DMTreesDumper.channelInfo.doTopReweighting=cms.untracked.bool(True)
+
 process.DMTreesDumper.lhes =cms.InputTag(options.lhesource)
 process.DMTreesDumper.changeJECs = cms.untracked.bool(options.changeJECs)
 process.DMTreesDumper.isData = cms.untracked.bool(options.isData)#This adds the L2L3Residuals
@@ -246,12 +248,12 @@ process.DMTreesDumper.channelInfo.useLHEWeights = cms.untracked.bool(True)
 
 if options.channel == "ttbar":
     process.DMTreesDumper.getPartonTop  = cms.untracked.bool(True)
-    #process.DMTreesDumper.channelInfo.getParticleWZ  = cms.untracked.bool(True) 
+    process.DMTreesDumper.channelInfo.getParticleWZ  = cms.untracked.bool(True) 
 if options.channel == "wzjets":
     print "channel is " + options.channel 
     process.DMTreesDumper.channelInfo.getPartonW  = cms.untracked.bool(True)
     process.DMTreesDumper.channelInfo.getParticleWZ  = cms.untracked.bool(True)
-
+    process.DMTreesDumper.channelInfo.getWZFlavour  = cms.untracked.bool(True)
 if options.isData:
     process.DMTreesDumper.channelInfo.useLHE = cms.untracked.bool(False)
     process.DMTreesDumper.channelInfo.useLHEWeights = cms.untracked.bool(False)

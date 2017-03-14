@@ -18,13 +18,15 @@ eventJetlabel = cms.string("eventShapePFJetVars")
 genlabel = cms.string("genPart")
 
 
+
 #Systematics:
 #systsToSave = ["noSyst","jes__up","jes__down"]
 #systsToSave = ["noSyst","jer__up","jer__down"]
 systsToSave = ["noSyst"]
 
 
-metFilters = ["Flag_CSCTightHaloFilter","Flag_goodVertices", "Flag_eeBadScFilter"]
+#metFilters = ["Flag_CSCTightHaloFilter","Flag_goodVertices", "Flag_eeBadScFilter"]
+metFilters=["Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_globalTightHalo2016Filter"]
 
 catMu = ["Tight","Loose", "Medium"]
 catEl = ["Tight","Veto"]
@@ -61,6 +63,8 @@ DMTreesDumper = cms.EDAnalyzer(
     metLabel = metlabel,
     genLabel = genlabel,
     eventLabel = eventlabel,
+    #resolutionsFile = cms.string('Spring16_25nsV10_MC_PtResolution_AK8PFchs.txt'),
+    #scaleFactorsFile = cms.string('Spring16_25nsV10_MC_SF_AK8PFchs.txt'),
     physicsObjects = cms.VPSet(
         cms.PSet(
             label = metlabel,
@@ -105,6 +109,14 @@ DMTreesDumper = cms.EDAnalyzer(
     eventNumber = cms.InputTag("eventInfo","evtInfoEventNumber"),
     #HBHE
     HBHEIsoFilter = cms.InputTag("HBHENoiseFilterResultProducer","HBHEIsoNoiseFilterResult"),
+
+    #Filters
+    BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter", ""),
+    BadPFMuonFilter =cms.InputTag("BadPFMuonFilter", ""),
+    
+    jetKeysAK4CHS = cms.InputTag("jetKeysAK4CHS", ""),
+    muonKeys = cms.InputTag("muonKeys", ""),
+
     #vertex
     vertexZ =  cms.InputTag("vertexInfo","z"),
     vertexChi2 =  cms.InputTag("vertexInfo","chi"),
@@ -412,6 +424,8 @@ DMTreesDumper.physicsObjects.append(
             #cms.InputTag("jetsAK8CHS","jetAK8CHStopMass"),
             cms.InputTag("jetsAK8CHS","jetAK8CHStrimmedMassCHS"),
             #cms.InputTag("jetsAK8CHS","jetAK8CHSwMass"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHSjecFactor0"),
+            cms.InputTag("jetsAK8CHS","jetAK8CHSjetArea"),
             ),
         variablesI = cms.VInputTag(),
         singleD = cms.VInputTag(),

@@ -24,6 +24,7 @@
 <use   name="HLTrigger/HLTcore"/>
 <use   name="RecoEcal/EgammaCoreTools"/>
 <!-- <use   name="Utilities/Timing"/> -->
+<use   name="JetMETCorrections/Modules"/>
 <use   name="CondFormats/HLTObjects"/>
 <use   name="root"/>
 <use   name="rootmva"/>
