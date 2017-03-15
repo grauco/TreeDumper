@@ -1,3 +1,6 @@
+
+
+
 #!/usr/bin/env python
 
 """
@@ -22,10 +25,6 @@ def getOptions() :
     parser.add_option("-f", "--datasets", dest="datasets",
         help=("File listing datasets to run over"),
         metavar="FILE")
-    parser.add_option("", "--isData", dest="isData",
-        default="False", action="store_true",
-        help=("Is it data?"),
-        )
     (options, args) = parser.parse_args()
 
 
@@ -38,30 +37,6 @@ def getOptions() :
 def main():
 
     options = getOptions()
-
-    datasetsFile = open( options.datasets )
-    jobsLines = datasetsFile.readlines()
-    jobs = []
-    eraLabel='BCD'
-    for ijob in jobsLines :
-        s = ijob.rstrip()
-        jobs.append( s )
-        print '  --> added ' + s
-
-        if (ijob.rstrip()).find('2016B') :
-            eraLabel = 'BCD'
-        if (ijob.rstrip()).find('2016C') :   
-            eraLabel = 'BCD'
-        if (ijob.rstrip()).find('2016D') :                                                                                                       
-            eraLabel = 'BCD'
-        if (ijob.rstrip()).find('2016E') :
-            eraLabel = 'EF'
-        if (ijob.rstrip()).find('2016F') :                                                                                                          
-            eraLabel = 'EF'
-        if (ijob.rstrip()).find('2016G') :                                                                                                    
-            eraLabel = 'G'
-        if (ijob.rstrip()).find('2016H') :                                                                                                    
-            eraLabel = 'H'
 
     from WMCore.Configuration import Configuration
     config = Configuration()
@@ -76,92 +51,93 @@ def main():
     config.JobType.pluginName = 'Analysis'
     config.JobType.psetName = options.config
     config.JobType.allowUndistributedCMSSW = True
-    config.JobType.pyCfgParams = ['isData=' + str(options.isData), 'changeJECs=True', 'EraLabel='+eraLabel]
-    #config.JobType.inputFiles = ['Fall15_25nsV2_DATA.db', 'Fall15_25nsV2_MC.db']
-    #config.JobType.inputFiles = ["Fall15_25nsV2_MC_L1FastJet_AK4PFchs.txt", "Fall15_25nsV2_MC_L1RC_AK4PFchs.txt","Fall15_25nsV2_MC_L2Relative_AK4PFchs.txt", "Fall15_25nsV2_MC_L3Absolute_AK4PFchs.txt","Fall15_25nsV2_MC_L2L3Residual_AK4PFchs.txt", "Fall15_25nsV2_DATA_L1FastJet_AK4PFchs.txt","Fall15_25nsV2_DATA_L1RC_AK4PFchs.txt","Fall15_25nsV2_DATA_L2Relative_AK4PFchs.txt","Fall15_25nsV2_DATA_L3Absolute_AK4PFchs.txt",  "Fall15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt"]
+    config.JobType.pyCfgParams = ['isData=False', 'changeJECs=True']
+    #config.JobType.inputFiles = ['Fall15_25nsV3_DATA.db', 'Fall15_25nsV3_MC.db']
+    #config.JobType.inputFiles = ["Fall15_25nsV3_MC_L1FastJet_AK4PFchs.txt", "Fall15_25nsV3_MC_L1RC_AK4PFchs.txt","Fall15_25nsV3_MC_L2Relative_AK4PFchs.txt", "Fall15_25nsV3_MC_L3Absolute_AK4PFchs.txt","Fall15_25nsV3_MC_L2L3Residual_AK4PFchs.txt", "Fall15_25nsV3_DATA_L1FastJet_AK4PFchs.txt","Fall15_25nsV3_DATA_L1RC_AK4PFchs.txt","Fall15_25nsV3_DATA_L2Relative_AK4PFchs.txt","Fall15_25nsV3_DATA_L3Absolute_AK4PFchs.txt",  "Fall15_25nsV3_DATA_L2L3Residual_AK4PFchs.txt"]
     
     config.JobType.inputFiles = [
-        'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV3_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV3_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016GV3_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016HV3_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016V3_MC_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016V3_MC_Uncertainty_AK8PFchs.txt',
+        'Spring16_25nsV10_MC_PtResolution_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV4_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV4_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016GV4_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016HV4_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016V4_MC_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016V4_MC_Uncertainty_AK8PFchs.txt',
         ]
     config.section_("Data")
     config.Data.ignoreLocality = True
     config.Data.inputDataset = None
     config.Data.inputDBS = 'phys03'
     config.Data.splitting = 'FileBased' 
-    config.Data.unitsPerJob = 1
+    config.Data.unitsPerJob = 3
     config.Data.publication = True    
-    config.Data.outLFNDirBase = '/store/user/decosa/Bprime_Mo17/'
+    config.Data.outLFNDirBase = '/store/user/grauco/Bprime_Mo17v4/'
 
     config.section_("Site")
     config.Site.storageSite = 'T2_CH_CSCS'
@@ -220,13 +196,9 @@ def main():
 #            run= 'G'
         ptbin = job.split('/')[1]
         cond = job.split('/')[2]
-        runs = cond.split('-')[1:-1]
-        run = '-'.join(runs)
-        config.General.requestName = 'Root80xV2p4_' + ptbin +'_08Feb17' 
-        if(options.isData): config.General.requestName = 'Root80xV2p4_' + ptbin + run + '_08Feb17' 
+        config.General.requestName = 'Root80xV2p4_' + ptbin +'_15M' 
         config.Data.inputDataset = job
-        config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin+'_08Feb17'
-        if(options.isData): config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin + run + '_08Feb17'
+        config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin+'_15M'
         print 'Submitting ' + config.General.requestName + ', dataset = ' + job
         print 'Configuration :'
         #print config
