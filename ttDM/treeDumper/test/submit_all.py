@@ -1,6 +1,3 @@
-
-
-
 #!/usr/bin/env python
 
 """
@@ -25,6 +22,10 @@ def getOptions() :
     parser.add_option("-f", "--datasets", dest="datasets",
         help=("File listing datasets to run over"),
         metavar="FILE")
+    parser.add_option( "--isData", dest="isData",
+        default=False, action="store_true",
+        help=("Is it data?"),
+        )
     (options, args) = parser.parse_args()
 
 
@@ -37,7 +38,10 @@ def getOptions() :
 def main():
 
     options = getOptions()
-
+    print "IsData? ", options.isData
+    datasetsFile = open( options.datasets )
+    jobsLines = datasetsFile.readlines()
+    jobs = []
     from WMCore.Configuration import Configuration
     config = Configuration()
 
@@ -51,93 +55,93 @@ def main():
     config.JobType.pluginName = 'Analysis'
     config.JobType.psetName = options.config
     config.JobType.allowUndistributedCMSSW = True
-    config.JobType.pyCfgParams = ['isData=False', 'changeJECs=True']
-    #config.JobType.inputFiles = ['Fall15_25nsV3_DATA.db', 'Fall15_25nsV3_MC.db']
-    #config.JobType.inputFiles = ["Fall15_25nsV3_MC_L1FastJet_AK4PFchs.txt", "Fall15_25nsV3_MC_L1RC_AK4PFchs.txt","Fall15_25nsV3_MC_L2Relative_AK4PFchs.txt", "Fall15_25nsV3_MC_L3Absolute_AK4PFchs.txt","Fall15_25nsV3_MC_L2L3Residual_AK4PFchs.txt", "Fall15_25nsV3_DATA_L1FastJet_AK4PFchs.txt","Fall15_25nsV3_DATA_L1RC_AK4PFchs.txt","Fall15_25nsV3_DATA_L2Relative_AK4PFchs.txt","Fall15_25nsV3_DATA_L3Absolute_AK4PFchs.txt",  "Fall15_25nsV3_DATA_L2L3Residual_AK4PFchs.txt"]
+    config.JobType.pyCfgParams = ['isData=' + str(options.isData), 'changeJECs=True']
+
+    #config.JobType.inputFiles = ['Fall15_25nsV2_DATA.db', 'Fall15_25nsV2_MC.db']
+    #config.JobType.inputFiles = ["Fall15_25nsV2_MC_L1FastJet_AK4PFchs.txt", "Fall15_25nsV2_MC_L1RC_AK4PFchs.txt","Fall15_25nsV2_MC_L2Relative_AK4PFchs.txt", "Fall15_25nsV2_MC_L3Absolute_AK4PFchs.txt","Fall15_25nsV2_MC_L2L3Residual_AK4PFchs.txt", "Fall15_25nsV2_DATA_L1FastJet_AK4PFchs.txt","Fall15_25nsV2_DATA_L1RC_AK4PFchs.txt","Fall15_25nsV2_DATA_L2Relative_AK4PFchs.txt","Fall15_25nsV2_DATA_L3Absolute_AK4PFchs.txt",  "Fall15_25nsV2_DATA_L2L3Residual_AK4PFchs.txt"]
     
     config.JobType.inputFiles = [
-        'Spring16_25nsV10_MC_PtResolution_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016BCDV4_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016EFV4_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016GV4_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L2Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_UncertaintySources_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_UncertaintySources_AK8PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016HV4_DATA_Uncertainty_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L1FastJet_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L1FastJet_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L1RC_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L1RC_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L2L3Residual_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L2L3Residual_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L2Relative_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L2Relative_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L3Absolute_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_L3Absolute_AK8PFchs.txt',
-        'Summer16_23Sep2016V4_MC_Uncertainty_AK4PFchs.txt',
-        'Summer16_23Sep2016V4_MC_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016BCDV3_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016EFV3_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016GV3_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L2Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_UncertaintySources_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_UncertaintySources_AK8PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016HV3_DATA_Uncertainty_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L1FastJet_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L1RC_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L1RC_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L2L3Residual_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L2L3Residual_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L2Relative_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_L3Absolute_AK8PFchs.txt',
+        'Summer16_23Sep2016V3_MC_Uncertainty_AK4PFchs.txt',
+        'Summer16_23Sep2016V3_MC_Uncertainty_AK8PFchs.txt',
         ]
     config.section_("Data")
     config.Data.ignoreLocality = True
     config.Data.inputDataset = None
     config.Data.inputDBS = 'phys03'
     config.Data.splitting = 'FileBased' 
-    config.Data.unitsPerJob = 3
-    config.Data.publication = True    
-    config.Data.outLFNDirBase = '/store/user/grauco/Bprime_Mo17v4/'
+    config.Data.unitsPerJob = 1
+    config.Data.publication = False    
+    config.Data.outLFNDirBase = '/store/user/decosa/Bprime_Mo17_jer/'
 
     config.section_("Site")
     config.Site.storageSite = 'T2_CH_CSCS'
@@ -162,6 +166,8 @@ def main():
     datasetsFile = open( options.datasets )
     jobsLines = datasetsFile.readlines()
     jobs = []
+
+
     for ijob in jobsLines :
         s = ijob.rstrip()
         jobs.append( s )
@@ -182,26 +188,52 @@ def main():
 
     for ijob, job in enumerate(jobs) :
 
-#        if (ijob.rstrip()).find('2016B') :
-#            run = 'B'
-#        if (ijob.rstrip()).find('2016C') :
-#            run = 'C'
-#        if (ijob.rstrip()).find('2016D') :
-#            run = 'D'
- #       if (ijob.rstrip()).find('2016E') :
- #           run= 'E'
- #       if (ijob.rstrip()).find('2016F') :
- #           run= 'F'
-#        if (ijob.rstrip()).find('2016G') :
-#            run= 'G'
+        eraLabel=''
+        print "**** Check job rstrip: ", job.rstrip()        
+        if ('2016B' in job.rstrip()) :
+            eraLabel = 'BCD'
+        elif ('2016C' in job.rstrip()) :   
+            eraLabel = 'BCD'
+        elif ('2016D' in job.rstrip()) :                                                                                                       
+            eraLabel = 'BCD'
+        elif ('2016E' in job.rstrip()) :
+            eraLabel = 'EF'
+        elif ('2016F' in job.rstrip()) :
+            eraLabel = 'EF'
+        elif ('2016G' in job.rstrip()) :                                                                                                    
+            eraLabel = 'G'
+        elif ('2016H' in job.rstrip()) :                                                                                                    
+            eraLabel = 'H'
+        else:
+            eraLabel = 'BCD'
+        #        print "-------> ERA: ", eraLabel
+
+        if(options.isData):config.JobType.pyCfgParams = ['isData=' + str(options.isData), 'changeJECs=True', "EraLabel="+eraLabel]
+        print "====> Config: ", config.JobType.pyCfgParams
+
         ptbin = job.split('/')[1]
         cond = job.split('/')[2]
-        config.General.requestName = 'Root80xV2p4_' + ptbin +'_15M' 
+        runs = cond.split('-')[1:-1]
+        run = '-'.join(runs)
+        print "===> PtBin: ", ptbin
+        if(options.isData):
+            ptbin = ptbin.split('-')[:1]
+            ptbin = '-'.join(ptbin)
+
+        print 'ptbin: ',ptbin
+        config.General.requestName = 'Root80xV2p4_' + ptbin +'_08Feb17' 
+        print "1st Request name: ", config.General.requestName        
+        if(options.isData): 
+            print "I am in the wrong hole -> isData is: ", options.isData
+            config.General.requestName = 'Root80xV2p4_' + ptbin + run + '_08Feb17' 
+        print "2nd Request name: ", config.General.requestName        
         config.Data.inputDataset = job
-        config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin+'_15M'
+        config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin+'_08Feb17'
+        if(options.isData): config.Data.outputDatasetTag = 'Root80xV2p4_' + ptbin + run + '_08Feb17'
         print 'Submitting ' + config.General.requestName + ', dataset = ' + job
         print 'Configuration :'
-        #print config
+        print "Request name: ", config.General.requestName        
+#print config
         try :
             from multiprocessing import Process
             p = Process(target=submit, args=(config,))
