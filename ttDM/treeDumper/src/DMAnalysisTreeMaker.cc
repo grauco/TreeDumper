@@ -1619,7 +1619,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	sizes[mu_label+"Medium"]=(int)float_values["Event_nMediumMuons"];
       }
       
-      if(isLoose>0 && pt> 10 && abs(eta) < 2.4 && iso<0.25){
+      if(isLoose>0 && pt> 30 && abs(eta) < 2.4 && iso<0.25){
 	if(isInVector(obj_cats[mu_label],"Loose")){
 	  ++float_values["Event_nLooseMuons"];
 	  if(isInVector(obj_cats[mu_label],"Loose")){
@@ -1632,7 +1632,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       }
 
 
-      if(isTight>0 && pt> 10 && abs(eta) < 2.4 && iso<0.25){
+      if(isTight>0 && pt> 30 && abs(eta) < 2.4 && iso<0.25){
         if(isInVector(obj_cats[mu_label],"Tight")){
           ++float_values["Event_nTightMuons"];
           if(isInVector(obj_cats[mu_label],"Tight")){
@@ -3945,7 +3945,6 @@ double DMAnalysisTreeMaker::MassSmear(double pt,  double eta, double rho, int fa
 
   smear = std::max((double)(0.0), (double)(1 + d(gen) * sqrt(delta)));
 
-  //cout << "===> smear: " << smear <<  endl;
   return  smear;
 }
 
