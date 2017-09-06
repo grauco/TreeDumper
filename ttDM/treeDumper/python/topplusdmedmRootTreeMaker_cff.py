@@ -21,8 +21,8 @@ genlabel = cms.string("genPart")
 
 #Systematics:
 #systsToSave = ["noSyst","jes__up","jes__down"]
-#systsToSave = ["noSyst","jer__up","jer__down"]
-systsToSave = ["noSyst"]
+systsToSave = ["noSyst","jer__up","jer__down"]
+#systsToSave = ["noSyst"]
 
 
 #metFilters = ["Flag_CSCTightHaloFilter","Flag_goodVertices", "Flag_eeBadScFilter"]

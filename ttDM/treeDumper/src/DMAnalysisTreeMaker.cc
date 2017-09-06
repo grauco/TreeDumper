@@ -2376,8 +2376,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     for(int t = 0;t < max_instances[boosted_tops_label] ;++t){
       string pref = obj_to_pref[boosted_tops_label];
       float prunedMass   = vfloats_values[makeName(boosted_tops_label,pref,"prunedMassCHS")][t];
-      float softDropMass = vfloats_values[makeName(boosted_tops_label,pref,"softDropMass")][t];
-
+      float softDropMass = vfloats_values[makeName(boosted_tops_label,pref,"softDropMassCHS")][t];
+      //      std::cout<<"SOFT DROP MASS: "<<softDropMass<<std::endl;
       float topPt        = vfloats_values[makeName(boosted_tops_label,pref,"Pt")][t];
       float topEta = vfloats_values[makeName(boosted_tops_label,pref,"Eta")][t];
       float topPhi = vfloats_values[makeName(boosted_tops_label,pref,"Phi")][t];
@@ -2397,6 +2397,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       float Masssmearfact8 = -9999;
       float Masssmearfact8_UP = -9999;
       float Masssmearfact8_DOWN = -9999;
+      float softDropMassCorr=-9999;
       float prunedMassCorr=-9999;
       float prunedMassCorr_JMSDOWN=-9999, prunedMassCorr_JMSUP=-9999;
       float prunedMassCorr_JMRDOWN=-9999, prunedMassCorr_JMRUP=-9999;
@@ -2445,8 +2446,14 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  
 	double recorr_NoL18 =  jecCorr_NoL18->getCorrection();
 	
+	//cout << "softdropmass " << softDropMass << endl;
+        softDropMassCorr = recorr_NoL18 * softDropMass;
+	//        softDropMassCorr = softDropMass;
+	/*	std::cout <<"=>softdropmassCorr "<< softDropMassCorr << std::endl;
+	std::cout <<"=>softdropmass "<< softDropMass << std::endl;
+	std::cout <<"=>Correction "<< recorr_NoL18  << std::endl;*/
+
 	prunedMass = recorr_NoL18 * prunedMass;
-	
 	prunedMassCorr = prunedMass;
 
 	Masssmearfact8 = MassSmear(topPt, topEta, Rho, 0);
@@ -2480,7 +2487,9 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
       vfloats_values[boosted_tops_label+"_NoCorrPt"][t]=juncpt8;
       vfloats_values[boosted_tops_label+"_NoCorrE"][t]=junce8;
-      
+
+      vfloats_values[boosted_tops_label+"_CorrSoftDropMass"][t]=softDropMassCorr;
+
       vfloats_values[boosted_tops_label+"_CorrPrunedMassCHS"][t]=prunedMassCorr;
       vfloats_values[boosted_tops_label+"_CorrPrunedMassCHSJMRDOWN"][t]=prunedMassCorr_JMRDOWN;
       vfloats_values[boosted_tops_label+"_CorrPrunedMassCHSJMRUP"][t]=prunedMassCorr_JMRUP;
@@ -3227,6 +3236,7 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
     addvar.push_back("IsLoose");
   }
   if(isak8){
+    addvar.push_back("CorrSoftDropMass");
     addvar.push_back("CorrPrunedMassCHS");
     addvar.push_back("CorrPrunedMassCHSJMRDOWN");
     addvar.push_back("CorrPrunedMassCHSJMRUP");

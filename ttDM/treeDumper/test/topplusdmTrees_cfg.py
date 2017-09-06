@@ -50,7 +50,8 @@ options.register('sample',
                  #'/store/user/grauco/B2GAnaFW_80X_V2p4/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2/BprimeBToHB_M-1800_TuneCUETP8M1_13TeV-madgraph-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161227_111236/0000/B2GEDMNtuple_2.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p3/JetHT/Run2016B/JetHT/Run2016B-23Sep2016-v3_B2GAnaFW_80X_V2p3/161216_214635/0000/B2GEDMNtuple_1.root',
                  #'/store/group/phys_b2g/B2GAnaFW_80X_V2p4/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1_B2GAnaFW_80X_V2p4/170124_202648/0000/B2GEDMNtuple_1.root',
-                 '/store/group/phys_b2g/B2GAnaFW_80X_V2p4/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V2p4/161222_110143/0000/B2GEDMNtuple_1.root',
+                 '/store/user/decosa/EPS17/B2GAnaFW_80X_V3p1/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_B2GAnaFW_80X_V3p1/170510_103545/0000/B2GEDMNtuple_1.root',
+#                 'file:B2GEDMNtuple.root',
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.string,
                  'Sample to analyze')
@@ -93,7 +94,7 @@ options.register('addPartonInfo',
                  'Add parton info??')
 
 options.register('changeJECs',
-                 True,
+                 False,
                  opts.VarParsing.multiplicity.singleton,
                  opts.VarParsing.varType.bool,
                  'Apply new JECs?')
