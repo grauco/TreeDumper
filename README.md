@@ -2,17 +2,13 @@
 
 ##to download and compile:
 
-cmsrel CMSSW_8_0_20
+cmsrel CMSSW_8_0_20 
 
 cd src
 
 cmsenv
 
 git clone https://github.com/grauco/treeDumper.git
-
-cp -rf treeDumper/ttDM .
-
-rm -rf treeDumper
 
 scram b -j 10
 
