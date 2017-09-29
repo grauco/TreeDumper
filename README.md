@@ -1,6 +1,6 @@
 # treeDumper
 
-##to download and compile:
+## to download and compile:
 
 cmsrel CMSSW_8_0_20 
 
@@ -12,7 +12,7 @@ git clone https://github.com/grauco/treeDumper.git
 
 scram b -j 10
 
-##to run:
+## to run:
 
 cd test/
 
