@@ -693,6 +693,14 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
     max_instances[namelabel]=maxI;
     string nameobs = namelabel;
     string prefix = nameprefix;
+    
+    cout << "size part: nameobs is  "<< nameobs<<endl;
+    if(saveNoCat) trees["noSyst"]->Branch((nameobs+"_size").c_str(), &sizes[nameobs]);
+    for(size_t sc = 0; sc< categories.size() ;++sc){
+      string category = categories.at(sc);
+      trees["noSyst"]->Branch((nameobs+category+"_size").c_str(), &sizes[nameobs+category]);
+    }
+    
 
     for (;itF != variablesFloat.end();++itF){
       
@@ -705,7 +713,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
       name = nametobranch;
       nameshort = nametobranch;
     
-      if(saveNoCat && (saveBaseVariables|| isInVector(toSave,itF->instance()))) trees["noSyst"]->Branch(nameshort.c_str(), &vfloats_values[name],(nameshort+"["+max_instance_str.str()+"]/F").c_str());
+      if(saveNoCat && (saveBaseVariables|| isInVector(toSave,itF->instance()))) trees["noSyst"]->Branch(nameshort.c_str(), &vfloats_values[name],(nameshort+"["+nameobs+"_size"+"]/F").c_str());
       names.push_back(name);
       obj_to_floats[namelabel].push_back(name);
       obs_to_obj[name] = nameobs;
@@ -718,7 +726,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
 	string nametobranchcat = makeBranchNameCat(namelabel,category,prefix,nameinstance);
 	string namecat = nametobranchcat;
 	nameshort = nametobranch;
-	if(saveBaseVariables|| isInVector(toSave,itF->instance())) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+max_instance_str.str()+"]/F").c_str());
+	if(saveBaseVariables|| isInVector(toSave,itF->instance())) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+nameobs+category+"_size"+"]/F").c_str());
       }
     }
   
@@ -729,13 +737,13 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
       name = nametobranch;
       nameshort = nametobranch;
 
-      if(saveNoCat && (saveBaseVariables|| isInVector(toSave,itI->instance())) ) trees["noSyst"]->Branch(nameshort.c_str(), &vints_values[name],(nameshort+"["+max_instance_str.str()+"]/I").c_str());
+      if(saveNoCat && (saveBaseVariables|| isInVector(toSave,itI->instance())) ) trees["noSyst"]->Branch(nameshort.c_str(), &vints_values[name],(nameshort+"["+nameobs+"_size"+"]/I").c_str());
       for(size_t sc = 0; sc< categories.size() ;++sc){
 	string category = categories.at(sc);
 	string nametobranchcat = makeBranchNameCat(namelabel,category,prefix,nameshort);
 	string namecat = nametobranchcat;
 	nameshort = nametobranch;
-	if(saveBaseVariables|| isInVector(toSave,itF->instance())) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+max_instance_str.str()+"]/I").c_str());
+	if(saveBaseVariables|| isInVector(toSave,itF->instance())) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+nameobs+category+"_size"+"]/I").c_str());
       }
 
       names.push_back(name);
@@ -752,14 +760,14 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
       vector<string> extravars = additionalVariables(nameshortv);
       for(size_t addv = 0; addv < extravars.size();++addv){
 	string name = nameshortv+"_"+extravars.at(addv);
-	if (saveNoCat && (saveBaseVariables || isInVector(toSave, extravars.at(addv)) || isInVector(toSave, "allExtra") ) )trees["noSyst"]->Branch(name.c_str(), &vfloats_values[name],(name+"["+max_instance_str.str()+"]/F").c_str());
+	if (saveNoCat && (saveBaseVariables || isInVector(toSave, extravars.at(addv)) || isInVector(toSave, "allExtra") ) )trees["noSyst"]->Branch(name.c_str(), &vfloats_values[name],(name+"["+nameobs+"_size"+"]/F").c_str());
 	for(size_t sc = 0; sc< categories.size() ;++sc){
 	  string category = categories.at(sc);
 	  string nametobranchcat = nameshortv+category+"_"+extravars.at(addv);
 	  string namecat = nametobranchcat;
 	  cout << "extra var "<< extravars.at(addv)<<endl;
 	  cout << " namecat "<< namecat<< endl;
-	  if(saveBaseVariables|| isInVector(toSave,extravars.at(addv)) || isInVector(toSave,"allExtra")) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+max_instance_str.str()+"]/F").c_str());
+	  if(saveBaseVariables|| isInVector(toSave,extravars.at(addv)) || isInVector(toSave,"allExtra")) trees["noSyst"]->Branch(namecat.c_str(), &vfloats_values[namecat],(namecat+"["+nameobs+"_size"+"]/F").c_str());
 	}
 
 	obj_to_floats[namelabel].push_back(name);
@@ -768,12 +776,6 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
       }
     }
     names.push_back(nameobs);
-    cout << "size part: nameobs is  "<< nameobs<<endl;
-    if(saveNoCat) trees["noSyst"]->Branch((nameobs+"_size").c_str(), &sizes[nameobs]);
-    for(size_t sc = 0; sc< categories.size() ;++sc){
-      string category = categories.at(sc);
-      trees["noSyst"]->Branch((nameobs+category+"_size").c_str(), &sizes[nameobs+category]);
-    }
     
     //Initialize single pset objects
      for (;itsF != singleFloat.end();++itsF){

@@ -33,7 +33,7 @@ catEl = ["Tight","Veto"]
 catJet = ["Tight"]
 
 cutOnTriggers = False
-doPreselectionCuts = False
+doPreselectionCuts = True
 
 #What to use for jets/other variables
 saveBase = cms.untracked.bool(False)
