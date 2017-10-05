@@ -8,7 +8,7 @@ cd src
 
 cmsenv
 
-git clone https://github.com/grauco/treeDumper.git
+git clone https://github.com/grauco/ttDM.git
 
 scram b -j 10
 
