@@ -4,7 +4,7 @@
 
 cmsrel CMSSW_8_0_20 
 
-cd src
+cd CMSSW_8_0_20/src
 
 cmsenv
 
