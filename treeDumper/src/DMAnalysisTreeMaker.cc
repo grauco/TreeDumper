@@ -839,7 +839,6 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   if(!isData){
     string nameshortv= "genPart";
     vector<string> extravarstop = additionalVariables(nameshortv);
-    //double max_instances_gen = max_genparticles*max((int)(max_instances[gen_label]),(int)(max_instances[gen_label]) );
     double max_instances_gen = 30*max((int)0,(int)1);
     max_instances[nameshortv]=max_instances_gen;
     stringstream mtop;
@@ -882,7 +881,7 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   }
 
   initTreeWeightHistory(useLHEWeights);
- 
+
   string L1Name ="Summer16_23Sep2016V4_MC_L1FastJet_AK4PFchs.txt"; 
   string L1RCName = "Summer16_23Sep2016V4_MC_L1RC_AK4PFchs.txt"; 
   string L2Name = "Summer16_23Sep2016V4_MC_L2Relative_AK4PFchs.txt";
@@ -968,12 +967,14 @@ DMAnalysisTreeMaker::DMAnalysisTreeMaker(const edm::ParameterSet& iConfig){
   
   season = "Summer11";
   distr = "pileUpDistr" + season + ".root";
+
 }
 
 
 void DMAnalysisTreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {
     iRun.getByLabel(edm::InputTag("TriggerUserData","triggerNameTree"), triggerNamesR);
     iRun.getByLabel(metNames_, metNames);
+	
     for(size_t bt = 0; bt < triggerNamesR->size();++bt){
       std::string tname = triggerNamesR->at(bt);
       //cout << "trigger test tname "<< tname <<endl; 
@@ -987,7 +988,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   nInitEventsHisto->Fill(0.1);
   nInitEvents+=1;
-
   // event info
   iEvent.getByToken(t_lumiBlock_,lumiBlock );
   iEvent.getByToken(t_runNumber_,runNumber );
@@ -1017,193 +1017,175 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     useLHEWeights=false;
   }
   
-  if(getPartonW || getPartonTop || doWReweighting || doTopReweighting){
-    if(!useLHE)return;
-    genlep.clear();
-    gentop.clear();
-    genantitop.clear();
-    genw.clear();
-    genz.clear();
-    gena.clear();
-    gennu.clear();
-    pare.clear();parebar.clear();parmu.clear();parmubar.clear();parnumu.clear();parnumubar.clear();parnue.clear();parnuebar.clear();parnutau.clear();parnutaubar.clear();parz.clear();parw.clear();
-
-    float_values["Event_Z_EW_Weight"]= 1.0;
-    float_values["Event_W_EW_Weight"]= 1.0;
-    float_values["Event_Z_QCD_Weight"]= 1.0;
-    float_values["Event_W_QCD_Weight"]= 1.0;
-    float_values["Event_Z_Weight"]= 1.0;
-    float_values["Event_W_Weight"]= 1.0;
-    float_values["Event_T_Weight"]= 1.0;
-    float_values["Event_T_Ext_Weight"]= 1.0;
-    size_t nup=lhes->hepeup().NUP;
-
-    for( size_t i=0;i<nup;++i){
-      //      cout << " particle number " << i << endl;
-      int id = lhes->hepeup().IDUP[i];
-      float px = lhes->hepeup().PUP[i][0];
-      float py = lhes->hepeup().PUP[i][1];
-      float pz = lhes->hepeup().PUP[i][2];
-      float energy = lhes->hepeup().PUP[i][3];
+  if((getPartonW || getPartonTop || doWReweighting || doTopReweighting)){
     
-      TLorentzVector vec;
-      math::XYZTLorentzVector part = math::XYZTLorentzVector(px, py, pz, energy);
-      float pt = part.pt();
-      float phi = part.phi();
-      float eta = part.eta();
+    if(useLHE){  
       
-      if(pt>0){
-	vec.SetPtEtaPhiE(pt, eta, phi, energy);
+      //if(!useLHE)return;
+      genlep.clear();
+      gentop.clear();
+      genantitop.clear();
+      genw.clear();
+      genz.clear();
+      gena.clear();
+      gennu.clear();
+      pare.clear();parebar.clear();parmu.clear();parmubar.clear();parnumu.clear();parnumubar.clear();parnue.clear();parnuebar.clear();parnutau.clear();parnutaubar.clear();parz.clear();parw.clear();
+      
+      float_values["Event_Z_EW_Weight"]= 1.0;
+      float_values["Event_W_EW_Weight"]= 1.0;
+      float_values["Event_Z_QCD_Weight"]= 1.0;
+      float_values["Event_W_QCD_Weight"]= 1.0;
+      float_values["Event_Z_Weight"]= 1.0;
+      float_values["Event_W_Weight"]= 1.0;
+      float_values["Event_T_Weight"]= 1.0;
+      float_values["Event_T_Ext_Weight"]= 1.0;
+      size_t nup=lhes->hepeup().NUP;
+      
+      for( size_t i=0;i<nup;++i){
+	int id = lhes->hepeup().IDUP[i];
+	float px = lhes->hepeup().PUP[i][0];
+	float py = lhes->hepeup().PUP[i][1];
+	float pz = lhes->hepeup().PUP[i][2];
+	float energy = lhes->hepeup().PUP[i][3];
 	
-	if(abs (id) == 11 || abs (id) == 13 || abs(id) == 15){
-	  genlep.push_back(vec);
+	TLorentzVector vec;
+	math::XYZTLorentzVector part = math::XYZTLorentzVector(px, py, pz, energy);
+	float pt = part.pt();
+	float phi = part.phi();
+	float eta = part.eta();
+	
+	if(pt>0){
+	  vec.SetPtEtaPhiE(pt, eta, phi, energy);
+	  
+	  if(abs (id) == 11 || abs (id) == 13 || abs(id) == 15){
+	    genlep.push_back(vec);
+	  }
+	  if(abs (id) == 12 || abs (id) == 14 || abs(id) == 16){
+	    gennu.push_back(vec);
+	  }
+	  if(id == 6 ){
+	    gentop.push_back(vec);
+	  }
+	  if(id == -6 ){
+	    genantitop.push_back(vec);
+	  }
+	  if(abs (id) == 24 ){
+	    genw.push_back(vec);
+	  }
+	  if(abs (id) == 23 ){
+	    genz.push_back(vec);
+	  }
+	  if(abs (id) == 22 ){
+	    gena.push_back(vec);
+	  }
+	}      
+      }
+    
+      if(getPartonTop && gentop.size()==1){
+	float_values["Event_T_Pt"]= gentop.at(0).Pt();
+	float_values["Event_T_Eta"]= gentop.at(0).Eta();
+	float_values["Event_T_Phi"]= gentop.at(0).Phi();
+	float_values["Event_T_E"]= gentop.at(0).Energy();
+	float_values["Event_T_Mass"]= gentop.at(0).M();
+      }
+      if(getPartonTop && genantitop.size()==1){
+	float_values["Event_Tbar_Pt"]= genantitop.at(0).Pt();
+	float_values["Event_Tbar_Eta"]= genantitop.at(0).Eta();
+	float_values["Event_Tbar_Phi"]= genantitop.at(0).Phi();
+	float_values["Event_Tbar_E"]= genantitop.at(0).Energy();
+	float_values["Event_Tbar_Mass"]= genantitop.at(0).M();
+	
+      }
+      if((getPartonW || doWReweighting )) {
+	if(genw.size()==1){
+	  float_values["Event_W_Pt"]= genw.at(0).Pt();
+	  float_values["Event_W_Eta"]= genw.at(0).Eta();
+	  float_values["Event_W_Phi"]= genw.at(0).Phi();
+	  float_values["Event_W_E"]= genw.at(0).Energy();
+	  float_values["Event_W_Mass"]= genw.at(0).M();	
+	  
+	  double ptW = genw.at(0).Pt();
+	  double wweight = getWPtWeight(ptW);			
+	  float_values["Event_W_QCD_Weight"]= wweight;
 	}
-	if(abs (id) == 12 || abs (id) == 14 || abs(id) == 16){
-	  gennu.push_back(vec);
+	else (float_values["Event_W_QCD_Weight"]=1.0);
+      }
+      
+      if((getPartonW || doWReweighting )){ 
+	if(genz.size()==1){
+	  float_values["Event_Z_Pt"]= genz.at(0).Pt();
+	  float_values["Event_Z_Eta"]= genz.at(0).Eta();
+	  float_values["Event_Z_Phi"]= genz.at(0).Phi();
+	  float_values["Event_Z_E"]= genz.at(0).Energy();
+	  float_values["Event_Z_Mass"]= genz.at(0).M();	
+	  
+	  double ptW = genz.at(0).Pt();
+	  double wweight = getZPtWeight(ptW);			
+	  float_values["Event_Z_QCD_Weight"]= wweight;
 	}
-	if(id == 6 ){
-	  gentop.push_back(vec);
+	else (float_values["Event_Z_QCD_Weight"]=1.0);
+      }
+      
+      if((getPartonW || doWReweighting ) ) {
+	if(gena.size()==1){       
+	  float_values["Event_a_Pt"]= gena.at(0).Pt();
+	  float_values["Event_a_Eta"]= gena.at(0).Eta();
+	  float_values["Event_a_Phi"]= gena.at(0).Phi();
+	  float_values["Event_a_E"]= gena.at(0).Energy();
+	  float_values["Event_a_Mass"]= gena.at(0).M();	
+	  
+	  double ptW = gena.at(0).Pt();
+	  double wweight = getAPtWeight(ptW);			
+	  float_values["Event_a_Weight"]= wweight;
 	}
-	if(id == -6 ){
-	  genantitop.push_back(vec);
+	else (float_values["Event_a_Weight"]=1.0);
+      }
+      if( (getPartonTop || doTopReweighting)) {
+	if (gentop.size()==1 && genantitop.size()==1 && getPartonTop){
+	  double ptT = gentop.at(0).Pt();
+	  double ptTbar = genantitop.at(0).Pt();
+	  double tweight = getTopPtWeight(ptT,ptTbar);			
+	  double tweightext = getTopPtWeight(ptT,ptTbar,true);			
+	  float_values["Event_T_Weight"]= tweight;
+	  float_values["Event_T_Ext_Weight"]= tweightext;
 	}
-	if(abs (id) == 24 ){
-	  genw.push_back(vec);
-	}
-	if(abs (id) == 23 ){
-	  genz.push_back(vec);
-	}
-	if(abs (id) == 22 ){
-	  gena.push_back(vec);
-	}
-      }      
+	else {(float_values["Event_T_Weight"]=1.0);
+	  (float_values["Event_T_Ext_Weight"]=1.0);}
+      }
+      
+      if(useLHEWeights){
+	getEventLHEWeights();
+      }
     }
     
-    if(getPartonTop && gentop.size()==1){
-      float_values["Event_T_Pt"]= gentop.at(0).Pt();
-      float_values["Event_T_Eta"]= gentop.at(0).Eta();
-      float_values["Event_T_Phi"]= gentop.at(0).Phi();
-      float_values["Event_T_E"]= gentop.at(0).Energy();
-      float_values["Event_T_Mass"]= gentop.at(0).M();
-    }
-    if(getPartonTop && genantitop.size()==1){
-      float_values["Event_Tbar_Pt"]= genantitop.at(0).Pt();
-      float_values["Event_Tbar_Eta"]= genantitop.at(0).Eta();
-      float_values["Event_Tbar_Phi"]= genantitop.at(0).Phi();
-      float_values["Event_Tbar_E"]= genantitop.at(0).Energy();
-      float_values["Event_Tbar_Mass"]= genantitop.at(0).M();
+    if(!isData) {
+      iEvent.getByToken(t_genParticleCollection_ , genParticles);
       
-    }
-    if((getPartonW || doWReweighting )) {
-      if(genw.size()==1){
-	float_values["Event_W_Pt"]= genw.at(0).Pt();
-	float_values["Event_W_Eta"]= genw.at(0).Eta();
-	float_values["Event_W_Phi"]= genw.at(0).Phi();
-	float_values["Event_W_E"]= genw.at(0).Energy();
-	float_values["Event_W_Mass"]= genw.at(0).M();	
-	
-	double ptW = genw.at(0).Pt();
-	double wweight = getWPtWeight(ptW);			
-	float_values["Event_W_QCD_Weight"]= wweight;
-      }
-      else (float_values["Event_W_QCD_Weight"]=1.0);
-    }
-    if((getPartonW || doWReweighting )){ 
-      if(genz.size()==1){
-	float_values["Event_Z_Pt"]= genz.at(0).Pt();
-	float_values["Event_Z_Eta"]= genz.at(0).Eta();
-	float_values["Event_Z_Phi"]= genz.at(0).Phi();
-	float_values["Event_Z_E"]= genz.at(0).Energy();
-	float_values["Event_Z_Mass"]= genz.at(0).M();	
-	
-	double ptW = genz.at(0).Pt();
-	double wweight = getZPtWeight(ptW);			
-	cout << wweight << endl;
-	float_values["Event_Z_QCD_Weight"]= wweight;
-      }
-      else (float_values["Event_Z_QCD_Weight"]=1.0);
-    }
-    //cout << "getPartonW is \t" << getPartonW << "and doWReweighting is\t" << doWReweighting << endl;
-    if((getPartonW || doWReweighting ) ) {
-      if(gena.size()==1){       
-      float_values["Event_a_Pt"]= gena.at(0).Pt();
-      float_values["Event_a_Eta"]= gena.at(0).Eta();
-      float_values["Event_a_Phi"]= gena.at(0).Phi();
-      float_values["Event_a_E"]= gena.at(0).Energy();
-      float_values["Event_a_Mass"]= gena.at(0).M();	
-      
-      double ptW = gena.at(0).Pt();
-      double wweight = getAPtWeight(ptW);			
-      //cout << wweight << endl;
-      float_values["Event_a_Weight"]= wweight;
-      }
-      else (float_values["Event_a_Weight"]=1.0);
-    }
-    if( (getPartonTop || doTopReweighting)) {
-      if (gentop.size()==1 && genantitop.size()==1 && getPartonTop){
-	double ptT = gentop.at(0).Pt();
-	double ptTbar = genantitop.at(0).Pt();
-	double tweight = getTopPtWeight(ptT,ptTbar);			
-	double tweightext = getTopPtWeight(ptT,ptTbar,true);			
-	float_values["Event_T_Weight"]= tweight;
-	float_values["Event_T_Ext_Weight"]= tweightext;
-	//cout << tweight << endl;
-      }
-      else {(float_values["Event_T_Weight"]=1.0);
-	(float_values["Event_T_Ext_Weight"]=1.0);}
-    }
-    if(useLHEWeights){
-      getEventLHEWeights();
-    }
-
-    //if(!isData) {//GEN PARTICLES HAVE TO BE FIXED
-    if(0>1){ 
-    iEvent.getByToken(t_genParticleCollection_ , genParticles);
-    
-      //const bool print = false;
-      int momId=-999;
-      int momStatus=-999;
-  
-      std::vector< int > MomId;
-      std::vector< int > MomStatus;
-      for(size_t i=0; i<genParticles->size(); ++i) {
-	  const reco::GenParticle& p = (*genParticles)[i];
-	  momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;                                                                                                                            
-	  momStatus = p.numberOfMothers() ? p.mother()->status() : 0;    
-	  MomId.push_back(momId);
-	  MomStatus.push_back(momStatus);
-      }
-
-      for(size_t i=0;/*i<genParticles->size()*/(size_t)max_instances[gen_label]/*max((int)genParticles->size(),(int)30)*/;++i){
+      for(int i=0;i<(int)genParticles->size();++i){
 	string nameshortv= "genPart";
 	string pref = obj_to_pref[gen_label];
-
+	
 	const reco::GenParticle& p = (*genParticles)[i];
-
-	/*vfloats_values[makeName(gen_label,pref,"Pt")][i]=(float)((p.p4()).Pt());
+	
+	vfloats_values[makeName(gen_label,pref,"Pt")][i]=(float)((p.p4()).Pt());
 	vfloats_values[makeName(gen_label,pref,"Eta")][i]=(float)((p.p4()).Eta());
 	vfloats_values[makeName(gen_label,pref,"Phi")][i]=(float)((p.p4()).Phi());
 	vfloats_values[makeName(gen_label,pref,"E")][i]=(float)((p.p4()).E());
 	vfloats_values[makeName(gen_label,pref,"Status")][i]=(int)(p.status());
 	vfloats_values[makeName(gen_label,pref,"Id")][i]=(int)(p.pdgId());
-	*/
 
 	int momId=-999;
-	//int momStatus =-999;
-	/*momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
+	int momStatus =-999;
+	momId = p.numberOfMothers() ? p.mother()->pdgId() : 0;
 	momStatus = p.numberOfMothers() ? p.mother()->status() : 0;
-
 	vfloats_values[makeName(gen_label,pref,"Mom0Id")][i]=(float)(momId);
 	vfloats_values[makeName(gen_label,pref,"Mom0Status")][i]=(float)(momStatus);
-	*/
-	/*for(size_t j = 0, n=p.numberOfDaughters(); j<n; ++j) {
-	  vfloats_values[makeName(gen_label,pref,"dauId1")][i]=(float)(p.daughter(j)->pdgId());
-	  vfloats_values[makeName(gen_label,pref,"dauStatus1")][i]=(float)(p.daughter(j)->status());
-	  vfloats_values[makeName(gen_label,pref,"dauId2")][i]=(float)(p.daughter(j+1)->pdgId());
-	  vfloats_values[makeName(gen_label,pref,"dauStatus2")][i]=(float)(p.daughter(j+1)->status());
-	  vfloats_values[makeName(gen_label,pref,"dauId3")][i]=(float)(p.daughter(j+1)->pdgId());
-	  vfloats_values[makeName(gen_label,pref,"dauStatus3")][i]=(float)(p.daughter(j+1)->status());
-	  }*/
+
+	int n=p.numberOfDaughters();
+	for(int j= 0; j<n; ++j) {
+	  vfloats_values[makeName(gen_label,pref,"dauId1")][i]=(float)((p.daughter(j))->pdgId());
+	  vfloats_values[makeName(gen_label,pref,"dauStatus1")][i]=(float)((p.daughter(j))->status());
+	}
 
 	if(p.pdgId()==momId && isEWKID(p.pdgId()) && getParticleWZ){
 	  
@@ -1217,7 +1199,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	    parmu.push_back(vec);	  }
 	  if(p.pdgId()==-13 && p.status()==1){
 	    parmubar.push_back(vec);	  }
-
+	  
 	  if(p.pdgId()==15  && p.status()==2){
 	    partau.push_back(vec);  }
 	  if(p.pdgId()==-15  && p.status()==2){
@@ -1229,7 +1211,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	    parnumu.push_back(vec);	  }
 	  if(p.pdgId()==16  && p.status()==1){
 	    parnutau.push_back(vec);	  }
-
+	  
 	  if(p.pdgId()==-12  && p.status()==1){
 	    parnuebar.push_back(vec);	  }
 	  if(p.pdgId()==-14  && p.status()==1){
@@ -1240,19 +1222,18 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
 	  if(abs(p.pdgId())==23 && p.status()==62){
 	    double wweight = getZEWKPtWeight((p.p4()).Pt());
 	    float_values["Event_Z_EW_Weight"]= wweight;
-
+	    
 	  }
 	  if(abs(p.pdgId())==24 && p.status()==62){
 	    double wweight = getWEWKPtWeight((p.p4()).Pt());
 	    cout << "third if ok"<< endl;
 	    float_values["Event_W_EW_Weight"]= wweight;
-	     cout << "z weight:\t" << wweight << endl;
-	     }   
-	 
+	    cout << "z weight:\t" << wweight << endl;
+	  }   
+	  
 	}
-
       }
-  
+      
       //Z
       if(parmu.size()>0&& parmubar.size()>0){parz.push_back(parmu.at(0)+parmubar.at(0)) ;}
       if(pare.size()>0&& parebar.size()>0){parz.push_back(pare.at(0)+parebar.at(0)) ;}
@@ -1262,30 +1243,26 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
       if(parnutau.size()>0&& parnutaubar.size()>0){parz.push_back(parnutau.at(0)+parnutaubar.at(0)) ;}
       if(   float_values["Event_Z_EW_Weight"] ==1 &&parz.size()>0 )    float_values["Event_Z_EW_Weight"]= getZEWKPtWeight(parz.at(0).Pt());
       if(   float_values["Event_Z_QCD_Weight"] ==1 &&parz.size()>0 )    float_values["Event_Z_QCD_Weight"]= getWPtWeight(parz.at(0).Pt());
-
+      
       //W
       if(parmu.size()>0&& parnumubar.size()>0){parw.push_back(parmu.at(0)+parnumubar.at(0)) ;}
-
       if(pare.size()>0&& parnuebar.size()>0){parw.push_back(pare.at(0)+parnuebar.at(0)) ;}
-
       if(partau.size()>0&& parnutaubar.size()>0){parw.push_back(partau.at(0)+parnutaubar.at(0)) ;}
-      
       if(parnumu.size()>0&& parmubar.size()>0){parw.push_back(parnumu.at(0)+parmubar.at(0)) ;}
-
       if(parnue.size()>0&& parebar.size()>0){parw.push_back(parnue.at(0)+parebar.at(0)) ;}
-
-
       if(parnutau.size()>0&& partaubar.size()>0){parw.push_back(parnutau.at(0)+partaubar.at(0)) ;}
-
       if(   float_values["Event_W_EW_Weight"] ==1 &&parw.size()>0 )    {
 	float_values["Event_W_EW_Weight"]= getWEWKPtWeight(parw.at(0).Pt());
       }
       if(   float_values["Event_W_QCD_Weight"] ==1 &&parw.size()>0 )    float_values["Event_W_QCD_Weight"]= getWPtWeight(parw.at(0).Pt());
+      
     }
+    
     float_values["Event_W_Weight"]= float_values["Event_W_EW_Weight"]*float_values["Event_W_QCD_Weight"];
     float_values["Event_Z_Weight"]= float_values["Event_Z_EW_Weight"]*float_values["Event_Z_QCD_Weight"];   
-    //cout << "ending mega if" << endl;
+    
   }
+
   trees["WeightHistory"]->Fill();
 
   //Part 3: filling the additional variables
@@ -1309,7 +1286,7 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     }
     
     if(cutOnTriggers && !triggerOr) return;
-  }
+ }
 
   if(useMETFilters){
    iEvent.getByToken(t_metBits_,metBits );
@@ -1339,7 +1316,8 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
     iEvent.getByToken(t_pvRho_,pvRho);
     nPV = pvZ->size();
   }
-  
+
+
   //Part 1 taking the obs values from the edm file
   for (;itPsets!=physObjects.end();++itPsets){ 
     variablesFloat = itPsets->template getParameter<std::vector<edm::InputTag> >("variablesF"); 
@@ -1443,7 +1421,6 @@ void DMAnalysisTreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetu
   }
 
   //  std::cout << " checkpoint part 1"<<endl;
-
 
   //Part 2: selection and analysis-level changes
   //This might change for each particular systematics, 
@@ -3192,13 +3169,13 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
   bool isphoton=object.find("photon")!=std::string::npos;
   bool iselectron=object.find("electron")!=std::string::npos;
   bool ismet=object.find("met")!=std::string::npos;
+  bool isgen=object.find("genPart")!=std::string::npos;
   bool isjet=object.find("jet")!=std::string::npos && object.find("AK4")!=std::string::npos;
   bool isak8=object.find("jet")!=std::string::npos && object.find("AK8")!=std::string::npos && object.find("sub")==std::string::npos;
   bool isak8subjet=object.find("jet")!=std::string::npos && object.find("AK8")!=std::string::npos && object.find("sub")!=std::string::npos;
   bool isevent=object.find("Event")!=std::string::npos;
   bool isResolvedTopHad=object.find("resolvedTopHad")!=std::string::npos;
   bool isResolvedTopSemiLep=object.find("resolvedTopSemiLep")!=std::string::npos;
-  //  bool isgen = object.find("genPart")!=std::string::npos;
 
   if(ismuon || iselectron){
     addvar.push_back("SFTrigger");
@@ -3265,21 +3242,17 @@ vector<string> DMAnalysisTreeMaker::additionalVariables(string object){
     addvar.push_back("tau2OVERtau1");
 
   }  
-  if(1>0){
+  if(isgen){
     addvar.push_back("Pt");
     addvar.push_back("Eta");
     addvar.push_back("Phi");
     addvar.push_back("E");
-    addvar.push_back("Id");
     addvar.push_back("Status");
-    addvar.push_back("MomId");
+    addvar.push_back("Id");
+    addvar.push_back("Mom0Id");
     addvar.push_back("Mom0Status");
-    /*addvar.push_back("dauId1");
+    addvar.push_back("dauId1");
     addvar.push_back("dauStatus1");
-    addvar.push_back("dauId2");
-    addvar.push_back("dauStatus2");
-    addvar.push_back("dauId3");
-    addvar.push_back("dauStatus3");*/
   }
   if(isak8subjet){
     ;//    addvar.push_back("CorrPt");

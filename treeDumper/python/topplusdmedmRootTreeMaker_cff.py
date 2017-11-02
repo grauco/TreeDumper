@@ -4,7 +4,7 @@ import copy
 
 leptonssize = cms.untracked.int32(6)
 jetssize = cms.untracked.int32(20)
-genpartsize = cms.untracked.int32(100)
+genpartsize = cms.untracked.int32(50)
 
 pholabel = cms.string("photons")
 mulabel = cms.string("muons")
@@ -21,8 +21,8 @@ genlabel = cms.string("genPart")
 
 #Systematics:
 #systsToSave = ["noSyst","jes__up","jes__down"]
-systsToSave = ["noSyst","jer__up","jer__down"]
-#systsToSave = ["noSyst"]
+#systsToSave = ["noSyst","jer__up","jer__down"]
+systsToSave = ["noSyst"]
 
 
 #metFilters = ["Flag_CSCTightHaloFilter","Flag_goodVertices", "Flag_eeBadScFilter"]
@@ -33,7 +33,7 @@ catEl = ["Tight","Veto"]
 catJet = ["Tight"]
 
 cutOnTriggers = False
-doPreselectionCuts = True
+doPreselectionCuts =True
 
 #What to use for jets/other variables
 saveBase = cms.untracked.bool(False)
@@ -458,35 +458,4 @@ DMTreesDumper.physicsObjects.append(
         singleF = cms.VInputTag(),
         toSave = cms.vstring(sjpref+"E",sjpref+"Pt",sjpref+"Eta",sjpref+"Phi", "allExtra"),
         )
-    )
-
-    
-if(1>0):  #GENPARTICLES HAVE TO BE FIXED                                                                                                                                           
-    DMTreesDumper.physicsObjects.append(
-        cms.PSet(
-            label = genlabel,
-            prefix = cms.string("genPart"),
-            maxInstances = genpartsize,
-            saveBaseVariables = saveBase,
-            categories = cms.vstring(),
-            variablesD = cms.VInputTag(),
-            variablesF = cms.VInputTag(
-     #   cms.InputTag("genPart","genPartCharge"),
-     #   cms.InputTag("genPart","genPartE"),
-     #   cms.InputTag("genPart","genPartEta"),
-     #   cms.InputTag("genPart","genPartID"),
-     #   cms.InputTag("genPart","genPartMass"),
-     #   cms.InputTag("genPart","genPartMom0ID"),
-     #   cms.InputTag("genPart","genPartPhi"),
-     #   cms.InputTag("genPart","genPartPt"),
-     #   cms.InputTag("genPart","genPartStatus"),
-     #   cms.InputTag("genPart","genPartY"),
-                ),
-            variablesI = cms.VInputTag(),
-            singleD = cms.VInputTag(),
-            singleI = cms.VInputTag(),
-            singleF = cms.VInputTag(),
-#            toSave = cms.vstring(),
-            toSave = cms.vstring( "genpartE", "genpartEta", "genpartID", "genpartMom0ID", "genpartPhi", "genpartPt", "genpartStatus", "allExtra"),
-            )
     )
